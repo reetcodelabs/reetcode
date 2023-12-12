@@ -14,6 +14,10 @@ import { BookOpenIcon } from "@heroicons/react/24/outline";
 
 const themes = [
   {
+    id: "atomDark",
+    name: "Atom Dark",
+  },
+  {
     id: "nightOwl",
     name: "Night Owl",
   },
@@ -24,10 +28,6 @@ const themes = [
   {
     id: "aquaBlue",
     name: "Aqua Blue",
-  },
-  {
-    id: "atomDark",
-    name: "Atom Dark",
   },
   {
     id: "cobalt2",
