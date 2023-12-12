@@ -373,7 +373,7 @@ export default function ProblemEditor() {
 
             <div
               style={{ height: previewHeight }}
-              className="relative box-border w-full overflow-y-auto rounded-lg border-2 border-slate-900 bg-slate-900"
+              className="relative box-border w-full rounded-lg border-2 border-slate-900 bg-slate-900"
             >
               <div
                 className="absolute -top-2 h-2 w-full cursor-row-resize rounded-sm bg-indigo-500 opacity-0 transition ease-linear hover:opacity-100"
@@ -397,7 +397,14 @@ export default function ProblemEditor() {
                     name: "Test cases",
                     value: "test cases",
                     current: false,
-                    content: <TestCases />,
+                    content: (
+                      <div
+                        className="overflow-y-auto"
+                        style={{ height: previewHeight - 64 }}
+                      >
+                        <TestCases />
+                      </div>
+                    ),
                   },
                 ]}
               />
