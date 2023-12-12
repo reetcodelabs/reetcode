@@ -73,5 +73,9 @@ export default {
       },
     },
   },
-  plugins: [tailwindCssAnimate],
+  plugins: [
+    tailwindCssAnimate,
+    require("@tailwindcss/forms"),
+    require("@tailwindcss/typography"),
+  ],
 } satisfies Config;

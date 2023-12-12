@@ -15,7 +15,7 @@ export default function Document() {
           href="https://rsms.me/inter/inter.css?feat-cv11=1&feat-cv02=1&feat-cv03=1&feat-cv04=1&feat-ss01=1"
         />
       </Head>
-      <body>
+      <body className="bg-slate-900">
         <Main />
         <NextScript />
       </body>

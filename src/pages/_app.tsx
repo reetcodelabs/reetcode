@@ -23,16 +23,18 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
   return (
     <ClerkProvider>
-      <ThemeProvider
+      {/* <ThemeProvider
         attribute="class"
         defaultTheme="light"
         enableSystem
         disableTransitionOnChange
       >
         <Layout>
-          <Component {...pageProps} />
         </Layout>
-      </ThemeProvider>
+      </ThemeProvider> */}
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </ClerkProvider>
   );
 };

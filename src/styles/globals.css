@@ -82,3 +82,19 @@ html {
     @apply bg-background text-foreground;
   }
 }
+
+.cm-gutterElement {
+  font-size: 14px;
+}
+
+.focused-link {
+  @apply focus-within:outline-none focus-within:outline-offset-8 focus-within:outline-indigo-500;
+}
+
+.sp-overlay {
+  @apply rounded-b-md bg-slate-800;
+}
+
+.sp-preview-container {
+  @apply rounded-b-md !bg-slate-900;
+}
