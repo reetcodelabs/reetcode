@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import { Button } from "./button";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
-export function Page({ children }: PropsWithChildren<{}>) {
+export function Page({ children }: PropsWithChildren) {
   const router = useRouter();
   return (
     <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 px-6 pb-48 pt-12 xl:px-0">

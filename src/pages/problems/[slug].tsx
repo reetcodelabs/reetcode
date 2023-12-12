@@ -1,4 +1,3 @@
-import { NavLinks, UserLinks } from "@/layouts/main";
 import {
   SandpackProvider,
   SandpackCodeEditor,
@@ -7,7 +6,6 @@ import {
   SandpackTheme,
 } from "@codesandbox/sandpack-react";
 import { useEffect, useState } from "react";
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tabs } from "@/components/tabs";
 import { Button } from "@/components/button";
 import { Select } from "@/components/select";
@@ -81,39 +79,13 @@ const themes = [
   },
 ];
 
-function useResize() {
-  const [size, setSize] = useState({ x: 400, y: 300 });
-
-  const onResize = (mouseDownEvent: MouseEvent) => {
-    const startSize = size;
-    const startPosition = { x: mouseDownEvent.pageX, y: mouseDownEvent.pageY };
-
-    function onMouseMove(mouseMoveEvent: MouseEvent) {
-      setSize((currentSize) => ({
-        x: startSize.x - startPosition.x + mouseMoveEvent.pageX,
-        y: startSize.y - startPosition.y + mouseMoveEvent.pageY,
-      }));
-    }
-    function onMouseUp() {
-      document.body.removeEventListener("mousemove", onMouseMove);
-      // uncomment the following line if not using `{ once: true }`
-      // document.body.removeEventListener("mouseup", onMouseUp);
-    }
-
-    document.body.addEventListener("mousemove", onMouseMove);
-    document.body.addEventListener("mouseup", onMouseUp, { once: true });
-  };
-
-  return { onResize, size };
-}
-
 function useWindowResized() {
   const [size, setSize] = useState<{ width: number; height: number }>({
     width: 0,
     height: 0,
   });
   useEffect(() => {
-    function handleWindowResized(event: UIEvent) {
+    function handleWindowResized() {
       setSize({ width: window.innerWidth, height: window.innerHeight });
     }
 

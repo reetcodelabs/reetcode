@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 export default function HomePage() {
   return (
     <div className="relative isolate overflow-hidden pt-14">

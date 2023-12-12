@@ -2,10 +2,10 @@ import { type AppType } from "next/app";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { type ThemeProviderProps } from "next-themes/dist/types";
+
 import { api } from "@/utils/api";
 
 import "@/styles/globals.css";
-import Head from "next/head";
 import { MainLayout } from "@/layouts/main";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
@@ -23,15 +23,6 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
   return (
     <ClerkProvider>
-      {/* <ThemeProvider
-        attribute="class"
-        defaultTheme="light"
-        enableSystem
-        disableTransitionOnChange
-      >
-        <Layout>
-        </Layout>
-      </ThemeProvider> */}
       <Layout>
         <Component {...pageProps} />
       </Layout>

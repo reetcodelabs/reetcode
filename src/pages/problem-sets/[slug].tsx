@@ -2,11 +2,8 @@ import { Page } from "@/components/Page";
 import { ProblemFilters } from "@/components/ProblemFilters";
 import { ProblemList } from "@/components/problems/ProblemList";
 import { BeakerIcon, ClockIcon } from "@heroicons/react/24/outline";
-import { PropsWithChildren } from "react";
 
-export interface ProblemSetDetailsProps {}
-
-export default function ProblemSetDetails({}: PropsWithChildren<ProblemSetDetailsProps>) {
+export default function ProblemSetDetails() {
   return (
     <Page>
       <div className="flex items-start gap-x-4 lg:gap-x-8">

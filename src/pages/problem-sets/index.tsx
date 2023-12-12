@@ -1,7 +1,6 @@
 import { Page } from "@/components/Page";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ProblemSetCard } from "@/components/problems/ProblemSetCard";
-import Link from "next/link";
 
 export default function ProblemSets() {
   return (
