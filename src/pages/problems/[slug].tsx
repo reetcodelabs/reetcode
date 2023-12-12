@@ -11,6 +11,7 @@ import { Button } from "@/components/button";
 import { Select } from "@/components/select";
 import * as sandpackThemes from "@codesandbox/sandpack-themes";
 import { BookOpenIcon } from "@heroicons/react/24/outline";
+import { TestCases } from "@/components/problems/TestCases";
 
 const themes = [
   {
@@ -146,7 +147,7 @@ export default function ProblemEditor() {
 
   const isLoadingWindowSize = windowWidth === 0 && height === 0;
 
-  const defaultEditorHeight = questionContainerHeight * 0.6;
+  const defaultEditorHeight = questionContainerHeight * 0.3;
 
   const defaultPreviewHeight =
     questionContainerHeight - defaultEditorHeight - 12;
@@ -372,7 +373,7 @@ export default function ProblemEditor() {
 
             <div
               style={{ height: previewHeight }}
-              className="relative box-border w-full rounded-lg border-2 border-slate-900 bg-slate-900"
+              className="relative box-border w-full overflow-y-auto rounded-lg border-2 border-slate-900 bg-slate-900"
             >
               <div
                 className="absolute -top-2 h-2 w-full cursor-row-resize rounded-sm bg-indigo-500 opacity-0 transition ease-linear hover:opacity-100"
@@ -396,11 +397,7 @@ export default function ProblemEditor() {
                     name: "Test cases",
                     value: "test cases",
                     current: false,
-                    content: (
-                      <div className="prose prose-lg space-y-4">
-                        Test cases here
-                      </div>
-                    ),
+                    content: <TestCases />,
                   },
                 ]}
               />
