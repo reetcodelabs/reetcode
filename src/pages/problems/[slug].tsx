@@ -5,7 +5,7 @@ import {
   SandpackFileExplorer,
   SandpackTheme,
 } from "@codesandbox/sandpack-react";
-import { useEffect, useState } from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 import { Tabs } from "@/components/tabs";
 import { Button } from "@/components/button";
 import { Select } from "@/components/select";
@@ -190,7 +190,7 @@ export default function ProblemEditor() {
           >
             <div
               className="absolute -right-2 z-10 h-full w-2 cursor-col-resize rounded-sm bg-indigo-500 opacity-0 transition ease-linear hover:opacity-100"
-              onMouseDown={onQuestionAreaResize as any}
+              onMouseDown={onQuestionAreaResize as unknown as MouseEventHandler}
             ></div>
             <Tabs
               tabs={[
@@ -376,7 +376,7 @@ export default function ProblemEditor() {
             >
               <div
                 className="absolute -top-2 h-2 w-full cursor-row-resize rounded-sm bg-indigo-500 opacity-0 transition ease-linear hover:opacity-100"
-                onMouseDown={onResize as any}
+                onMouseDown={onResize as unknown as MouseEventHandler}
               ></div>
               <Tabs
                 tabs={[
