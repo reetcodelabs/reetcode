@@ -10,6 +10,7 @@ import { Tabs } from "@/components/tabs";
 import { Button } from "@/components/button";
 import { Select } from "@/components/select";
 import * as sandpackThemes from "@codesandbox/sandpack-themes";
+import { BookOpenIcon } from "@heroicons/react/24/outline";
 
 const themes = [
   {
@@ -84,6 +85,7 @@ function useWindowResized() {
     width: 0,
     height: 0,
   });
+
   useEffect(() => {
     function handleWindowResized() {
       setSize({ width: window.innerWidth, height: window.innerHeight });
@@ -99,32 +101,97 @@ function useWindowResized() {
   return size;
 }
 
+function useResize({
+  initialSize = { x: 0, y: 0 },
+}: {
+  initialSize?: { x: number; y: number };
+}) {
+  const [size, setSize] = useState(initialSize);
+
+  useEffect(() => {
+    if (size.y <= 0 || size.x <= 0) {
+      setSize(initialSize);
+    }
+  }, [initialSize]);
+
+  const onResize = (mouseDownEvent: MouseEvent) => {
+    const startSize = size;
+    const startPosition = { x: mouseDownEvent.pageX, y: mouseDownEvent.pageY };
+
+    function onMouseMove(mouseMoveEvent: MouseEvent) {
+      setSize((currentSize) => ({
+        x: startSize.x - startPosition.x + mouseMoveEvent.pageX,
+        y: startSize.y - startPosition.y + mouseMoveEvent.pageY,
+      }));
+    }
+
+    function onMouseUp() {
+      document.body.removeEventListener("mousemove", onMouseMove);
+      // uncomment the following line if not using `{ once: true }`
+      // document.body.removeEventListener("mouseup", onMouseUp);
+    }
+
+    document.body.addEventListener("mousemove", onMouseMove);
+    document.body.addEventListener("mouseup", onMouseUp, { once: true });
+  };
+
+  return { onResize, size };
+}
+
 export default function ProblemEditor() {
-  //   const { onResize } = useResize();
-  const { width, height } = useWindowResized();
+  const { width: windowWidth, height } = useWindowResized();
+
+  const questionContainerHeight = height - 70;
+  const defaultQuestionContainerWidth = windowWidth * 0.32; // 32% by default
+
+  const isLoadingWindowSize = windowWidth === 0 && height === 0;
+
+  const defaultEditorHeight = questionContainerHeight * 0.6;
+
+  const defaultPreviewHeight =
+    questionContainerHeight - defaultEditorHeight - 12;
+
+  const { onResize, size: previewSize } = useResize({
+    initialSize: { x: windowWidth, y: defaultPreviewHeight },
+  });
+
+  const { onResize: onQuestionAreaResize, size: questionAreaSize } = useResize({
+    initialSize: { x: defaultQuestionContainerWidth, y: height },
+  });
+
+  const questionContainerWidth = questionAreaSize.x;
+  const previewAndEditorContainerWidth = windowWidth - questionContainerWidth;
+
+  const editorHeight = previewSize.y - 36;
+
+  const previewHeight = questionContainerHeight - editorHeight - 16;
 
   const [theme, setTheme] = useState<SandpackTheme>(
     sandpackThemes.sandpackDark,
   );
 
-  const questionContainerHeight = height - 70;
-
-  const editorHeight = questionContainerHeight * 0.6;
-  const previewHeight = questionContainerHeight - editorHeight - 12;
-
-  console.log(theme);
+  if (isLoadingWindowSize) {
+    return <BookOpenIcon className="h-32 w-32" />;
+  }
 
   return (
     <div className="flex flex-col">
-      <main className="flex w-full flex-1 bg-slate-900 p-2">
+      <main className="flex w-full flex-1 bg-slate-800 p-2">
         <div
-          className="transition ease-linear"
-          style={{ width: "32%", height: questionContainerHeight }}
+          className="relative transition ease-linear"
+          style={{
+            width: questionContainerWidth,
+            height: questionContainerHeight,
+          }}
         >
           <div
-            className="h-full w-full overflow-y-auto rounded-lg border border-slate-50/[0.06] bg-slate-900"
+            className=" box-border h-full w-full overflow-y-auto rounded-lg border border-slate-50/[0.06] bg-slate-900"
             style={{ height: "calc(100vh - 4.25rem)" }}
           >
+            <div
+              className="absolute -right-2 z-10 h-full w-2 cursor-col-resize rounded-sm bg-indigo-500 opacity-0 transition ease-linear hover:opacity-100"
+              onMouseDown={onQuestionAreaResize as any}
+            ></div>
             <Tabs
               tabs={[
                 {
@@ -271,7 +338,10 @@ export default function ProblemEditor() {
             />
           </div>
         </div>
-        <div className="h-full pl-2" style={{ width: "68%" }}>
+        <div
+          className="relative h-full pl-2"
+          style={{ width: previewAndEditorContainerWidth }}
+        >
           <SandpackProvider template="react" className="h-full" theme={theme}>
             <div
               style={{ height: editorHeight }}
@@ -299,10 +369,15 @@ export default function ProblemEditor() {
                 <SandpackCodeEditor showLineNumbers className="rounded-lg" />
               </div>
             </div>
+
             <div
-              className="w-full rounded-lg border border-slate-50/[0.06] bg-slate-900"
               style={{ height: previewHeight }}
+              className="relative box-border w-full rounded-lg border-2 border-slate-900 bg-slate-900"
             >
+              <div
+                className="absolute -top-2 h-2 w-full cursor-row-resize rounded-sm bg-indigo-500 opacity-0 transition ease-linear hover:opacity-100"
+                onMouseDown={onResize as any}
+              ></div>
               <Tabs
                 tabs={[
                   {
