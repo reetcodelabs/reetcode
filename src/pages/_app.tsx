@@ -1,5 +1,5 @@
-import { type AppType } from "next/app";
-import { ClerkProvider } from "@clerk/nextjs";
+import { type AppProps } from "next/app";
+import { SessionProvider } from "next-auth/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { type ThemeProviderProps } from "next-themes/dist/types";
 
@@ -14,7 +14,10 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }
 
-const MyApp: AppType = ({ Component, pageProps }) => {
+const MyApp = ({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) => {
   const router = useRouter();
 
   const isChallengePage = router.pathname === "/challenges/[slug]";
@@ -22,11 +25,11 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   const Layout = isChallengePage ? Fragment : MainLayout;
 
   return (
-    <ClerkProvider>
+    <SessionProvider session={session}>
       <Layout>
         <Component {...pageProps} />
       </Layout>
-    </ClerkProvider>
+    </SessionProvider>
   );
 };
 

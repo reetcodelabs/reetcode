@@ -13,6 +13,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^1.0.11",
     "@aws-amplify/ui-react": "^6.0.3",
     "@clerk/nextjs": "^4.27.3",
     "@codesandbox/sandpack-react": "^2.10.0",
@@ -37,9 +38,11 @@
     "classnames": "^2.3.2",
     "clsx": "^2.0.0",
     "next": "^14.0.3",
+    "next-auth": "^4.24.5",
     "next-themes": "^0.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hot-toast": "^2.4.1",
     "superjson": "^2.2.1",
     "tailwind-merge": "^2.1.0",
     "tailwindcss-animate": "^1.0.7",

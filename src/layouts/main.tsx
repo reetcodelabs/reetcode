@@ -23,6 +23,9 @@ import {
 } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
 import classNames from "classnames";
+import { Modal } from "@/components/modal";
+import { SignInOrSignUp } from "@/components/signin";
+import { Toaster } from "react-hot-toast";
 
 const solutions = [
   {
@@ -123,8 +126,21 @@ export function MainLayout({ children }: PropsWithChildren) {
   const isHome = router.pathname === "/";
   const isProblemPage = router.pathname === "/problems/[slug]";
 
+  const openAuthenticationDialog = () => {
+    const { pathname, query } = router;
+    const params = new URLSearchParams(query as Record<string, string>);
+
+    params.append("signin", "true");
+
+    router.replace({ pathname, query: params.toString() }, undefined, {
+      shallow: true,
+    });
+  };
+
   return (
     <>
+      <Toaster position="bottom-center" />
+      <SignInOrSignUp />
       {isProblemPage ? null : (
         <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex justify-center overflow-hidden">
           <div className="flex w-[108rem] flex-none justify-end">
@@ -185,8 +201,17 @@ export function MainLayout({ children }: PropsWithChildren) {
             </div>
             <div className="flex lg:hidden">
               <button
+                onClick={() => openAuthenticationDialog()}
+                className="focused-link mr-6 text-sm font-semibold leading-6 text-white"
+              >
+                Log in or sign up
+                <span className="ml-1" aria-hidden="true">
+                  &rarr;
+                </span>
+              </button>
+              <button
                 type="button"
-                className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-white"
+                className="focused-link -m-2.5 inline-flex items-center justify-center p-1.5 text-white"
                 onClick={() => setMobileMenuOpen(true)}
               >
                 <span className="sr-only">Open main menu</span>
@@ -212,12 +237,12 @@ export function MainLayout({ children }: PropsWithChildren) {
               >
                 Join Premium
               </button>
-              <a
-                href="#"
+              <button
+                onClick={() => openAuthenticationDialog()}
                 className="text-sm font-semibold leading-6 text-white focus-within:outline-none focus-within:outline-offset-8 focus-within:outline-indigo-500"
               >
                 Log in or sign up<span aria-hidden="true">&rarr;</span>
-              </a>
+              </button>
             </div>
           </nav>
           <Dialog
@@ -229,7 +254,7 @@ export function MainLayout({ children }: PropsWithChildren) {
             <div className="fixed inset-0 z-50" />
             <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10">
               <div className="flex items-center justify-between">
-                <a href="#" className="-m-1.5 p-1.5">
+                <a href="#" className="focused-link -m-1.5 p-1.5">
                   <span className="sr-only">Your Company</span>
                   <img
                     className="h-8 w-auto"
@@ -239,7 +264,7 @@ export function MainLayout({ children }: PropsWithChildren) {
                 </a>
                 <button
                   type="button"
-                  className="-m-2.5 rounded-md p-2.5 text-white"
+                  className="focused-link -m-2.5 p-1.5 text-white"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <span className="sr-only">Close menu</span>
@@ -253,19 +278,16 @@ export function MainLayout({ children }: PropsWithChildren) {
                       <a
                         key={item.name}
                         href={item.href}
-                        className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-white hover:bg-gray-800"
+                        className="focused-link -mx-3 block px-3 py-2 text-base font-semibold leading-7 text-white hover:bg-gray-800"
                       >
                         {item.name}
                       </a>
                     ))}
                   </div>
                   <div className="py-6">
-                    <a
-                      href="#"
-                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
-                    >
+                    <button className="focused-link -mx-3 block px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800">
                       Log in
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
