@@ -1,3 +1,8 @@
+import {
+  GetServerSidePropsWithSession,
+  getServerSidePropsWithAuth,
+} from "@/server/auth";
+
 export default function HomePage() {
   return (
     <div className="relative isolate overflow-hidden pt-14">
@@ -68,3 +73,12 @@ export default function HomePage() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSidePropsWithSession = (ctx) =>
+  getServerSidePropsWithAuth(ctx, (ctx, session) => {
+    return {
+      props: {
+        session,
+      },
+    };
+  });

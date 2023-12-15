@@ -51,7 +51,7 @@ export function Tabs({ tabs = [] }: { tabs?: Tab[] }) {
                     <button
                       onClick={() => setCurrentIndex(idx)}
                       className={classNames(
-                        "focused-link transition ease-linear hover:text-white",
+                        "focused-link font-sans transition ease-linear hover:text-white",
                         {
                           "text-indigo-500": idx === currentIndex,
                         },

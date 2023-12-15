@@ -1,6 +1,10 @@
 import { Page } from "@/components/Page";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ProblemSetCard } from "@/components/problems/ProblemSetCard";
+import {
+  GetServerSidePropsWithSession,
+  getServerSidePropsWithAuth,
+} from "@/server/auth";
 
 export default function ProblemSets() {
   return (
@@ -25,3 +29,12 @@ export default function ProblemSets() {
     </Page>
   );
 }
+
+export const getServerSideProps: GetServerSidePropsWithSession = (ctx) =>
+  getServerSidePropsWithAuth(ctx, (ctx, session) => {
+    return {
+      props: {
+        session,
+      },
+    };
+  });

@@ -15,9 +15,11 @@ export function Modal({
   className,
   open,
   setOpen,
+  hideCloseIcon,
 }: PropsWithChildren<{
   className?: string;
   open?: boolean;
+  hideCloseIcon?: boolean;
   setOpen: (value: boolean) => void;
 }>) {
   return (
@@ -54,12 +56,14 @@ export function Modal({
                   ),
                 )}
               >
-                <button
-                  onClick={() => setOpen(false)}
-                  className="focused-link absolute right-4 top-8 flex items-center justify-center"
-                >
-                  <XMarkIcon className="h-5 w-5 stroke-current text-white" />
-                </button>
+                {hideCloseIcon ? null : (
+                  <button
+                    onClick={() => setOpen(false)}
+                    className="focused-link absolute right-4 top-8 flex items-center justify-center"
+                  >
+                    <XMarkIcon className="h-5 w-5 stroke-current text-white" />
+                  </button>
+                )}
                 {/* <div>
                   <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
                     <CheckIcon

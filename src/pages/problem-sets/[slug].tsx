@@ -1,6 +1,10 @@
 import { Page } from "@/components/Page";
 import { ProblemFilters } from "@/components/ProblemFilters";
 import { ProblemList } from "@/components/problems/ProblemList";
+import {
+  GetServerSidePropsWithSession,
+  getServerSidePropsWithAuth,
+} from "@/server/auth";
 import { BeakerIcon, ClockIcon } from "@heroicons/react/24/outline";
 
 export default function ProblemSetDetails() {
@@ -85,3 +89,12 @@ export default function ProblemSetDetails() {
     </Page>
   );
 }
+
+export const getServerSideProps: GetServerSidePropsWithSession = (ctx) =>
+  getServerSidePropsWithAuth(ctx, (ctx, session) => {
+    return {
+      props: {
+        session,
+      },
+    };
+  });

@@ -12,6 +12,10 @@ import { Select } from "@/components/select";
 import * as sandpackThemes from "@codesandbox/sandpack-themes";
 import { BookOpenIcon } from "@heroicons/react/24/outline";
 import { TestCases } from "@/components/problems/TestCases";
+import {
+  GetServerSidePropsWithSession,
+  getServerSidePropsWithAuth,
+} from "@/server/auth";
 
 const themes = [
   {
@@ -415,3 +419,12 @@ export default function ProblemEditor() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSidePropsWithSession = (ctx) =>
+  getServerSidePropsWithAuth(ctx, (ctx, session) => {
+    return {
+      props: {
+        session,
+      },
+    };
+  });

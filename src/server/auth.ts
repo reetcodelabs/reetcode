@@ -1,6 +1,10 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { GetServerSidePropsContext } from "next";
-import { DefaultSession, NextAuthOptions, getServerSession } from "next-auth";
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  GetServerSidePropsResult,
+} from "next";
+import { NextAuthOptions, Session, getServerSession } from "next-auth";
 
 import { SendVerificationRequestParams } from "next-auth/providers/email";
 import GithubProvider from "next-auth/providers/github";
@@ -8,18 +12,15 @@ import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "@/env";
 import { db } from "@/server/db";
-
-declare module "next-auth" {
-  interface Session {
-    user?: {
-      id: string;
-    } & DefaultSession["user"];
-  }
-}
+import { sendTransactionalEmail, MailcoachEmails } from "@/utils/mailcoach";
 
 export const authOptions = {
   // Configure one or more authentication providers
   adapter: PrismaAdapter(db),
+  session: {
+    strategy: "jwt",
+    maxAge: 180 * 24 * 60 * 60, // six months
+  },
   providers: [
     GithubProvider({
       clientId: env.GITHUB_CLIENT_ID,
@@ -32,8 +33,15 @@ export const authOptions = {
         identifier: email,
         url,
       }: SendVerificationRequestParams) {
-        // TODO: Send transactional email via mailcoach
-        console.log({ email, url });
+        await sendTransactionalEmail(
+          MailcoachEmails.EMAIL_VERIFICATION_LINK,
+          email,
+          {
+            emailVerificationLink: url,
+          },
+        );
+
+        console.log({ url, email });
       },
     } as any,
     GoogleProvider({
@@ -48,9 +56,36 @@ export const authOptions = {
   ],
 } satisfies NextAuthOptions;
 
-export const getServerAuthSession = (ctx: {
+export function getServerAuthSession(ctx: {
   req: GetServerSidePropsContext["req"];
   res: GetServerSidePropsContext["res"];
-}) => {
+}) {
   return getServerSession(ctx.req, ctx.res, authOptions);
-};
+}
+
+export type GetServerSidePropsWithSession<Props = Record<string, any>> =
+  GetServerSideProps<{ session: Session | null } & Props>;
+
+export async function getServerSidePropsWithAuth<
+  Props extends Record<string, any>,
+>(
+  ctx: GetServerSidePropsContext,
+  getServerSideProps: (
+    ctx: GetServerSidePropsContext,
+    session: Session | null,
+  ) => GetServerSidePropsResult<Props>,
+  mustBeAuthenticated?: boolean,
+): Promise<GetServerSidePropsResult<Props>> {
+  const session = await getServerAuthSession(ctx);
+
+  if (!session && mustBeAuthenticated) {
+    return {
+      redirect: {
+        destination: "/dashboard?signin=true",
+        statusCode: 301,
+      },
+    };
+  }
+
+  return getServerSideProps(ctx, session);
+}

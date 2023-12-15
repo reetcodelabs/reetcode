@@ -26,7 +26,7 @@ const MyApp = ({
 
   return (
     <SessionProvider session={session}>
-      <Layout>
+      <Layout session={session}>
         <Component {...pageProps} />
       </Layout>
     </SessionProvider>

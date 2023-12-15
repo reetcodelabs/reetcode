@@ -1,6 +1,10 @@
 import { ProblemFilters } from "@/components/ProblemFilters";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ProblemList } from "@/components/problems/ProblemList";
+import {
+  GetServerSidePropsWithSession,
+  getServerSidePropsWithAuth,
+} from "@/server/auth";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 
@@ -140,3 +144,12 @@ export default function Problems() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSidePropsWithSession = (ctx) =>
+  getServerSidePropsWithAuth(ctx, (ctx, session) => {
+    return {
+      props: {
+        session,
+      },
+    };
+  });

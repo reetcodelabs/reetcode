@@ -2,12 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --font-sans: "Inter var";
+html {
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01" !important;
 }
 
-html {
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
+:root {
+  --font-sans: "Inter var";
 }
 
 @layer base {

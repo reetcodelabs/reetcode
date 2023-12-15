@@ -1,6 +1,7 @@
 import Link from "next/link";
 import classnames from "classnames";
 import { PropsWithChildren } from "react";
+import Avatar from "avvvatars-react";
 
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
@@ -26,6 +27,9 @@ import classNames from "classnames";
 import { Modal } from "@/components/modal";
 import { SignInOrSignUp } from "@/components/signin";
 import { Toaster } from "react-hot-toast";
+import { useSession } from "next-auth/react";
+import { UserProfileDropdown } from "@/components/user-profile-dropdown";
+import { Session } from "next-auth";
 
 const solutions = [
   {
@@ -118,7 +122,10 @@ export function Navigation() {
   );
 }
 
-export function MainLayout({ children }: PropsWithChildren) {
+export function MainLayout({
+  children,
+  session,
+}: PropsWithChildren<{ session?: Session | null }>) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const router = useRouter();
@@ -137,9 +144,23 @@ export function MainLayout({ children }: PropsWithChildren) {
     });
   };
 
+  const LoginOrSignUpLink = session?.user ? (
+    <UserProfileDropdown session={session} />
+  ) : (
+    <button
+      onClick={() => openAuthenticationDialog()}
+      className="text-sm font-semibold leading-6 text-white focus-within:outline-none focus-within:outline-offset-8 focus-within:outline-indigo-500"
+    >
+      Log in or sign up
+      <span aria-hidden="true" className="ml-1">
+        &rarr;
+      </span>
+    </button>
+  );
+
   return (
     <>
-      <Toaster position="bottom-center" />
+      <Toaster position="bottom-center" toastOptions={{ duration: 6000 }} />
       <SignInOrSignUp />
       {isProblemPage ? null : (
         <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex justify-center overflow-hidden">
@@ -181,8 +202,8 @@ export function MainLayout({ children }: PropsWithChildren) {
           <nav
             className={classNames("flex items-center justify-between", {
               "p-6 md:px-8": isHome,
-              "px-6 py-4 md:px-0": !isHome && !isProblemPage,
-              "px-6 py-2 md:px-0": isProblemPage,
+              "px-6 py-4 xl:px-0": !isHome && !isProblemPage,
+              "px-6 py-2 xl:px-0": isProblemPage,
             })}
             aria-label="Global"
           >
@@ -200,15 +221,7 @@ export function MainLayout({ children }: PropsWithChildren) {
               </Link>
             </div>
             <div className="flex lg:hidden">
-              <button
-                onClick={() => openAuthenticationDialog()}
-                className="focused-link mr-6 text-sm font-semibold leading-6 text-white"
-              >
-                Log in or sign up
-                <span className="ml-1" aria-hidden="true">
-                  &rarr;
-                </span>
-              </button>
+              <div className="mr-3">{LoginOrSignUpLink}</div>
               <button
                 type="button"
                 className="focused-link -m-2.5 inline-flex items-center justify-center p-1.5 text-white"
@@ -237,12 +250,7 @@ export function MainLayout({ children }: PropsWithChildren) {
               >
                 Join Premium
               </button>
-              <button
-                onClick={() => openAuthenticationDialog()}
-                className="text-sm font-semibold leading-6 text-white focus-within:outline-none focus-within:outline-offset-8 focus-within:outline-indigo-500"
-              >
-                Log in or sign up<span aria-hidden="true">&rarr;</span>
-              </button>
+              {LoginOrSignUpLink}
             </div>
           </nav>
           <Dialog
