@@ -12,7 +12,7 @@ export function TestCases() {
         <p className="mt-1 text-xs text-slate-400">0/10 test cases passed.</p>
       </div>
       <div className="grid grid-cols-1 gap-y-2 pb-8">
-        {[1, 2, 3, 4, 5, 6, 7, 8].map((x, idx) => (
+        {[1, 2, 3, 4, 5, 6, 7, 8].map((x) => (
           <button
             className="focused-link w-full rounded-sm border border-slate-50/[0.06] bg-slate-800 p-3 focus-within:outline-offset-0"
             key={x}

@@ -1,5 +1,5 @@
 import {
-  GetServerSidePropsWithSession,
+  type GetServerSidePropsWithSession,
   getServerSidePropsWithAuth,
 } from "@/server/auth";
 

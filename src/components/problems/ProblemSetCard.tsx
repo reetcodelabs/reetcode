@@ -1,6 +1,6 @@
-import { BeakerIcon, ClockIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
+import { BeakerIcon, ClockIcon } from "@heroicons/react/24/outline";
 
 export interface ProblemSetCardProps {
   name?: string;

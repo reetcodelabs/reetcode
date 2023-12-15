@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { PropsWithChildren, ComponentPropsWithoutRef } from "react";
+import type { PropsWithChildren, ComponentPropsWithoutRef } from "react";
 
 import { twMerge as tw } from "tailwind-merge";
 export interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
@@ -14,11 +14,11 @@ export function Button({
   isLoading,
   ...rest
 }: PropsWithChildren<ButtonProps>) {
-  const isDisabled = isLoading || rest.disabled;
+  const isDisabled = isLoading ?? rest.disabled;
   return (
     <button
       type="button"
-      disabled={isLoading || rest.disabled}
+      disabled={isLoading ?? rest.disabled}
       className={tw(
         classNames(
           "rounded-sm  px-2.5 py-1.5 text-sm font-semibold  shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-8 ",

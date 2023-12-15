@@ -1,14 +1,19 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import {
+import type {
   GetServerSideProps,
   GetServerSidePropsContext,
   GetServerSidePropsResult,
 } from "next";
-import { NextAuthOptions, Session, getServerSession } from "next-auth";
+import {
+  type NextAuthOptions,
+  type Session,
+  getServerSession,
+} from "next-auth";
 
-import { SendVerificationRequestParams } from "next-auth/providers/email";
+import { type SendVerificationRequestParams } from "next-auth/providers/email";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+import { type EmailConfig } from "next-auth/providers/email";
 
 import { env } from "@/env";
 import { db } from "@/server/db";
@@ -22,10 +27,6 @@ export const authOptions = {
     maxAge: 180 * 24 * 60 * 60, // six months
   },
   providers: [
-    GithubProvider({
-      clientId: env.GITHUB_CLIENT_ID,
-      clientSecret: env.GITHUB_CLIENT_SECRET,
-    }),
     {
       id: "mailcoach",
       type: "email",
@@ -43,16 +44,15 @@ export const authOptions = {
 
         console.log({ url, email });
       },
-    } as any,
+    } as unknown as EmailConfig,
+    GithubProvider({
+      clientId: env.GITHUB_CLIENT_ID,
+      clientSecret: env.GITHUB_CLIENT_SECRET,
+    }),
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
-    // TwitterProvider({
-    //   clientId: "",
-    //   clientSecret: "",
-    // }),
-    // ...add more providers here
   ],
 } satisfies NextAuthOptions;
 
@@ -63,11 +63,12 @@ export function getServerAuthSession(ctx: {
   return getServerSession(ctx.req, ctx.res, authOptions);
 }
 
-export type GetServerSidePropsWithSession<Props = Record<string, any>> =
-  GetServerSideProps<{ session: Session | null } & Props>;
+export type GetServerSidePropsWithSession<
+  Props = Record<string, string | Session | null>,
+> = GetServerSideProps<{ session: Session | null } & Props>;
 
 export async function getServerSidePropsWithAuth<
-  Props extends Record<string, any>,
+  Props extends Record<string, string | Session | null>,
 >(
   ctx: GetServerSidePropsContext,
   getServerSideProps: (

@@ -9,6 +9,7 @@ import "@/styles/globals.css";
 import { MainLayout } from "@/layouts/main";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
+import { type Session } from "next-auth";
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
@@ -17,7 +18,7 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
 const MyApp = ({
   Component,
   pageProps: { session, ...pageProps },
-}: AppProps) => {
+}: AppProps<{ session?: Session | null }>) => {
   const router = useRouter();
 
   const isChallengePage = router.pathname === "/challenges/[slug]";

@@ -1,7 +1,7 @@
 import { Button } from "@/components/button";
 import { getServerSidePropsWithAuth } from "@/server/auth";
-import { GetServerSideProps } from "next";
-import { Session } from "next-auth";
+import { type GetServerSideProps } from "next";
+import { type Session } from "next-auth";
 
 export default function AccountSettings() {
   return (

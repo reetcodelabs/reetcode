@@ -3,9 +3,9 @@ import {
   SandpackCodeEditor,
   SandpackPreview,
   SandpackFileExplorer,
-  SandpackTheme,
+  type SandpackTheme,
 } from "@codesandbox/sandpack-react";
-import { MouseEventHandler, useEffect, useState } from "react";
+import { type MouseEventHandler, useEffect, useState } from "react";
 import { Tabs } from "@/components/tabs";
 import { Button } from "@/components/button";
 import { Select } from "@/components/select";
@@ -13,7 +13,7 @@ import * as sandpackThemes from "@codesandbox/sandpack-themes";
 import { BookOpenIcon } from "@heroicons/react/24/outline";
 import { TestCases } from "@/components/problems/TestCases";
 import {
-  GetServerSidePropsWithSession,
+  type GetServerSidePropsWithSession,
   getServerSidePropsWithAuth,
 } from "@/server/auth";
 
@@ -124,7 +124,7 @@ function useResize({
     const startPosition = { x: mouseDownEvent.pageX, y: mouseDownEvent.pageY };
 
     function onMouseMove(mouseMoveEvent: MouseEvent) {
-      setSize((currentSize) => ({
+      setSize(() => ({
         x: startSize.x - startPosition.x + mouseMoveEvent.pageX,
         y: startSize.y - startPosition.y + mouseMoveEvent.pageY,
       }));

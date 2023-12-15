@@ -1,22 +1,18 @@
-import Link from "next/link";
 import { Modal } from "./modal";
 import { Button } from "./button";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
   CheckIcon,
-  XCircleIcon,
 } from "@heroicons/react/24/outline";
-import { FormEventHandler, useState } from "react";
+import { type FormEventHandler } from "react";
 import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
 
-import { signIn, getProviders } from "next-auth/react";
-import classNames from "classnames";
+import { signIn } from "next-auth/react";
 import { Alert } from "./Notification";
 import { useMutation } from "@tanstack/react-query";
 import { RenderIf } from "./RenderIf";
-import { ArrowLeftCircleIcon } from "@heroicons/react/20/solid";
 
 const providers = [
   { name: "Github", icon: "https://img.clerk.com/static/github.svg?width=160" },
@@ -31,54 +27,50 @@ export function SignInOrSignUp() {
 
   const open = router.query?.signin == "true";
 
-  const signinViaEmailMutation = useMutation<unknown, Error, { email: string }>(
-    {
-      async mutationFn({ email }) {
-        const callbackUrl = window.location.pathname.replace("signin=true", "");
+  const signinViaEmailMutation = useMutation<void, Error, { email: string }>({
+    async mutationFn({ email }) {
+      const callbackUrl = window.location.pathname.replace("signin=true", "");
 
-        const response = await signIn("mailcoach", {
-          email,
-          redirect: false,
-          callbackUrl,
-        });
+      const response = await signIn("mailcoach", {
+        email,
+        redirect: false,
+        callbackUrl,
+      });
 
-        if (response?.error) {
-          throw new Error(
-            "We couldn't send you a magic link. Please try again or try another login method if this keeps happening.",
-          );
-        }
-
-        return response?.url as string;
-      },
-      onError(error) {
-        toast.custom(
-          ({ visible }) => (
-            <Alert
-              variant="error"
-              title="Failed to log in via email."
-              description={error?.message}
-              className={visible ? "animate-enter" : "animate-leave"}
-            />
-          ),
-          { position: "top-center" },
+      if (response?.error) {
+        throw new Error(
+          "We couldn't send you a magic link. Please try again or try another login method if this keeps happening.",
         );
-      },
+      }
     },
-  );
+    onError(error) {
+      toast.custom(
+        ({ visible }) => (
+          <Alert
+            variant="error"
+            title="Failed to log in via email."
+            description={error?.message}
+            className={visible ? "animate-enter" : "animate-leave"}
+          />
+        ),
+        { position: "top-center" },
+      );
+    },
+  });
 
-  const setOpen = (closed: boolean) => {
+  const setOpen = () => {
     const { pathname, query } = router;
 
     const params = new URLSearchParams(query as Record<string, string>);
 
     params.delete("signin");
 
-    router.replace({ pathname, query: params.toString() }, undefined, {
+    void router.replace({ pathname, query: params.toString() }, undefined, {
       shallow: true,
     });
   };
 
-  const onEmailSubmit: FormEventHandler = async (submitEvent) => {
+  const onEmailSubmit: FormEventHandler = (submitEvent) => {
     submitEvent.preventDefault();
 
     const email = (

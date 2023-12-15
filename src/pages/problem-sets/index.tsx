@@ -2,7 +2,7 @@ import { Page } from "@/components/Page";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ProblemSetCard } from "@/components/problems/ProblemSetCard";
 import {
-  GetServerSidePropsWithSession,
+  type GetServerSidePropsWithSession,
   getServerSidePropsWithAuth,
 } from "@/server/auth";
 

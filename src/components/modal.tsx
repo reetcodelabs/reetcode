@@ -1,14 +1,8 @@
-import {
-  Dispatch,
-  Fragment,
-  PropsWithChildren,
-  SetStateAction,
-  useState,
-} from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import { twMerge as tw } from "tailwind-merge";
+import { Fragment, type PropsWithChildren } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export function Modal({
   children,

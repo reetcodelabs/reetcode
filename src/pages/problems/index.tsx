@@ -2,10 +2,9 @@ import { ProblemFilters } from "@/components/ProblemFilters";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ProblemList } from "@/components/problems/ProblemList";
 import {
-  GetServerSidePropsWithSession,
+  type GetServerSidePropsWithSession,
   getServerSidePropsWithAuth,
 } from "@/server/auth";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 
 const stats = [

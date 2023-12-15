@@ -13,7 +13,7 @@ import { ZodError } from "zod";
 
 import { db } from "@/server/db";
 import { getServerAuthSession } from "@/server/auth";
-import { Session } from "next-auth";
+import { type Session } from "next-auth";
 
 /**
  * 1. CONTEXT
@@ -94,7 +94,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
 export const createTRPCRouter = t.router;
 
 const isAuthenticated = t.middleware(({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user) {
+  if (!ctx?.session?.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 

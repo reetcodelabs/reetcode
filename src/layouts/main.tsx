@@ -1,7 +1,6 @@
 import Link from "next/link";
 import classnames from "classnames";
-import { PropsWithChildren } from "react";
-import Avatar from "avvvatars-react";
+import type { PropsWithChildren } from "react";
 
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
@@ -24,12 +23,10 @@ import {
 } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
 import classNames from "classnames";
-import { Modal } from "@/components/modal";
 import { SignInOrSignUp } from "@/components/signin";
-import { Toaster } from "react-hot-toast";
-import { useSession } from "next-auth/react";
 import { UserProfileDropdown } from "@/components/user-profile-dropdown";
-import { Session } from "next-auth";
+import { Toaster } from "react-hot-toast";
+import { type Session } from "next-auth";
 
 const solutions = [
   {
@@ -139,7 +136,7 @@ export function MainLayout({
 
     params.append("signin", "true");
 
-    router.replace({ pathname, query: params.toString() }, undefined, {
+    void router.replace({ pathname, query: params.toString() }, undefined, {
       shallow: true,
     });
   };
