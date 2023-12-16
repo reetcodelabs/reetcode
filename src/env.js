@@ -7,7 +7,7 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    DATABASE_URL: z
+    DATABASE_PRISMA_URL: z
       .string()
       .url()
       .refine(
@@ -45,7 +45,7 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
-    DATABASE_URL: process.env.DATABASE_URL,
+    DATABASE_PRISMA_URL: process.env.DATABASE_PRISMA_URL,
     DATABASE_URL_NON_POOLING: process.env.DATABASE_URL_NON_POOLING,
     NODE_ENV: process.env.NODE_ENV,
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
