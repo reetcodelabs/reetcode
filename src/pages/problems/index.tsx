@@ -5,6 +5,7 @@ import {
   type GetServerSidePropsWithSession,
   getServerSidePropsWithAuth,
 } from "@/server/auth";
+import { withIronSessionSsr } from "@/utils/session";
 import Link from "next/link";
 
 const stats = [
@@ -144,11 +145,12 @@ export default function Problems() {
   );
 }
 
-export const getServerSideProps: GetServerSidePropsWithSession = (ctx) =>
-  getServerSidePropsWithAuth(ctx, (ctx, session) => {
+export const getServerSideProps = withIronSessionSsr(
+  async function getServerSideProps(ctx) {
     return {
       props: {
-        session,
+        session: ctx.req.session,
       },
     };
-  });
+  },
+);

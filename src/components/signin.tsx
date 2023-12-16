@@ -9,6 +9,8 @@ import { type FormEventHandler } from "react";
 import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
 
+import { axiosClient } from "@/utils/axios";
+
 import { signIn } from "next-auth/react";
 import { Alert } from "./Notification";
 import { useMutation } from "@tanstack/react-query";
@@ -29,27 +31,24 @@ export function SignInOrSignUp() {
 
   const signinViaEmailMutation = useMutation<void, Error, { email: string }>({
     async mutationFn({ email }) {
-      const callbackUrl = window.location.pathname.replace("signin=true", "");
+      const callbackURL = window.location.pathname.replace("signin=true", "");
 
-      const response = await signIn("mailcoach", {
+      const response = await axiosClient.post("accounts/send-magic-link", {
         email,
-        redirect: false,
-        callbackUrl,
+        callbackURL,
       });
 
-      if (response?.error) {
-        throw new Error(
-          "We couldn't send you a magic link. Please try again or try another login method if this keeps happening.",
-        );
-      }
+      return response.data;
     },
-    onError(error) {
+    onError() {
       toast.custom(
         ({ visible }) => (
           <Alert
             variant="error"
             title="Failed to log in via email."
-            description={error?.message}
+            description={
+              "We couldn't send you a magic link. Please try again or try another login method if this keeps happening."
+            }
             className={visible ? "animate-enter" : "animate-leave"}
           />
         ),
@@ -176,7 +175,6 @@ export function SignInOrSignUp() {
                 name="email"
                 autoFocus
                 required
-                defaultValue="bahdcoder@gmail.com"
                 className="block w-full rounded-md border-0 bg-slate-900 py-2 text-white shadow-sm ring-1 ring-inset ring-slate-50/[0.15] placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 placeholder="you@example.com"
               />
@@ -186,7 +184,7 @@ export function SignInOrSignUp() {
           <Button
             type="submit"
             isLoading={signinViaEmailMutation.isLoading}
-            className="mt-4 w-full font-normal focus-visible:outline-offset-2"
+            className="mt-4 w-full py-2 font-normal focus-visible:outline-offset-2"
           >
             Continue
           </Button>

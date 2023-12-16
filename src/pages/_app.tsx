@@ -1,5 +1,6 @@
+import { Fragment } from "react";
 import { type AppProps } from "next/app";
-import { SessionProvider } from "next-auth/react";
+import { useRouter } from "next/router";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { type ThemeProviderProps } from "next-themes/dist/types";
 
@@ -7,9 +8,8 @@ import { api } from "@/utils/api";
 
 import "@/styles/globals.css";
 import { MainLayout } from "@/layouts/main";
-import { useRouter } from "next/router";
-import { Fragment } from "react";
-import { type Session } from "next-auth";
+import { Flash } from "@/components/flash";
+import { IronSessionData } from "iron-session";
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
@@ -18,7 +18,7 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
 const MyApp = ({
   Component,
   pageProps: { session, ...pageProps },
-}: AppProps<{ session?: Session | null }>) => {
+}: AppProps<{ session?: IronSessionData | null }>) => {
   const router = useRouter();
 
   const isChallengePage = router.pathname === "/challenges/[slug]";
@@ -26,11 +26,10 @@ const MyApp = ({
   const Layout = isChallengePage ? Fragment : MainLayout;
 
   return (
-    <SessionProvider session={session}>
-      <Layout session={session}>
-        <Component {...pageProps} />
-      </Layout>
-    </SessionProvider>
+    <Layout session={session}>
+      <Flash />
+      <Component {...{ session, ...pageProps }} />
+    </Layout>
   );
 };
 

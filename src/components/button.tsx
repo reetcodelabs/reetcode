@@ -1,46 +1,72 @@
 import classNames from "classnames";
-import type { PropsWithChildren, ComponentPropsWithoutRef } from "react";
+import Link from "next/link";
+
+import type {
+  PropsWithChildren,
+  ComponentPropsWithoutRef,
+  Component,
+  FunctionComponent,
+} from "react";
 
 import { twMerge as tw } from "tailwind-merge";
 export interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
   variant?: "primary" | "secondary";
   isLoading?: boolean;
+  as?: "link" | "button";
+  href?: string;
+  target?: "_blank";
 }
 
 export function Button({
   children,
   className,
+  target,
   variant = "primary",
   isLoading,
+  href,
+  as = "button",
   ...rest
 }: PropsWithChildren<ButtonProps>) {
   const isDisabled = isLoading ?? rest.disabled;
+
+  const Element = (as === "button"
+    ? "button"
+    : Link) as unknown as FunctionComponent<ButtonProps>;
+
+  const buttonProps: ComponentPropsWithoutRef<"button"> = {
+    type: "button",
+    disabled: isLoading ?? rest.disabled,
+    className: tw(
+      classNames(
+        "rounded-sm  px-2.5 py-1.5 text-sm font-semibold  shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-8 ",
+        {
+          "bg-indigo-600 text-white  hover:bg-indigo-500 focus-visible:outline-indigo-500":
+            variant === "primary" && !isDisabled,
+          "bg-indigo-400 text-white": variant === "primary" && isDisabled,
+          "cursor-not-allowed": isDisabled,
+          " border border-slate-50/[0.06] text-white hover:bg-slate-800":
+            variant === "secondary",
+          "flex items-center justify-center": isLoading,
+        },
+        className,
+      ),
+    ),
+    ...rest,
+  };
+
+  const hrefProps = {
+    href,
+    target,
+    className: buttonProps.className,
+  };
+
   return (
-    <button
-      type="button"
-      disabled={isLoading ?? rest.disabled}
-      className={tw(
-        classNames(
-          "rounded-sm  px-2.5 py-1.5 text-sm font-semibold  shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-8 ",
-          {
-            "bg-indigo-500 text-white  hover:bg-indigo-400 focus-visible:outline-indigo-500":
-              variant === "primary" && !isDisabled,
-            "bg-indigo-400 text-white": variant === "primary" && isDisabled,
-            "cursor-not-allowed": isDisabled,
-            " border border-slate-50/[0.06] text-white hover:bg-slate-800":
-              variant === "secondary",
-            "flex items-center justify-center": isLoading,
-          },
-          className,
-        ),
-      )}
-      {...rest}
-    >
+    <Element {...(as === "button" ? buttonProps : hrefProps)}>
       {isLoading ? (
         <div role="status">
           <svg
             aria-hidden="true"
-            className="animate-spin-fast h-4 w-4 fill-indigo-400 text-white"
+            className="h-4 w-4 animate-spin-fast fill-indigo-400 text-white"
             viewBox="0 0 100 101"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -58,6 +84,6 @@ export function Button({
         </div>
       ) : null}
       {isLoading ? null : children}
-    </button>
+    </Element>
   );
 }

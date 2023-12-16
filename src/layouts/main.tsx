@@ -26,7 +26,11 @@ import classNames from "classnames";
 import { SignInOrSignUp } from "@/components/signin";
 import { UserProfileDropdown } from "@/components/user-profile-dropdown";
 import { Toaster } from "react-hot-toast";
-import { type Session } from "next-auth";
+import { useSignInPopup } from "@/hooks/useSignInPopup";
+import { IronSessionData } from "iron-session";
+import { Banner } from "@/components/banner";
+import { useSession } from "@/hooks/useSession";
+import { RenderIf } from "@/components/RenderIf";
 
 const solutions = [
   {
@@ -122,8 +126,11 @@ export function Navigation() {
 export function MainLayout({
   children,
   session,
-}: PropsWithChildren<{ session?: Session | null }>) {
+}: PropsWithChildren<{ session?: IronSessionData | null }>) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const { openSignInPopup } = useSignInPopup();
+  const { subscription } = useSession({ session });
 
   const router = useRouter();
 
@@ -131,18 +138,13 @@ export function MainLayout({
   const isProblemPage = router.pathname === "/problems/[slug]";
 
   const openAuthenticationDialog = () => {
-    const { pathname, query } = router;
-    const params = new URLSearchParams(query as Record<string, string>);
-
-    params.append("signin", "true");
-
-    void router.replace({ pathname, query: params.toString() }, undefined, {
-      shallow: true,
-    });
+    openSignInPopup();
   };
 
   const LoginOrSignUpLink = session?.user ? (
-    <UserProfileDropdown session={session} />
+    <>
+      <UserProfileDropdown session={session} />
+    </>
   ) : (
     <button
       onClick={() => openAuthenticationDialog()}
@@ -155,8 +157,26 @@ export function MainLayout({
     </button>
   );
 
+  const hasBanner = subscription?.isExpiringSoon || subscription?.isExpired;
+
   return (
     <>
+      <RenderIf if={!isProblemPage}>
+        {subscription?.isExpiringSoon || subscription?.isExpired ? (
+          <Banner
+            title={
+              subscription?.isExpired
+                ? `Your subscription expired ${Math.abs(
+                    subscription?.daysUntilExpiry,
+                  )} days ago.`
+                : `Your subscription expires in ${subscription?.daysUntilExpiry} days.`
+            }
+            content="Renew your subscription now"
+            href="/pricing"
+            variant={subscription?.isExpired ? "danger" : "info"}
+          />
+        ) : null}
+      </RenderIf>
       <Toaster position="bottom-center" toastOptions={{ duration: 6000 }} />
       <SignInOrSignUp />
       {isProblemPage ? null : (
@@ -188,6 +208,7 @@ export function MainLayout({
           "supports-backdrop-blur:bg-transparent sticky border-b border-slate-50/[0.06] backdrop-blur":
             !isHome,
           "absolute ": isHome,
+          "pt-8": hasBanner && isHome,
         })}
       >
         <header
@@ -241,12 +262,14 @@ export function MainLayout({
               <Navigation />
             </div>
             <div className="hidden items-center gap-x-6 lg:flex lg:flex-1 lg:justify-end">
-              <button
-                type="button"
-                className="rounded-sm bg-indigo-500 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-indigo-500"
-              >
-                Join Premium
-              </button>
+              {session?.user?.subscription ? null : (
+                <Link
+                  href="/pricing"
+                  className="rounded-sm bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-indigo-500"
+                >
+                  Join Premium
+                </Link>
+              )}
               {LoginOrSignUpLink}
             </div>
           </nav>

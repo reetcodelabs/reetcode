@@ -3,6 +3,8 @@ import type {
   GetServerSideProps,
   GetServerSidePropsContext,
   GetServerSidePropsResult,
+  NextApiRequest,
+  NextApiResponse,
 } from "next";
 import {
   type NextAuthOptions,
@@ -10,13 +12,16 @@ import {
   getServerSession,
 } from "next-auth";
 
-import { type SendVerificationRequestParams } from "next-auth/providers/email";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
-import { type EmailConfig } from "next-auth/providers/email";
+import type {
+  EmailConfig,
+  SendVerificationRequestParams,
+} from "next-auth/providers/email";
 
 import { env } from "@/env";
 import { db } from "@/server/db";
+
 import { sendTransactionalEmail, MailcoachEmails } from "@/utils/mailcoach";
 
 export const authOptions = {
@@ -54,6 +59,14 @@ export const authOptions = {
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
   ],
+  callbacks: {
+    session({ session, token, user }) {
+      return session;
+    },
+    jwt({ account, profile, token }) {
+      return token;
+    },
+  },
 } satisfies NextAuthOptions;
 
 export function getServerAuthSession(ctx: {
@@ -89,4 +102,29 @@ export async function getServerSidePropsWithAuth<
   }
 
   return getServerSideProps(ctx, session);
+}
+
+export function unauthenticatedResponse(response: NextApiResponse) {
+  return response.status(401).json({
+    message: "Unauthenticated.",
+  });
+}
+
+export function invalidPayloadResponse(
+  response: NextApiResponse,
+  errors?: Record<string, string>,
+) {
+  return response.status(422).json({
+    message: "Invalid data provided.",
+    ...errors,
+  });
+}
+
+export async function getAuthSession(
+  request: NextApiRequest,
+  response: NextApiResponse,
+) {
+  const session = await getServerSession(request, response, authOptions);
+
+  return session;
 }

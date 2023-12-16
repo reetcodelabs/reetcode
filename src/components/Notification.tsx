@@ -13,7 +13,7 @@ export function Alert({ className, variant, title, description }: AlertProps) {
   return (
     <div
       className={classNames(
-        "rounded-md p-4 transition ease-linear",
+        "min-w-[32rem] rounded-md p-4 transition ease-linear",
         {
           "bg-red-600": variant === "error",
           "bg-green-600": variant === "success",
