@@ -26,7 +26,7 @@ export const env = createEnv({
     PAYSTACK_SECRET_KEY: z.string(),
     NEXTAUTH_SECRET: z.string(),
     IRON_SESSION_PASSWORD: z.string(),
-    JWT_SECRET: z.string(),
+
     APP_URL: z.string(),
   },
 
@@ -58,7 +58,7 @@ export const env = createEnv({
     NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY:
       process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
     IRON_SESSION_PASSWORD: process.env.IRON_SESSION_PASSWORD,
-    JWT_SECRET: process.env.JWT_SECRET,
+
     APP_URL: process.env.APP_URL,
   },
   /**
