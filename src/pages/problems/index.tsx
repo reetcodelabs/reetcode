@@ -1,10 +1,7 @@
 import { ProblemFilters } from "@/components/ProblemFilters";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ProblemList } from "@/components/problems/ProblemList";
-import {
-  type GetServerSidePropsWithSession,
-  getServerSidePropsWithAuth,
-} from "@/server/auth";
+
 import { withIronSessionSsr } from "@/utils/session";
 import Link from "next/link";
 

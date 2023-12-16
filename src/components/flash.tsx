@@ -15,7 +15,7 @@ export function Flash() {
     const errorMessage = params.get("errorMessage");
     const successMessage = params.get("successMessage");
 
-    if (successMessage || errorMessage) {
+    if (successMessage ?? errorMessage) {
       toast.custom(
         ({ visible }) => (
           <Alert

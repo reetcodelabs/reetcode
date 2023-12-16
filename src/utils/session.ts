@@ -1,4 +1,4 @@
-import { GetServerSideProps, type NextApiHandler } from "next";
+import { type GetServerSideProps, type NextApiHandler } from "next";
 import { type IronSessionOptions } from "iron-session";
 
 import { type Subscription } from "@prisma/client";

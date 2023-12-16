@@ -1,19 +1,14 @@
 import { Fragment } from "react";
 import { type AppProps } from "next/app";
 import { useRouter } from "next/router";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { type ThemeProviderProps } from "next-themes/dist/types";
 
 import { api } from "@/utils/api";
 
 import "@/styles/globals.css";
+
 import { MainLayout } from "@/layouts/main";
 import { Flash } from "@/components/flash";
-import { IronSessionData } from "iron-session";
-
-export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
-}
+import { type IronSessionData } from "iron-session";
 
 const MyApp = ({
   Component,

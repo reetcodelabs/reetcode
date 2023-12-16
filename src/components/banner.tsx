@@ -1,6 +1,6 @@
 import Link from "next/link";
 import classNames from "classnames";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
 interface BannerProps {
   variant?: "info" | "danger" | "warning";

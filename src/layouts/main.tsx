@@ -27,7 +27,8 @@ import { SignInOrSignUp } from "@/components/signin";
 import { UserProfileDropdown } from "@/components/user-profile-dropdown";
 import { Toaster } from "react-hot-toast";
 import { useSignInPopup } from "@/hooks/useSignInPopup";
-import { IronSessionData } from "iron-session";
+import { type IronSessionData } from "iron-session";
+
 import { Banner } from "@/components/banner";
 import { useSession } from "@/hooks/useSession";
 import { RenderIf } from "@/components/RenderIf";

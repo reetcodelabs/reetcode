@@ -1,10 +1,7 @@
 import { Page } from "@/components/Page";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ProblemSetCard } from "@/components/problems/ProblemSetCard";
-import {
-  type GetServerSidePropsWithSession,
-  getServerSidePropsWithAuth,
-} from "@/server/auth";
+
 import { withIronSessionSsr } from "@/utils/session";
 
 export default function ProblemSets() {

@@ -1,15 +1,13 @@
 import { z } from "zod";
 import dayjs from "dayjs";
 import Crypto from "crypto";
-import Jwt from "jsonwebtoken";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { invalidPayloadResponse } from "@/server/auth";
 
 import { db } from "@/server/db";
 
 import { env } from "@/env";
 
-import { createToken } from "@/utils/jwt";
 import { MailcoachEmails, sendTransactionalEmail } from "@/utils/mailcoach";
 
 export const SendMagicLinkValidationSchema = z.object({

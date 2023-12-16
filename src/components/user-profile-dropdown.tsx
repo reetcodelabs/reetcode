@@ -6,9 +6,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { useMutation } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
-import { useRouter } from "next/router";
-import { signOut } from "next-auth/react";
-import { IronSessionData } from "iron-session";
+import { type IronSessionData } from "iron-session";
 
 import { Alert } from "./Notification";
 import { axiosClient } from "@/utils/axios";
@@ -23,8 +21,6 @@ interface UserProfileDropdownProps {
 }
 
 export function UserProfileDropdown({ session }: UserProfileDropdownProps) {
-  const router = useRouter();
-
   const signOutMutation = useMutation({
     async mutationFn() {
       await axiosClient.post("/accounts/signout");

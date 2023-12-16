@@ -12,10 +12,7 @@ import { Select } from "@/components/select";
 import * as sandpackThemes from "@codesandbox/sandpack-themes";
 import { BookOpenIcon } from "@heroicons/react/24/outline";
 import { TestCases } from "@/components/problems/TestCases";
-import {
-  type GetServerSidePropsWithSession,
-  getServerSidePropsWithAuth,
-} from "@/server/auth";
+
 import { withIronSessionSsr } from "@/utils/session";
 
 const themes = [

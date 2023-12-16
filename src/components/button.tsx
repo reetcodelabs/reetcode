@@ -4,7 +4,6 @@ import Link from "next/link";
 import type {
   PropsWithChildren,
   ComponentPropsWithoutRef,
-  Component,
   FunctionComponent,
 } from "react";
 

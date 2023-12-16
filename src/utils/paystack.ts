@@ -32,7 +32,7 @@ export async function verifyTransactionReference(
 ): Promise<Partial<PaystackTransaction>> {
   try {
     const response = await paystackAxiosClient.get<{
-      status: Boolean;
+      status: boolean;
       data: PaystackTransaction;
     }>(`/transaction/verify/${reference}`);
 

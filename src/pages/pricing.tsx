@@ -4,23 +4,17 @@ import { RadioGroup } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/20/solid";
 
 import { Button } from "@/components/button";
-import {
-  type GetServerSidePropsWithSession,
-  getServerSidePropsWithAuth,
-} from "@/server/auth";
-import { Session } from "next-auth";
 
 import { env } from "@/env";
 
 import { usePaystackPayment } from "react-paystack";
-import { useRouter } from "next/router";
 import { useSignInPopup } from "@/hooks/useSignInPopup";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { Alert } from "@/components/Notification";
 import { withIronSessionSsr } from "@/utils/session";
 import { axiosClient } from "@/utils/axios";
-import { IronSessionData } from "iron-session";
+import { type IronSessionData } from "iron-session";
 import { useSession } from "@/hooks/useSession";
 import { RenderIf } from "@/components/RenderIf";
 import dayjs from "dayjs";
@@ -122,19 +116,19 @@ export default function PricingPage({ session }: PricingPageProps) {
   const initializeMonthlyPayment = usePaystackPayment({
     publicKey: env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
     email: session?.user?.email ?? "",
-    amount: pricingAmounts["monthly"],
+    amount: pricingAmounts.monthly,
   });
 
   const initializeAnnuallyPayment = usePaystackPayment({
     publicKey: env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
     email: session?.user?.email ?? "",
-    amount: pricingAmounts["annually"],
+    amount: pricingAmounts.annually,
   });
 
   const initializeLifetimePayment = usePaystackPayment({
     publicKey: env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
     email: session?.user?.email ?? "",
-    amount: pricingAmounts["lifetime"],
+    amount: pricingAmounts.lifetime,
   });
 
   function onSubscribe(plan: SubscriptionPlan) {
@@ -230,7 +224,7 @@ export default function PricingPage({ session }: PricingPageProps) {
               role="list"
               className="mt-8 space-y-3 text-sm leading-6 text-slate-400 xl:mt-10"
             >
-              {freePlanFeatures.map((feature: any) => (
+              {freePlanFeatures.map((feature) => (
                 <li key={feature} className="flex gap-x-3">
                   <CheckIcon
                     className="h-6 w-5 flex-none text-white"
@@ -328,7 +322,7 @@ export default function PricingPage({ session }: PricingPageProps) {
               role="list"
               className="mt-4 space-y-3 text-sm leading-6 text-slate-400 xl:mt-6"
             >
-              {premiumPlanFeatures.map((feature: any) => (
+              {premiumPlanFeatures.map((feature) => (
                 <li key={feature} className="flex gap-x-3">
                   <CheckIcon
                     className="h-6 w-5 flex-none text-white"

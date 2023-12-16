@@ -60,10 +60,10 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    session({ session, token, user }) {
+    session({ session }) {
       return session;
     },
-    jwt({ account, profile, token }) {
+    jwt({ token }) {
       return token;
     },
   },

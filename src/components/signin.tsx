@@ -1,5 +1,3 @@
-import { Modal } from "./modal";
-import { Button } from "./button";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -8,13 +6,14 @@ import {
 import { type FormEventHandler } from "react";
 import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
 
 import { axiosClient } from "@/utils/axios";
 
-import { signIn } from "next-auth/react";
-import { Alert } from "./Notification";
-import { useMutation } from "@tanstack/react-query";
+import { Modal } from "./modal";
+import { Button } from "./button";
 import { RenderIf } from "./RenderIf";
+import { Alert } from "./Notification";
 
 const providers = [
   { name: "Github", icon: "https://img.clerk.com/static/github.svg?width=160" },
@@ -29,14 +28,21 @@ export function SignInOrSignUp() {
 
   const open = router.query?.signin == "true";
 
-  const signinViaEmailMutation = useMutation<void, Error, { email: string }>({
+  const signinViaEmailMutation = useMutation<
+    { message: string },
+    Error,
+    { email: string }
+  >({
     async mutationFn({ email }) {
       const callbackURL = window.location.pathname.replace("signin=true", "");
 
-      const response = await axiosClient.post("accounts/send-magic-link", {
-        email,
-        callbackURL,
-      });
+      const response = await axiosClient.post<{ message: string }>(
+        "accounts/send-magic-link",
+        {
+          email,
+          callbackURL,
+        },
+      );
 
       return response.data;
     },

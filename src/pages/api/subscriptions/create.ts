@@ -1,11 +1,7 @@
 import { z } from "zod";
 import dayjs from "dayjs";
-import { NextApiRequest, NextApiResponse } from "next";
-import {
-  getAuthSession,
-  invalidPayloadResponse,
-  unauthenticatedResponse,
-} from "@/server/auth";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { invalidPayloadResponse, unauthenticatedResponse } from "@/server/auth";
 
 import { db } from "@/server/db";
 import { verifyTransactionReference } from "@/utils/paystack";

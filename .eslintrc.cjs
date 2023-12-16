@@ -32,6 +32,8 @@ const config = {
       },
     ],
     "@next/next/no-img-element": "off",
+    "@typescript-eslint/unbound-method": "off",
+    "@typescript-eslint/consistent-indexed-object-style": "off",
   },
 };
 

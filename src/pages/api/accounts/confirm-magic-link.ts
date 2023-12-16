@@ -1,6 +1,6 @@
 import { z } from "zod";
 import dayjs from "dayjs";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 import { db } from "@/server/db";
 
@@ -21,7 +21,7 @@ export async function confirmMagicLink(
     return response.redirect(
       301,
       `${
-        request.query?.callbackURL || "/"
+        (request.query?.callbackURL as string) ?? "/"
       }?errorMessage=Your magic link was invalid. Please try to login again.`,
     );
   }
@@ -36,7 +36,7 @@ export async function confirmMagicLink(
     return response.redirect(
       301,
       `${
-        validation.data.callbackURL || "/"
+        validation.data.callbackURL ?? "/"
       }?errorMessage=Your magic link was invalid. Please try to login again.s`,
     );
   }
@@ -47,7 +47,7 @@ export async function confirmMagicLink(
     return response.redirect(
       301,
       `${
-        validation.data.callbackURL || "/"
+        validation.data.callbackURL ?? "/"
       }?errorMessage=Your magic link has expired. Please try to login again.`,
     );
   }
@@ -83,7 +83,7 @@ export async function confirmMagicLink(
   return response.redirect(
     301,
     `${
-      validation.data.callbackURL || ""
+      validation.data.callbackURL ?? ""
     }?successMessage=Successfully logged in.`,
   );
 }

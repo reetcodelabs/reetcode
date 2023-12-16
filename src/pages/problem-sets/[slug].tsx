@@ -1,10 +1,7 @@
 import { Page } from "@/components/Page";
 import { ProblemFilters } from "@/components/ProblemFilters";
 import { ProblemList } from "@/components/problems/ProblemList";
-import {
-  type GetServerSidePropsWithSession,
-  getServerSidePropsWithAuth,
-} from "@/server/auth";
+
 import { withIronSessionSsr } from "@/utils/session";
 import { BeakerIcon, ClockIcon } from "@heroicons/react/24/outline";
 

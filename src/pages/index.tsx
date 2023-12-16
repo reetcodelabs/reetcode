@@ -1,7 +1,3 @@
-import {
-  type GetServerSidePropsWithSession,
-  getServerSidePropsWithAuth,
-} from "@/server/auth";
 import { withIronSessionSsr } from "@/utils/session";
 
 export default function HomePage() {
