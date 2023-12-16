@@ -1,8 +1,8 @@
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 
 import { Alert } from "./Notification";
-import { useRouter } from "next/router";
 
 export function Flash() {
   const { pathname, query, replace } = useRouter();

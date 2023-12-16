@@ -1,13 +1,11 @@
-import { z } from "zod";
-import dayjs from "dayjs";
 import Crypto from "crypto";
+import dayjs from "dayjs";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { invalidPayloadResponse } from "@/server/auth";
-
-import { db } from "@/server/db";
+import { z } from "zod";
 
 import { env } from "@/env";
-
+import { db } from "@/server/db";
+import { invalidPayloadResponse } from "@/server/response";
 import { MailcoachEmails, sendTransactionalEmail } from "@/utils/mailcoach";
 
 export const SendMagicLinkValidationSchema = z.object({

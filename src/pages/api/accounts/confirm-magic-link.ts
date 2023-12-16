@@ -1,9 +1,8 @@
-import { z } from "zod";
 import dayjs from "dayjs";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { z } from "zod";
 
 import { db } from "@/server/db";
-
 import { withIronSessionApiRoute } from "@/utils/session";
 
 export const ConfirmMagicLinkValidationSchema = z.object({

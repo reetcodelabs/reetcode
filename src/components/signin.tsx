@@ -3,17 +3,17 @@ import {
   ArrowRightIcon,
   CheckIcon,
 } from "@heroicons/react/24/outline";
-import { type FormEventHandler } from "react";
-import { useRouter } from "next/router";
-import { toast } from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/router";
+import { type FormEventHandler } from "react";
+import { toast } from "react-hot-toast";
 
 import { axiosClient } from "@/utils/axios";
 
-import { Modal } from "./modal";
 import { Button } from "./button";
-import { RenderIf } from "./RenderIf";
+import { Modal } from "./modal";
 import { Alert } from "./Notification";
+import { RenderIf } from "./RenderIf";
 
 const providers = [
   { name: "Github", icon: "https://img.clerk.com/static/github.svg?width=160" },

@@ -1,12 +1,10 @@
-import { type GetServerSideProps, type NextApiHandler } from "next";
-import { type IronSessionOptions } from "iron-session";
-
 import { type Subscription } from "@prisma/client";
-
+import { type IronSessionOptions } from "iron-session";
 import {
   withIronSessionApiRoute as baseWithIronSessionApiRoute,
   withIronSessionSsr as baseWithIronSessionSsr,
 } from "iron-session/next";
+import { type GetServerSideProps, type NextApiHandler } from "next";
 
 import { env } from "@/env";
 

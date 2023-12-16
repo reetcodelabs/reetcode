@@ -1,15 +1,15 @@
-import Link from "next/link";
-import { Fragment } from "react";
-import classNames from "classnames";
-import Avvvatars from "avvvatars-react";
 import { Menu, Transition } from "@headlessui/react";
 import { useMutation } from "@tanstack/react-query";
-
-import toast from "react-hot-toast";
+import Avvvatars from "avvvatars-react";
+import classNames from "classnames";
 import { type IronSessionData } from "iron-session";
+import Link from "next/link";
+import { Fragment } from "react";
+import toast from "react-hot-toast";
+
+import { axiosClient } from "@/utils/axios";
 
 import { Alert } from "./Notification";
-import { axiosClient } from "@/utils/axios";
 
 const userNavigation = [
   { name: "Account settings", href: "/account/settings" },

@@ -4,7 +4,7 @@ const config = {
   parserOptions: {
     project: true,
   },
-  plugins: ["@typescript-eslint"],
+  plugins: ["@typescript-eslint", "simple-import-sort"],
   extends: [
     "plugin:@next/next/recommended",
     "plugin:@typescript-eslint/recommended-type-checked",
@@ -34,6 +34,7 @@ const config = {
     "@next/next/no-img-element": "off",
     "@typescript-eslint/unbound-method": "off",
     "@typescript-eslint/consistent-indexed-object-style": "off",
+    "simple-import-sort/imports": "error",
   },
 };
 

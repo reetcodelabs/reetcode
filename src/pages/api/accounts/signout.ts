@@ -1,5 +1,6 @@
-import { withIronSessionApiRoute } from "@/utils/session";
 import type { NextApiRequest, NextApiResponse } from "next";
+
+import { withIronSessionApiRoute } from "@/utils/session";
 
 export async function signOutSession(
   request: NextApiRequest,

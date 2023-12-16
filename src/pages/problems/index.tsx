@@ -1,9 +1,9 @@
-import { ProblemFilters } from "@/components/ProblemFilters";
-import { SectionHeading } from "@/components/SectionHeading";
-import { ProblemList } from "@/components/problems/ProblemList";
-
-import { withIronSessionSsr } from "@/utils/session";
 import Link from "next/link";
+
+import { ProblemFilters } from "@/components/ProblemFilters";
+import { ProblemList } from "@/components/problems/ProblemList";
+import { SectionHeading } from "@/components/SectionHeading";
+import { withIronSessionSsr } from "@/utils/session";
 
 const stats = [
   { name: "Completed problems", stat: 13, subtitle: "of 43 problems" },

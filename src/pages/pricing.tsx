@@ -1,23 +1,21 @@
-import { useState } from "react";
-import classNames from "classnames";
 import { RadioGroup } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/20/solid";
+import { useMutation } from "@tanstack/react-query";
+import classNames from "classnames";
+import dayjs from "dayjs";
+import { type IronSessionData } from "iron-session";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { usePaystackPayment } from "react-paystack";
 
 import { Button } from "@/components/button";
-
-import { env } from "@/env";
-
-import { usePaystackPayment } from "react-paystack";
-import { useSignInPopup } from "@/hooks/useSignInPopup";
-import { useMutation } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 import { Alert } from "@/components/Notification";
-import { withIronSessionSsr } from "@/utils/session";
-import { axiosClient } from "@/utils/axios";
-import { type IronSessionData } from "iron-session";
-import { useSession } from "@/hooks/useSession";
 import { RenderIf } from "@/components/RenderIf";
-import dayjs from "dayjs";
+import { env } from "@/env";
+import { useSession } from "@/hooks/useSession";
+import { useSignInPopup } from "@/hooks/useSignInPopup";
+import { axiosClient } from "@/utils/axios";
+import { withIronSessionSsr } from "@/utils/session";
 
 const frequencies = [
   { value: "monthly", label: "Monthly", priceSuffix: "/month" },

@@ -1,3 +1,12 @@
+import {
+  Dialog,
+  Disclosure,
+  Menu,
+  Popover,
+  Transition,
+} from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 /*
   This example requires some changes to your config:
@@ -14,15 +23,6 @@ import classNames from "classnames";
   ```
 */
 import { Fragment, useState } from "react";
-import {
-  Dialog,
-  Disclosure,
-  Menu,
-  Popover,
-  Transition,
-} from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
 const sortOptions = [
   { name: "Difficulty", href: "#", current: true },

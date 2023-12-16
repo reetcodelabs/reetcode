@@ -1,6 +1,6 @@
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
 
 interface SectionHeadingProps {
   title?: string;

@@ -1,15 +1,12 @@
-import { Button } from "@/components/button";
-import { withIronSessionSsr } from "@/utils/session";
-import { premiumPlanFeatures } from "@/pages/pricing";
-
 import { CheckIcon, LockClosedIcon } from "@heroicons/react/24/outline";
-
+import { type IronSessionData } from "iron-session";
 import { type PropsWithChildren } from "react";
 
-import { type IronSessionData } from "iron-session";
-
-import { useSession } from "@/hooks/useSession";
+import { Button } from "@/components/button";
 import { RenderIf } from "@/components/RenderIf";
+import { useSession } from "@/hooks/useSession";
+import { premiumPlanFeatures } from "@/pages/pricing";
+import { withIronSessionSsr } from "@/utils/session";
 
 interface AccountSettingsProps {
   session: IronSessionData | null;

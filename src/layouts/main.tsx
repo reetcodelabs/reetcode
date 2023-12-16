@@ -1,17 +1,15 @@
-import Link from "next/link";
-import classnames from "classnames";
-import type { PropsWithChildren } from "react";
-
-import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import classnames from "classnames";
+import Link from "next/link";
+import type { PropsWithChildren } from "react";
+import { useState } from "react";
 
 const navigation = [
   { name: "Explore", href: "/" },
   { name: "Dashboard", href: "/problems" },
 ];
 
-import { Fragment } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import {
@@ -21,17 +19,18 @@ import {
   FingerPrintIcon,
   SquaresPlusIcon,
 } from "@heroicons/react/24/outline";
-import { useRouter } from "next/router";
 import classNames from "classnames";
-import { SignInOrSignUp } from "@/components/signin";
-import { UserProfileDropdown } from "@/components/user-profile-dropdown";
-import { Toaster } from "react-hot-toast";
-import { useSignInPopup } from "@/hooks/useSignInPopup";
 import { type IronSessionData } from "iron-session";
+import { useRouter } from "next/router";
+import { Fragment } from "react";
+import { Toaster } from "react-hot-toast";
 
 import { Banner } from "@/components/banner";
-import { useSession } from "@/hooks/useSession";
 import { RenderIf } from "@/components/RenderIf";
+import { SignInOrSignUp } from "@/components/signin";
+import { UserProfileDropdown } from "@/components/user-profile-dropdown";
+import { useSession } from "@/hooks/useSession";
+import { useSignInPopup } from "@/hooks/useSignInPopup";
 
 const solutions = [
   {

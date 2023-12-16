@@ -1,12 +1,10 @@
 import classNames from "classnames";
 import Link from "next/link";
-
 import type {
-  PropsWithChildren,
   ComponentPropsWithoutRef,
   FunctionComponent,
+  PropsWithChildren,
 } from "react";
-
 import { twMerge as tw } from "tailwind-merge";
 export interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
   variant?: "primary" | "secondary";

@@ -1,7 +1,7 @@
-import { Fragment, useEffect, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import classNames from "classnames";
+import { Fragment, useEffect, useState } from "react";
 interface Option {
   id: string;
   name: string;

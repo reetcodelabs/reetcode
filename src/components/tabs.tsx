@@ -1,6 +1,6 @@
 import classNames from "classnames";
-import { useState } from "react";
 import type { ReactNode } from "react";
+import { useState } from "react";
 
 interface Tab {
   name: string;

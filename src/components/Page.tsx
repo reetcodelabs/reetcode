@@ -1,7 +1,8 @@
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
 import type { PropsWithChildren } from "react";
+
 import { Button } from "./button";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 export function Page({ children }: PropsWithChildren) {
   const router = useRouter();

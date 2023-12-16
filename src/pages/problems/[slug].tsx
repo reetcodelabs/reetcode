@@ -1,18 +1,18 @@
 import {
-  SandpackProvider,
   SandpackCodeEditor,
-  SandpackPreview,
   SandpackFileExplorer,
+  SandpackPreview,
+  SandpackProvider,
   type SandpackTheme,
 } from "@codesandbox/sandpack-react";
-import { type MouseEventHandler, useEffect, useState } from "react";
-import { Tabs } from "@/components/tabs";
-import { Button } from "@/components/button";
-import { Select } from "@/components/select";
 import * as sandpackThemes from "@codesandbox/sandpack-themes";
 import { BookOpenIcon } from "@heroicons/react/24/outline";
-import { TestCases } from "@/components/problems/TestCases";
+import { type MouseEventHandler, useEffect, useState } from "react";
 
+import { Button } from "@/components/button";
+import { TestCases } from "@/components/problems/TestCases";
+import { Select } from "@/components/select";
+import { Tabs } from "@/components/tabs";
 import { withIronSessionSsr } from "@/utils/session";
 
 const themes = [

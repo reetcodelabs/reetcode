@@ -1,8 +1,8 @@
-import classNames from "classnames";
-import { twMerge as tw } from "tailwind-merge";
-import { Fragment, type PropsWithChildren } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import classNames from "classnames";
+import { Fragment, type PropsWithChildren } from "react";
+import { twMerge as tw } from "tailwind-merge";
 
 export function Modal({
   children,

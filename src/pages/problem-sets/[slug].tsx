@@ -1,9 +1,9 @@
+import { BeakerIcon, ClockIcon } from "@heroicons/react/24/outline";
+
 import { Page } from "@/components/Page";
 import { ProblemFilters } from "@/components/ProblemFilters";
 import { ProblemList } from "@/components/problems/ProblemList";
-
 import { withIronSessionSsr } from "@/utils/session";
-import { BeakerIcon, ClockIcon } from "@heroicons/react/24/outline";
 
 export default function ProblemSetDetails() {
   return (
