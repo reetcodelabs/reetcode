@@ -30,7 +30,7 @@ export async function sendTransactionalEmail(
   return mailcoachClient.post("transactional-mails/send", {
     mail_name: name,
     to: email,
-    from: "reetcode@mailcoach.cloud",
+    from: "frantz@reetcode.com",
     replacements,
   });
 }

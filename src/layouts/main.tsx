@@ -32,38 +32,9 @@ import { UserProfileDropdown } from "@/components/user-profile-dropdown";
 import { useSession } from "@/hooks/useSession";
 import { useSignInPopup } from "@/hooks/useSignInPopup";
 
-const solutions = [
-  {
-    name: "Authentication",
-    description: "Get a better understanding of your traffic",
-    href: "#",
-    icon: ChartPieIcon,
-  },
-  {
-    name: "Security",
-    description: "Speak directly to your customers",
-    href: "#",
-    icon: CursorArrowRaysIcon,
-  },
-  {
-    name: "Forms",
-    description: "Your customers' data will be safe and secure",
-    href: "#",
-    icon: FingerPrintIcon,
-  },
-  {
-    name: "Performance",
-    description: "Connect with third-party tools",
-    href: "#",
-    icon: SquaresPlusIcon,
-  },
-  {
-    name: "Analytics",
-    description: "Build strategic funnels that will convert",
-    href: "#",
-    icon: ArrowPathIcon,
-  },
-];
+import ProblemSets from "@/seed/problem-sets.json";
+
+const solutions = ProblemSets.slice(0, 5);
 
 export function Navigation() {
   return (
@@ -96,14 +67,16 @@ export function Navigation() {
             <div className="p-4">
               {solutions.map((item) => (
                 <Link
-                  href={"/"}
+                  href={`/problem-sets/${item?.slug}`}
                   key={item.name}
                   className="group relative flex gap-x-6 rounded-sm p-4 focus-within:outline-none focus-within:outline-indigo-500 hover:bg-slate-800"
                 >
                   <div className="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-slate-800 group-hover:bg-slate-900">
-                    <item.icon
+                    <img
                       className="h-6 w-6 text-slate-400 group-hover:text-indigo-600"
                       aria-hidden="true"
+                      src={item?.icon}
+                      alt={`Icon for problem set: ${item?.name}`}
                     />
                   </div>
                   <div>
@@ -111,7 +84,9 @@ export function Navigation() {
                       {item.name}
                       <span className="absolute inset-0" />
                     </p>
-                    <p className="mt-1 text-slate-400">{item.description}</p>
+                    <p className="mt-1 text-slate-400">
+                      {item?.shortDescription}
+                    </p>
                   </div>
                 </Link>
               ))}

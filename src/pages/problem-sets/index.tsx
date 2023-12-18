@@ -3,6 +3,8 @@ import { ProblemSetCard } from "@/components/problems/ProblemSetCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import { withIronSessionSsr } from "@/utils/session";
 
+import ProblemSetsData from "@/seed/problem-sets.json";
+
 export default function ProblemSets() {
   return (
     <Page>
@@ -13,13 +15,8 @@ export default function ProblemSets() {
         />
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((x) => (
-            <ProblemSetCard
-              key={x}
-              expanded
-              name={"Security"}
-              description="Solve real world problems around web application security"
-            />
+          {ProblemSetsData.map((problemSet) => (
+            <ProblemSetCard key={problemSet?.slug} expanded {...problemSet} />
           ))}
         </div>
       </section>
