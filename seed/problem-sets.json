@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Authentication",
+    "slug": "authentication",
+    "icon": "/icons/problem-sets/security.svg",
+    "shortDescription": "Master user identity and security on the web and in the cloud.",
+    "longDescription": "Solve the most common authentication problems, and master the fundamentals of how authentication on the web actually works, with technologies like cookies, JWT, basic and Oauth 2 protocols."
+  },
+  {
+    "name": "Performance",
+    "slug": "performance",
+    "icon": "/icons/problem-sets/performance.svg",
+    "shortDescription": "Diagnose and resolve real world performance issues in web applications.",
+    "longDescription": "Learn how to implement the most popular performance patterns by solving real world performance challenges."
+  },
+  {
+    "name": "Authorization",
+    "slug": "authorization",
+    "icon": "/icons/problem-sets/authorization.svg",
+    "shortDescription": "Understand the problem of secure access control in web and cloud applications.",
+    "longDescription": "Implement the most popular authorization strategies such as RBAC, ABAC and ACL. Learn how to solve enterprise level authorization problems into your applications."
+  },
+  {
+    "name": "Payments",
+    "slug": "payments",
+    "icon": "/icons/problem-sets/payments.svg",
+    "shortDescription": "How web applications send and receive money on the internet securely.",
+    "longDescription": "Implement practical payment solutions with multiple providers such as Paystack, Stripe, Flutterwave, including crypto payment."
+  },
+  {
+    "name": "Product engineering",
+    "slug": "product-engineering",
+    "icon": "/icons/problem-sets/product-engineering.svg",
+    "shortDescription": "Solve problems related to product growth and user insights.",
+    "longDescription": "Implement solutions to product problems such as product analytics, feature flags, A/B testing, and customer support."
+  },
+  {
+    "name": "File and Media management",
+    "slug": "file-and-media-management",
+    "icon": "/icons/problem-sets/file-and-media-management.svg",
+    "shortDescription": "Build reliable applications that upload and download files and assets.",
+    "longDescription": "Solve the unique problem of transferring large amounts of data such as videos, images, pausing and resuming file uploads."
+  },
+  {
+    "name": "Developer experience",
+    "slug": "developer-experience",
+    "icon": "/icons/problem-sets/developer-experience.svg",
+    "shortDescription": "Solve developer specific questions, and master the most common build tools.",
+    "longDescription": "Become the star on your team that implements the code quality workflows and ensures the best developer experiences. Master tools like eslint, CI & CD, build tools, commit hooks, and custom build scripts."
+  },
+  {
+    "name": "User Interfaces",
+    "slug": "user-interfaces",
+    "icon": "/icons/problem-sets/user-interfaces.svg",
+    "shortDescription": "Create engaging user experiences that match the spefications of user designers.",
+    "longDescription": "Implement pixel perfect UI designs from Figma prototypes, create engaging animations and user interactions, and create reusable components for design systems."
+  }
+]

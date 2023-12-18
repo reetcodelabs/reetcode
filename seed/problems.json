@@ -1,0 +1,146 @@
+[
+  {
+    "name": "Udemy categories menu: Load on interaction",
+    "slug": "udemy-categories-menu-load-on-interaction",
+    "description": "Solve this performance problem of extremely large data sets, by using the load on interaction performance strategy",
+    "solutionVideoUrl": "",
+    "techStack": ["JAVASCRIPT", "VUE", "TAILWINDCSS", "TYPESCRIPT"],
+    "difficulty": "medium",
+    "completionDuration": 45,
+    "problemSets": ["performance"],
+    "templates": [
+      {
+        "sandpackTemplate": "static",
+        "folder": "vanilla-js"
+      },
+      {
+        "sandpackTemplate": "react",
+        "folder": "react"
+      },
+      {
+        "sandpackTemplate": "vue",
+        "folder": "vue"
+      }
+    ]
+  },
+  {
+    "name": "Github file tree: Load on interaction",
+    "slug": "github-file-tree-load-on-interaction",
+    "description": "How to display a large tree of data with the best performance practices. Solve this problem that engineers at Github had to solve.",
+    "solutionVideoUrl": "",
+    "techStack": ["JAVASCRIPT", "VUE", "TAILWINDCSS", "TYPESCRIPT"],
+    "difficulty": "medium",
+    "completionDuration": 125,
+    "problemSets": ["performance"],
+    "templates": [
+      {
+        "sandpackTemplate": "static",
+        "folder": "vanilla-js"
+      },
+      {
+        "sandpackTemplate": "react",
+        "folder": "react"
+      },
+      {
+        "sandpackTemplate": "vue",
+        "folder": "vue"
+      }
+    ]
+  },
+  {
+    "name": "Cowrywise authentication: Customer login Page",
+    "slug": "cowrywise-authentication-customer-login-page-ui",
+    "description": "Recreate the Cowrywise customer login page from a Figma design prototype.",
+    "solutionVideoUrl": "",
+    "techStack": ["JAVASCRIPT", "CSS", "TYPESCRIPT"],
+    "difficulty": "medium",
+    "completionDuration": 125,
+    "problemSets": ["user-interfaces"],
+    "templates": [
+      {
+        "sandpackTemplate": "static",
+        "folder": "vanilla-js"
+      },
+      {
+        "sandpackTemplate": "react",
+        "folder": "react"
+      },
+      {
+        "sandpackTemplate": "vue",
+        "folder": "vue"
+      }
+    ]
+  },
+  {
+    "name": "Cowrywise onboarding: Customer sign up page",
+    "slug": "cowrywise-onboarding-customer-signup-page-ui",
+    "description": "Recreate the Cowrywise customer signup page from a Figma design prototype.",
+    "solutionVideoUrl": "",
+    "techStack": ["JAVASCRIPT", "CSS", "TYPESCRIPT"],
+    "difficulty": "medium",
+    "completionDuration": 125,
+    "problemSets": ["user-interfaces"],
+    "templates": [
+      {
+        "sandpackTemplate": "static",
+        "folder": "vanilla-js"
+      },
+      {
+        "sandpackTemplate": "react",
+        "folder": "react"
+      },
+      {
+        "sandpackTemplate": "vue",
+        "folder": "vue"
+      }
+    ]
+  },
+  {
+    "name": "Udemy ecommerce: Course purchase card",
+    "slug": "udemy-ecommerce-course-purchase-card",
+    "description": "Recreate the Udemy course purchase card from a Figma design prototype.",
+    "solutionVideoUrl": "",
+    "techStack": ["JAVASCRIPT", "CSS", "TYPESCRIPT"],
+    "difficulty": "medium",
+    "completionDuration": 125,
+    "problemSets": ["user-interfaces"],
+    "templates": [
+      {
+        "sandpackTemplate": "static",
+        "folder": "vanilla-js"
+      },
+      {
+        "sandpackTemplate": "react",
+        "folder": "react"
+      },
+      {
+        "sandpackTemplate": "vue",
+        "folder": "vue"
+      }
+    ]
+  },
+  {
+    "name": "Cowrywise authentication: Customer login",
+    "slug": "cowrywise-authentication-customer-login",
+    "description": "How to display a large tree of data with the best performance practices. Solve this problem that engineers at Github had to solve.",
+    "solutionVideoUrl": "",
+    "techStack": ["JAVASCRIPT", "VUE", "TAILWINDCSS", "TYPESCRIPT"],
+    "difficulty": "medium",
+    "completionDuration": 125,
+    "problemSets": ["authentication"],
+    "templates": [
+      {
+        "sandpackTemplate": "static",
+        "folder": "vanilla-js"
+      },
+      {
+        "sandpackTemplate": "react",
+        "folder": "react"
+      },
+      {
+        "sandpackTemplate": "vue",
+        "folder": "vue"
+      }
+    ]
+  }
+]

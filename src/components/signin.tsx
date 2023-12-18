@@ -127,11 +127,11 @@ export function SignInOrSignUp() {
 
       <RenderIf if={!signinViaEmailMutation.isSuccess}>
         <div className="-m-1.5 p-1.5 focus-within:outline-none focus-within:outline-offset-2 focus-within:outline-indigo-500">
-          <span className="sr-only">Your Company</span>
+          <span className="sr-only">Reetcode</span>
           <img
             className="h-8 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-            alt=""
+            src="/images/logo-mobile.png"
+            alt="reetcode"
           />
         </div>
 
