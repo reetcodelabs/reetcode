@@ -1,13 +1,11 @@
 import { BeakerIcon, ClockIcon } from "@heroicons/react/24/outline";
+import { type ProblemSet } from "@prisma/client";
 
 import { Page } from "@/components/Page";
 import { ProblemFilters } from "@/components/ProblemFilters";
 import { ProblemList } from "@/components/problems/ProblemList";
-import { withIronSessionSsr } from "@/utils/session";
-
 import ProblemSetsData from "@/seed/problem-sets.json";
-import { type ProblemSet } from "@prisma/client";
-import { useRouter } from "next/router";
+import { withIronSessionSsr } from "@/utils/session";
 
 interface ProblemSetDetailsProps {
   problemSet: ProblemSet;
@@ -16,8 +14,6 @@ interface ProblemSetDetailsProps {
 export default function ProblemSetDetails({
   problemSet,
 }: ProblemSetDetailsProps) {
-  const { query } = useRouter();
-
   return (
     <Page>
       <div className="flex items-start gap-x-4 lg:gap-x-8">
@@ -69,7 +65,7 @@ export default function ProblemSetDetails({
 export const getServerSideProps = withIronSessionSsr(
   async function getServerSideProps(ctx) {
     const problemSet = ProblemSetsData.find(
-      (problemSet) => problemSet?.slug === ctx.query["slug"],
+      (problemSet) => problemSet?.slug === ctx.query.slug,
     );
 
     if (!problemSet) {

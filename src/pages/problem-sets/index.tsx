@@ -1,9 +1,8 @@
 import { Page } from "@/components/Page";
 import { ProblemSetCard } from "@/components/problems/ProblemSetCard";
 import { SectionHeading } from "@/components/SectionHeading";
-import { withIronSessionSsr } from "@/utils/session";
-
 import ProblemSetsData from "@/seed/problem-sets.json";
+import { withIronSessionSsr } from "@/utils/session";
 
 export default function ProblemSets() {
   return (

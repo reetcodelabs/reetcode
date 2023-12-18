@@ -1,8 +1,7 @@
 import { BeakerIcon, ClockIcon } from "@heroicons/react/24/outline";
+import { type ProblemSet } from "@prisma/client";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
-
-import { type ProblemSet } from "@prisma/client";
 
 export interface ProblemSetCardProps extends Omit<ProblemSet, "id"> {
   expanded?: boolean;

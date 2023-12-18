@@ -1,12 +1,9 @@
-import Link from "next/link";
-
 import { ProblemFilters } from "@/components/ProblemFilters";
 import { ProblemList } from "@/components/problems/ProblemList";
-import { SectionHeading } from "@/components/SectionHeading";
-import { withIronSessionSsr } from "@/utils/session";
 import { ProblemSetCard } from "@/components/problems/ProblemSetCard";
-
+import { SectionHeading } from "@/components/SectionHeading";
 import ProblemSets from "@/seed/problem-sets.json";
+import { withIronSessionSsr } from "@/utils/session";
 
 const recommendedProblemSets = ProblemSets.slice(0, 4);
 

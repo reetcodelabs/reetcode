@@ -12,13 +12,6 @@ const navigation = [
 
 import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import {
-  ArrowPathIcon,
-  ChartPieIcon,
-  CursorArrowRaysIcon,
-  FingerPrintIcon,
-  SquaresPlusIcon,
-} from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import { type IronSessionData } from "iron-session";
 import { useRouter } from "next/router";
@@ -31,7 +24,6 @@ import { SignInOrSignUp } from "@/components/signin";
 import { UserProfileDropdown } from "@/components/user-profile-dropdown";
 import { useSession } from "@/hooks/useSession";
 import { useSignInPopup } from "@/hooks/useSignInPopup";
-
 import ProblemSets from "@/seed/problem-sets.json";
 
 const solutions = ProblemSets.slice(0, 5);
