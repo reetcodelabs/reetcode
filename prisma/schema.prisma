@@ -89,3 +89,93 @@ model VerificationToken {
 
     @@unique([email, token])
 }
+
+model CareerPath {
+    id   String @id @default(cuid())
+    name String
+    slug String @unique
+
+    Problem    Problem[]
+    ProblemSet ProblemSet[]
+}
+
+model ProblemSet {
+    id               String  @id @default(cuid())
+    name             String
+    slug             String  @unique
+    icon             String  @db.Text()
+    shortDescription String?
+    longDescription  String?
+
+    careerPathId String
+    careerPath   CareerPath @relation(fields: [careerPathId], references: [id])
+
+    problems Problem[]
+}
+
+enum TechStack {
+    JAVASCRIPT
+    TYPESCRIPT
+    ANGULAR
+    VUE
+    NEXTJS
+    NUXTJS
+    REACT
+    HTML
+    CSS
+    STYLED_COMPONENTS
+    TAILWINDCSS
+}
+
+enum Difficulty {
+    EASY
+    MEDIUM
+    HARD
+}
+
+model Problem {
+    id                 String      @id @default(cuid())
+    name               String
+    slug               String      @unique
+    description        String?
+    brief              String      @db.Text()
+    solution           String      @db.Text()
+    solutionVideoUrl   String?
+    techStack          TechStack[]
+    difficulty         Difficulty  @default(MEDIUM)
+    completionDuration Int?        @default(0)
+
+    careerPathId String
+    careerPath   CareerPath @relation(fields: [careerPathId], references: [id])
+
+    problemSets ProblemSet[]
+}
+
+model Template {
+    id        String      @id @default(cuid())
+    name      String
+    default   Boolean?    @default(true)
+    techStack TechStack[]
+
+    starterFiles File[] @relation("starterFiles")
+
+    solutionFiles File[] @relation("solutionFiles")
+
+    startCommand String?
+    testCommand  String?
+
+    sandpackTemplate String?
+}
+
+model File {
+    id   String  @id @default(cuid())
+    path String
+    root Boolean @default(true)
+
+    starterTemplateId    String?
+    solutionTemplateId   String?
+    starterFileTemplate  Template? @relation(fields: [starterTemplateId], references: [id], name: "starterFiles")
+    solutionFileTemplate Template? @relation(fields: [solutionTemplateId], references: [id], name: "solutionFiles")
+
+    content String @db.Text()
+}
