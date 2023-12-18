@@ -230,11 +230,11 @@ export function MainLayout({
                 href="/"
                 className="-m-1.5 p-1.5 focus-within:outline-none focus-within:outline-offset-2 focus-within:outline-indigo-500"
               >
-                <span className="sr-only">Your Company</span>
+                <span className="sr-only">Reetcode</span>
                 <img
                   className="h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                  alt=""
+                  src="/images/logo-desktop.png"
+                  alt="reetcode logo desktop"
                 />
               </Link>
             </div>
@@ -280,14 +280,14 @@ export function MainLayout({
             onClose={setMobileMenuOpen}
           >
             <div className="fixed inset-0 z-50" />
-            <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10">
+            <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-slate-900 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10">
               <div className="flex items-center justify-between">
                 <a href="#" className="focused-link -m-1.5 p-1.5">
-                  <span className="sr-only">Your Company</span>
+                  <span className="sr-only"></span>
                   <img
                     className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                    alt=""
+                    src="/images/logo-desktop.png"
+                    alt="reetcode"
                   />
                 </a>
                 <button
