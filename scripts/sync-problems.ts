@@ -1,16 +1,21 @@
 import Consola from "consola";
 import Fs from "fs";
 import Path from "path";
+import { fileURLToPath } from "url";
 import {
   CareerPath,
   Difficulty,
   PrismaClient,
   ProblemSet,
+  TechStack,
 } from "@prisma/client";
 
 import problemsData from "../src/seed/problems.json";
 import problemSetsData from "../src/seed/problem-sets.json";
 import careerPathsData from "../src/seed/career-paths.json";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = Path.dirname(__filename);
 
 // fetch all the problem sets
 const prisma = new PrismaClient();
@@ -163,7 +168,7 @@ async function seedProblems(
         brief,
         solution,
         solutionVideoUrl: problem.solutionVideoUrl,
-        techStack: [],
+        techStack: problem.techStack as TechStack[],
         difficulty: problem.difficulty.toUpperCase() as Difficulty,
         completionDuration: problem.completionDuration,
       };

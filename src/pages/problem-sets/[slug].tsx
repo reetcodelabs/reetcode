@@ -3,7 +3,6 @@ import { type ProblemSet } from "@prisma/client";
 
 import { Page } from "@/components/Page";
 import { ProblemFilters } from "@/components/ProblemFilters";
-import { ProblemList } from "@/components/problems/ProblemList";
 import ProblemSetsData from "@/seed/problem-sets.json";
 import { withIronSessionSsr } from "@/utils/session";
 
@@ -56,7 +55,7 @@ export default function ProblemSetDetails({
 
       <ProblemFilters />
       <div className="rounded border border-slate-50/[0.06]">
-        <ProblemList />
+        {/* <ProblemList /> */}
       </div>
     </Page>
   );

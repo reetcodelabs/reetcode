@@ -1,8 +1,11 @@
+import { type Problem } from "@prisma/client";
+
 import { ProblemFilters } from "@/components/ProblemFilters";
 import { ProblemList } from "@/components/problems/ProblemList";
 import { ProblemSetCard } from "@/components/problems/ProblemSetCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import ProblemSets from "@/seed/problem-sets.json";
+import { databaseService } from "@/server/services/database";
 import { withIronSessionSsr } from "@/utils/session";
 
 const recommendedProblemSets = ProblemSets.slice(0, 4);
@@ -21,7 +24,13 @@ const stats = [
   },
 ];
 
-export default function Problems() {
+interface ProblemsProps {
+  problems: Problem[];
+}
+
+export default function Problems({ problems = [] }: ProblemsProps) {
+  console.log({ problems });
+
   return (
     <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 px-6 pb-48 pt-12 xl:px-0">
       <section className="flex w-full flex-col">
@@ -76,7 +85,7 @@ export default function Problems() {
         <ProblemFilters />
 
         <div className="mt-6 rounded border border-slate-50/[0.06]">
-          <ProblemList />
+          <ProblemList problems={problems} />
         </div>
       </section>
     </div>
@@ -85,9 +94,14 @@ export default function Problems() {
 
 export const getServerSideProps = withIronSessionSsr(
   async function getServerSideProps(ctx) {
+    const problems = await databaseService.getAllProblems();
+
+    console.log({ problems });
+
     return {
       props: {
         session: ctx.req.session,
+        problems,
       },
     };
   },
