@@ -2,7 +2,7 @@ import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import classNames from "classnames";
 import { Fragment, useEffect, useState } from "react";
-interface Option {
+export interface SelectOption {
   id: string;
   name: string;
 }
@@ -10,28 +10,24 @@ interface Option {
 export function Select({
   options = [],
   onChange,
+  value,
+  label = "Select an option",
 }: {
-  options?: Option[];
-  onChange?: (selected: Option) => void;
+  options?: SelectOption[];
+  value?: SelectOption;
+  label?: string;
+  onChange?: (selected: SelectOption) => void;
 }) {
-  const [selected, setSelected] = useState(options[0]);
-
-  useEffect(() => {
-    if (selected) {
-      onChange?.(selected);
-    }
-  }, [selected]);
-
   return (
-    <Listbox value={selected} onChange={setSelected}>
+    <Listbox value={value} onChange={onChange}>
       {({ open }) => (
         <>
           <Listbox.Label className="sr-only block text-sm font-medium leading-6 text-slate-400">
-            Assigned to
+            {label}
           </Listbox.Label>
-          <div className="relative">
+          <div className="relative w-full">
             <Listbox.Button className="relative w-full cursor-default rounded-md bg-slate-900 py-1 pl-3 pr-10 text-left text-white shadow-sm ring-1 ring-inset ring-slate-50/[0.06] focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
-              <span className="block truncate">{selected?.name}</span>
+              <span className="block truncate">{value?.name}</span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronUpDownIcon
                   className="h-5 w-5 text-slate-400"

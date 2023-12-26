@@ -104,8 +104,8 @@ export const technologiesLogos: Record<TechStack, ReactNode> = {
         y2="25.73"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0" stop-color="#33c481"></stop>
-        <stop offset="1" stop-color="#21a366"></stop>
+        <stop offset="0" stopColor="#33c481"></stop>
+        <stop offset="1" stopColor="#21a366"></stop>
       </linearGradient>
       <path
         fill="url(#jOxEAtqKLV9JfRrHHmqLMa_BUnExfsRs3CW_gr1)"
@@ -119,8 +119,8 @@ export const technologiesLogos: Record<TechStack, ReactNode> = {
         y2="19"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset=".189" stop-color="#313437"></stop>
-        <stop offset="1" stop-color="#45494d"></stop>
+        <stop offset=".189" stopColor="#313437"></stop>
+        <stop offset="1" stopColor="#45494d"></stop>
       </linearGradient>
       <polygon
         fill="url(#jOxEAtqKLV9JfRrHHmqLMb_BUnExfsRs3CW_gr2)"

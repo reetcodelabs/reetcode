@@ -9,6 +9,7 @@ import {
   ProblemSet,
   TechStack,
 } from "@prisma/client";
+import Showdown from "showdown";
 
 import problemsData from "../src/seed/problems.json";
 import problemSetsData from "../src/seed/problem-sets.json";
@@ -91,209 +92,215 @@ async function seedProblems(
 
   // fetch all templates for the problem
 
-  await Promise.all(
-    problemsData.map(async (problem) => {
-      Consola.start(`Upserting problem: ${problem.slug}...`);
-      const getTemplatesWithFiles = (rootFolder: string) =>
-        problem.templates.map((template) => {
-          const folderLocation = Path.resolve(
-            __dirname,
-            "..",
-            "src",
-            "seed",
-            rootFolder,
-            problem.slug,
-            template.folder,
-          );
+  for (const problem of problemsData) {
+    Consola.start(`Upserting problem: ${problem.slug}...`);
+    const getTemplatesWithFiles = (rootFolder: string) =>
+      problem.templates.map((template) => {
+        const folderLocation = Path.resolve(
+          __dirname,
+          "..",
+          "src",
+          "seed",
+          rootFolder,
+          problem.slug,
+          template.folder,
+        );
 
-          const allTemplateFiles = Fs.readdirSync(folderLocation, {
-            recursive: true,
-          });
-
-          const allTemplateFilesContent = allTemplateFiles.map((fileName) => {
-            const filePath = Path.resolve(folderLocation, fileName as string);
-
-            const isDirectory = Fs.lstatSync(filePath).isDirectory();
-
-            if (isDirectory) {
-              return null;
-            }
-
-            return {
-              path: fileName,
-              content: Fs.readFileSync(filePath).toString(),
-            };
-          });
-
-          return { template, content: allTemplateFilesContent };
+        const allTemplateFiles = Fs.readdirSync(folderLocation, {
+          recursive: true,
         });
 
-      const templatesWithFiles = getTemplatesWithFiles("templates");
-      const solutionTemplatesWithFiles =
-        getTemplatesWithFiles("solution-templates");
+        const allTemplateFilesContent = allTemplateFiles.map((fileName) => {
+          const filePath = Path.resolve(folderLocation, fileName as string);
 
-      const brief = Fs.readFileSync(
-        Path.resolve(
-          __dirname,
-          "..",
-          "src",
-          "seed",
-          "briefs",
-          `${problem.slug}.md`,
-        ),
-      ).toString();
+          const isDirectory = Fs.lstatSync(filePath).isDirectory();
 
-      const solution = Fs.readFileSync(
-        Path.resolve(
-          __dirname,
-          "..",
-          "src",
-          "seed",
-          "solutions",
-          `${problem.slug}.md`,
-        ),
-      ).toString();
+          if (isDirectory) {
+            return null;
+          }
 
-      const careerPath = careerPaths.find(
-        (path) => path.slug === problem.careerPath,
-      )?.id;
+          return {
+            path: fileName,
+            content: Fs.readFileSync(filePath).toString(),
+          };
+        });
 
-      const problemSetsIds = problemSets
-        .filter((set) => problem.problemSets.includes(set.slug))
-        .map((set) => set.id);
-
-      const problemPayload = {
-        name: problem.name,
-        description: problem.description,
-        brief,
-        solution,
-        solutionVideoUrl: problem.solutionVideoUrl,
-        techStack: problem.techStack as TechStack[],
-        difficulty: problem.difficulty.toUpperCase() as Difficulty,
-        completionDuration: problem.completionDuration,
-      };
-
-      // create the problem
-      const upsertedProblem = await prisma.problem.upsert({
-        where: {
-          slug: problem.slug,
-        },
-        create: {
-          ...problemPayload,
-          slug: problem.slug,
-          careerPathId: careerPath ?? null,
-          problemSets: {
-            connect: problemSetsIds.map((setId) => ({ id: setId })),
-          },
-        },
-        update: problemPayload,
+        return { template, content: allTemplateFilesContent };
       });
 
-      for (const template of templatesWithFiles) {
-        Consola.start(
-          `Upserting starter template ${template.template.folder} for problem: ${problem.slug}.\n`,
-        );
-        const upsertedTemplate = await prisma.template.upsert({
-          where: {
-            problemId_name: {
-              problemId: upsertedProblem.id,
-              name: template?.template?.folder,
-            },
-          },
-          create: {
-            default: template?.template?.default ?? false,
-            name: template.template.folder,
+    const templatesWithFiles = getTemplatesWithFiles("templates");
+    const solutionTemplatesWithFiles =
+      getTemplatesWithFiles("solution-templates");
+
+    const brief = Fs.readFileSync(
+      Path.resolve(
+        __dirname,
+        "..",
+        "src",
+        "seed",
+        "briefs",
+        `${problem.slug}.md`,
+      ),
+    ).toString();
+
+    const solution = Fs.readFileSync(
+      Path.resolve(
+        __dirname,
+        "..",
+        "src",
+        "seed",
+        "solutions",
+        `${problem.slug}.md`,
+      ),
+    ).toString();
+
+    const careerPath = careerPaths.find(
+      (path) => path.slug === problem.careerPath,
+    )?.id;
+
+    const problemSetsIds = problemSets
+      .filter((set) => problem.problemSets.includes(set.slug))
+      .map((set) => set.id);
+
+    const problemPayload = {
+      name: problem.name,
+      description: problem.description,
+      brief: new Showdown.Converter().makeHtml(brief),
+      solution: new Showdown.Converter().makeHtml(solution),
+      solutionVideoUrl: problem.solutionVideoUrl,
+      techStack: problem.techStack as TechStack[],
+      difficulty: problem.difficulty.toUpperCase() as Difficulty,
+      completionDuration: problem.completionDuration,
+    };
+
+    // create the problem
+    const upsertedProblem = await prisma.problem.upsert({
+      where: {
+        slug: problem.slug,
+      },
+      create: {
+        ...problemPayload,
+        slug: problem.slug,
+        careerPathId: careerPath ?? null,
+        problemSets: {
+          connect: problemSetsIds.map((setId) => ({ id: setId })),
+        },
+      },
+      update: problemPayload,
+    });
+
+    for (const template of templatesWithFiles) {
+      Consola.start(
+        `Upserting starter template ${template.template.folder} for problem: ${problem.slug}.\n`,
+      );
+      const upsertedTemplate = await prisma.template.upsert({
+        where: {
+          problemId_name: {
             problemId: upsertedProblem.id,
+            name: template?.template?.folder,
           },
-          update: {
-            default: template?.template?.default ?? false,
-            name: template.template.folder,
-          },
-        });
+        },
+        create: {
+          default: template?.template?.default ?? false,
+          name: template.template.folder,
+          problemId: upsertedProblem.id,
+          sandpackTemplate: template.template.sandpackTemplate,
+        },
+        update: {
+          default: template?.template?.default ?? false,
+          name: template.template.folder,
+          sandpackTemplate: template.template.sandpackTemplate,
+        },
+      });
 
-        for (const file of template.content) {
-          if (file === null) {
-            continue;
-          }
+      for (const file of template.content) {
+        if (file === null) {
+          continue;
+        }
 
-          await prisma.file.upsert({
-            where: {
-              starterTemplateId_path: {
-                path: file?.path as string,
-                starterTemplateId: upsertedTemplate.id,
-              },
-            },
-            create: {
-              path: file.path as string,
-              content: file.content,
+        await prisma.file.upsert({
+          where: {
+            starterTemplateId_path: {
+              path: file?.path as string,
               starterTemplateId: upsertedTemplate.id,
             },
-            update: {
-              path: file.path as string,
-              content: file.content,
-            },
-          });
-        }
-
-        Consola.success(
-          `Upserted template ${template.template.folder} for problem: ${problem.slug}.`,
-        );
+          },
+          create: {
+            path: file.path as string,
+            content: file.content,
+            starterTemplateId: upsertedTemplate.id,
+          },
+          update: {
+            path: file.path as string,
+            content: file.content,
+          },
+        });
       }
 
-      for (const template of solutionTemplatesWithFiles) {
-        Consola.start(
-          `Upserting solution template ${template.template.folder} for problem: ${problem.slug}.\n`,
-        );
-        const upsertedTemplate = await prisma.template.upsert({
+      Consola.success(
+        `Upserted template ${template.template.folder} for problem: ${problem.slug}.`,
+      );
+    }
+
+    for (const template of solutionTemplatesWithFiles) {
+      Consola.start(
+        `Upserting solution template ${template.template.folder} for problem: ${problem.slug}.\n`,
+      );
+      const upsertedTemplate = await prisma.template.upsert({
+        where: {
+          problemId_name: {
+            problemId: upsertedProblem.id,
+            name: template?.template?.folder,
+          },
+        },
+        create: {
+          default: template?.template?.default ?? false,
+          name: template.template.folder,
+          problemId: upsertedProblem.id,
+        },
+        update: {
+          default: template?.template?.default ?? false,
+          name: template.template.folder,
+        },
+      });
+
+      for (const file of template.content) {
+        if (file === null) {
+          continue;
+        }
+
+        await prisma.file.upsert({
           where: {
-            problemId_name: {
-              problemId: upsertedProblem.id,
-              name: template?.template?.folder,
+            solutionTemplateId_path: {
+              path: file?.path as string,
+              solutionTemplateId: upsertedTemplate.id,
             },
           },
           create: {
-            default: template?.template?.default ?? false,
-            name: template.template.folder,
-            problemId: upsertedProblem.id,
+            path: file.path as string,
+            content: file.content,
+            solutionTemplateId: upsertedTemplate.id,
           },
           update: {
-            default: template?.template?.default ?? false,
-            name: template.template.folder,
+            path: file.path as string,
+            content: file.content,
           },
         });
-
-        for (const file of template.content) {
-          if (file === null) {
-            continue;
-          }
-
-          await prisma.file.upsert({
-            where: {
-              solutionTemplateId_path: {
-                path: file?.path as string,
-                solutionTemplateId: upsertedTemplate.id,
-              },
-            },
-            create: {
-              path: file.path as string,
-              content: file.content,
-              solutionTemplateId: upsertedTemplate.id,
-            },
-            update: {
-              path: file.path as string,
-              content: file.content,
-            },
-          });
-        }
-
-        Consola.success(
-          `Upserted solution template ${template.template.folder} for problem: ${problem.slug}.`,
-        );
       }
 
-      Consola.success(`Upserted problem: ${problem.slug}.\n`);
-    }),
-  );
+      Consola.success(
+        `Upserted solution template ${template.template.folder} for problem: ${problem.slug}.`,
+      );
+    }
+
+    Consola.success(`Upserted problem: ${problem.slug}.\n`);
+  }
+
+  // await Promise.all(
+  //   problemsData.map(async (problem) => {
+
+  //   }),
+  // );
 
   // fetch the brief and the solution
 }

@@ -33,7 +33,7 @@ export function Navigation() {
     <Popover className="relative">
       <Popover.Button className="focused-link inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-white">
         {({ open }) => (
-          <>
+          <Fragment>
             <span>Problem sets</span>
             <ChevronDownIcon
               className={classnames("h-5 w-5 transition ease-linear", {
@@ -41,7 +41,7 @@ export function Navigation() {
               })}
               aria-hidden="true"
             />
-          </>
+          </Fragment>
         )}
       </Popover.Button>
 
@@ -59,8 +59,11 @@ export function Navigation() {
             <div className="p-4">
               {solutions.map((item) => (
                 <Link
-                  href={`/problem-sets/${item?.slug}`}
-                  key={item.name}
+                  href={{
+                    pathname: "/problem-sets/[slug]/",
+                    query: { slug: item.slug },
+                  }}
+                  key={item.slug}
                   className="group relative flex gap-x-6 rounded-sm p-4 focus-within:outline-none focus-within:outline-indigo-500 hover:bg-slate-800"
                 >
                   <div className="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-slate-800 group-hover:bg-slate-900">

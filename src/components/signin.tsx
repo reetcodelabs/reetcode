@@ -146,7 +146,11 @@ export function SignInOrSignUp() {
               className="focused-link group flex h-10 w-full items-center justify-between rounded-md border border-slate-50/[0.15] bg-slate-900 px-2 text-sm text-white transition ease-linear hover:bg-slate-800 focus-visible:outline-offset-1"
             >
               <span className="flex items-center">
-                <img src={provider.icon} alt="Google icon" className="mr-3" />
+                <img
+                  src={provider.icon}
+                  alt="Google icon"
+                  className="mr-3 h-5 w-5"
+                />
                 Continue with {provider.name}
               </span>
               <ArrowRightIcon className="mr-4 h-4 w-4 opacity-0 transition ease-linear group-hover:translate-x-1 group-hover:opacity-100" />

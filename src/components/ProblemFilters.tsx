@@ -10,7 +10,15 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { type Difficulty } from "@prisma/client";
 import classNames from "classnames";
 import { useRouter } from "next/router";
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Dispatch,
+  Fragment,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { RenderIf } from "./RenderIf";
 
@@ -64,29 +72,28 @@ const filters: Filter[] = [
   },
 ];
 
-export function ProblemFilters() {
+export interface ProblemFilterState {
+  difficulty?: {
+    in: Difficulty[];
+  };
+  careerPath: {
+    slug: {
+      in: string[];
+    };
+  };
+}
+
+export const QUERY_PARAMS_DELIMITER = "__";
+
+export function ProblemFilters({
+  activeFilters,
+  setActiveFilters,
+}: {
+  activeFilters: ProblemFilterState;
+  setActiveFilters: Dispatch<SetStateAction<ProblemFilterState>>;
+}) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-
-  const [activeFilters, setActiveFilters] = useState<{
-    difficulty?: {
-      in: Difficulty[];
-    };
-    careerPath: {
-      slug: {
-        in: string[];
-      };
-    };
-  }>({
-    difficulty: {
-      in: [],
-    },
-    careerPath: {
-      slug: {
-        in: [],
-      },
-    },
-  });
 
   const listOfFilters: Filter[] = useMemo(() => {
     const activeFilterCounts: Record<string, number> = {
@@ -119,9 +126,15 @@ export function ProblemFilters() {
   const getURLValueForActiveFilter = (filter: string) => {
     switch (filter) {
       case "difficulty":
-        return activeFilters?.difficulty?.in?.join("__") ?? undefined;
+        return (
+          activeFilters?.difficulty?.in?.join(QUERY_PARAMS_DELIMITER) ??
+          undefined
+        );
       case "career-path":
-        return activeFilters?.careerPath?.slug?.in?.join("__") ?? undefined;
+        return (
+          activeFilters?.careerPath?.slug?.in?.join(QUERY_PARAMS_DELIMITER) ??
+          undefined
+        );
       default:
         return undefined;
     }
@@ -145,7 +158,10 @@ export function ProblemFilters() {
   // sync filter values to URL
   useEffect(() => {
     const filterNames = ["difficulty", "career-path"];
-    const params = new URLSearchParams({});
+
+    const params = new URLSearchParams(
+      router.query?.slug ? { slug: router.query.slug as string } : {},
+    );
 
     const filters: Record<"key" | "value", string>[] = [];
 

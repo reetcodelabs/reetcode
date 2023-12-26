@@ -59,6 +59,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     subscription  Subscription?
+    Solution      Solution[]
 }
 
 model Subscription {
@@ -145,7 +146,8 @@ model Problem {
     careerPath   CareerPath? @relation(fields: [careerPathId], references: [id])
 
     problemSets ProblemSet[]
-    Template    Template[]
+    templates   Template[]
+    Solution    Solution[]
 }
 
 model Template {
@@ -165,8 +167,25 @@ model Template {
 
     sandpackTemplate String?
     problemId        String
+    Solution         Solution[]
 
     @@unique([problemId, name])
+}
+
+model Solution {
+    id String @id @default(cuid())
+
+    problem  Problem  @relation(fields: [problemId], references: [id])
+    template Template @relation(fields: [templateId], references: [id])
+    user     User     @relation(fields: [userId], references: [id])
+
+    userId     String
+    problemId  String
+    templateId String
+
+    files File[]
+
+    @@unique([problemId, userId, templateId])
 }
 
 model File {
@@ -174,8 +193,12 @@ model File {
     path String
     root Boolean @default(true)
 
-    starterTemplateId    String?
-    solutionTemplateId   String?
+    solutionId         String?
+    starterTemplateId  String?
+    solutionTemplateId String?
+
+    solution Solution? @relation(fields: [solutionId], references: [id])
+
     starterFileTemplate  Template? @relation(fields: [starterTemplateId], references: [id], name: "starterFiles")
     solutionFileTemplate Template? @relation(fields: [solutionTemplateId], references: [id], name: "solutionFiles")
 

@@ -9,6 +9,8 @@ import Link from "next/link";
 import { technologiesLogos } from "@/utils/technologies";
 
 import { Badge } from "../badge";
+import { DefinedUseQueryResult } from "@tanstack/react-query";
+import { SUGGESTION_FORM_LINK } from "@/env";
 
 interface ProblemProps {
   problem: Problem & { careerPath?: { slug?: string } | null };
@@ -52,7 +54,10 @@ export function ProblemRow({ problem }: ProblemProps) {
   return (
     <Link
       className="focused-link flex w-full flex-col justify-between gap-x-6 px-4 py-5 lg:flex-row "
-      href={`/problems/${problem.slug}`}
+      href={{
+        pathname: "/problems/[slug]/",
+        query: { slug: problem.slug },
+      }}
     >
       <div className="flex min-w-0 gap-x-4">
         <div className="min-w-0 flex-auto">
@@ -105,13 +110,31 @@ export function ProblemRow({ problem }: ProblemProps) {
 }
 
 interface ProblemListProps {
-  problems: Problem[];
+  problemsQuery: DefinedUseQueryResult<Problem[]>;
 }
 
-export function ProblemList({ problems }: ProblemListProps) {
+export function ProblemList({ problemsQuery }: ProblemListProps) {
+  if (problemsQuery.data.length === 0) {
+    return (
+      <div className="flex flex-col items-center py-6 text-sm">
+        <p className="mb-3 text-center text-slate-400">
+          We do not have problems that match your query yet.
+        </p>
+
+        <a
+          target="_blank"
+          href={SUGGESTION_FORM_LINK}
+          className="text-indigo-400 underline underline-offset-4 hover:text-indigo-500"
+        >
+          Request a problem or problem set
+        </a>
+      </div>
+    );
+  }
+
   return (
     <ul role="list" className="divide-y divide-gray-800">
-      {problems.map((problem) => (
+      {problemsQuery.data.map((problem) => (
         <li
           key={problem.slug}
           className="flex w-full cursor-pointer transition ease-linear focus-within:bg-slate-800 hover:bg-slate-800"

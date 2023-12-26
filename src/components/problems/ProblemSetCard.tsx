@@ -16,7 +16,10 @@ export function ProblemSetCard({
 }: PropsWithChildren<ProblemSetCardProps>) {
   return (
     <Link
-      href={`/problem-sets/${slug}`}
+      href={{
+        pathname: "/problem-sets/[slug]/",
+        query: { slug },
+      }}
       className="group relative cursor-pointer rounded-xl border border-slate-800 focus-within:outline-none "
     >
       <div className="absolute -inset-px rounded-xl border-2 border-transparent opacity-0 transition duration-200 ease-linear [--quick-links-hover-bg:theme(colors.slate.800)] [background:linear-gradient(var(--quick-links-hover-bg,theme(colors.sky.50)),var(--quick-links-hover-bg,theme(colors.sky.50)))_padding-box,linear-gradient(to_top,theme(colors.indigo.400),theme(colors.cyan.400),theme(colors.sky.500))_border-box] group-focus-within:opacity-100 group-hover:opacity-100"></div>

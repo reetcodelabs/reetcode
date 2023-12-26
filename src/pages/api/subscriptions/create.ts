@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
-import { db } from "@/server/db";
+import prisma from "@/server/prisma";
 import {
   invalidPayloadResponse,
   unauthenticatedResponse,
@@ -32,7 +32,7 @@ export async function createSubscription(
     return unauthenticatedResponse(response);
   }
 
-  const user = await db.user.findFirst({
+  const user = await prisma.user.findFirst({
     where: {
       id: session?.user?.id,
     },
@@ -65,8 +65,6 @@ export async function createSubscription(
     channel,
     ...rest
   } = await verifyTransactionReference(validation.data.reference);
-
-  console.log({ status, amount, authorization, channel, ...rest });
 
   if (!status) {
     return invalidPayloadResponse(response, {
@@ -113,7 +111,7 @@ export async function createSubscription(
   };
 
   // create a subscription for customer
-  const subscription = await db.subscription.upsert({
+  const subscription = await prisma.subscription.upsert({
     create: {
       userId: user.id,
       subscribedAt: new Date(),
@@ -138,11 +136,6 @@ export async function createSubscription(
     ...session?.user,
     subscription,
   };
-
-  console.log(">>>>>>> ", request.session.user, validation, {
-    expiresAt,
-    user,
-  });
 
   await request.session.save();
 

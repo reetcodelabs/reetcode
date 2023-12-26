@@ -1,12 +1,20 @@
-import { type Problem } from "@prisma/client";
+import { Difficulty, type Problem } from "@prisma/client";
 
-import { ProblemFilters } from "@/components/ProblemFilters";
+import { axiosClient } from "@/utils/axios";
+import {
+  ProblemFilterState,
+  ProblemFilters,
+  QUERY_PARAMS_DELIMITER,
+} from "@/components/ProblemFilters";
 import { ProblemList } from "@/components/problems/ProblemList";
 import { ProblemSetCard } from "@/components/problems/ProblemSetCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import ProblemSets from "@/seed/problem-sets.json";
 import { databaseService } from "@/server/services/database";
 import { withIronSessionSsr } from "@/utils/session";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useRouter } from "next/router";
 
 const recommendedProblemSets = ProblemSets.slice(0, 4);
 
@@ -29,7 +37,22 @@ interface ProblemsProps {
 }
 
 export default function Problems({ problems = [] }: ProblemsProps) {
-  console.log({ problems });
+  const router = useRouter();
+  const [activeFilters, setActiveFilters] = useState<ProblemFilterState>(
+    getDefaultFilterStateFromQuery(router.query as Record<string, string>),
+  );
+
+  const problemsQuery = useQuery<Problem[]>(["query-problems", activeFilters], {
+    async queryFn() {
+      const response = await axiosClient.post(
+        "/problems/get-all-problems",
+        prepareFilterForQuery(activeFilters),
+      );
+
+      return response.data;
+    },
+    initialData: problems,
+  });
 
   return (
     <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 px-6 pb-48 pt-12 xl:px-0">
@@ -82,21 +105,56 @@ export default function Problems({ problems = [] }: ProblemsProps) {
       </section>
 
       <section className="flex w-full flex-col">
-        <ProblemFilters />
+        <ProblemFilters
+          activeFilters={activeFilters}
+          setActiveFilters={setActiveFilters}
+        />
 
         <div className="mt-6 rounded border border-slate-50/[0.06]">
-          <ProblemList problems={problems} />
+          <ProblemList problemsQuery={problemsQuery} />
         </div>
       </section>
     </div>
   );
 }
 
+export function getDefaultFilterStateFromQuery(
+  query: Record<"difficulty" | "careerPath", string>,
+): ProblemFilterState {
+  return {
+    difficulty: {
+      in: (query?.difficulty?.split(QUERY_PARAMS_DELIMITER) ??
+        []) as Difficulty[],
+    },
+    careerPath: {
+      slug: {
+        in: query?.careerPath?.split(QUERY_PARAMS_DELIMITER) ?? [],
+      },
+    },
+  };
+}
+
+export function prepareFilterForQuery(activeFilters: ProblemFilterState) {
+  const careerPathStateIsEmpty =
+    activeFilters?.careerPath?.slug?.in.length === 0;
+
+  const difficultyStateIsEmpty = activeFilters.difficulty?.in.length === 0;
+
+  return {
+    difficulty: difficultyStateIsEmpty ? undefined : activeFilters.difficulty,
+    careerPath: careerPathStateIsEmpty ? undefined : activeFilters.careerPath,
+  };
+}
+
 export const getServerSideProps = withIronSessionSsr(
   async function getServerSideProps(ctx) {
-    const problems = await databaseService.getAllProblems();
+    const problemsQuery = getDefaultFilterStateFromQuery(
+      ctx.query as Record<string, string>,
+    );
 
-    console.log({ problems });
+    const problems = await databaseService.getAllProblems(
+      prepareFilterForQuery(problemsQuery),
+    );
 
     return {
       props: {

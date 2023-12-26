@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
-import { db } from "@/server/db";
+import prisma from "@/server/prisma";
 import { withIronSessionApiRoute } from "@/utils/session";
 
 export const ConfirmMagicLinkValidationSchema = z.object({
@@ -25,7 +25,7 @@ export async function confirmMagicLink(
     );
   }
 
-  const verificationToken = await db.verificationToken.findFirst({
+  const verificationToken = await prisma.verificationToken.findFirst({
     where: {
       token: validation.data.token,
     },
@@ -52,7 +52,7 @@ export async function confirmMagicLink(
   }
 
   // create user in database
-  const user = await db.user.upsert({
+  const user = await prisma.user.upsert({
     where: {
       email: verificationToken.email,
     },

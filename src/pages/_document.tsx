@@ -6,9 +6,9 @@ export default function Document() {
     <Html className="h-full">
       <Head>
         <style
-          dangerouslySetInnerHTML={{ __html: getSandpackCssText() }}
           id="sandpack"
           key="sandpack-css"
+          dangerouslySetInnerHTML={{ __html: getSandpackCssText() }}
         />
         <link
           rel="stylesheet"

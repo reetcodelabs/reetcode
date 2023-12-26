@@ -1,18 +1,54 @@
 import { BeakerIcon, ClockIcon } from "@heroicons/react/24/outline";
-import { type ProblemSet } from "@prisma/client";
+import { Problem, type ProblemSet } from "@prisma/client";
 
 import { Page } from "@/components/Page";
-import { ProblemFilters } from "@/components/ProblemFilters";
+import {
+  ProblemFilterState,
+  ProblemFilters,
+} from "@/components/ProblemFilters";
 import ProblemSetsData from "@/seed/problem-sets.json";
 import { withIronSessionSsr } from "@/utils/session";
+import { useRouter } from "next/router";
+import {
+  getDefaultFilterStateFromQuery,
+  prepareFilterForQuery,
+} from "../problems";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { axiosClient } from "@/utils/axios";
+import { ProblemList } from "@/components/problems/ProblemList";
+import { databaseService } from "@/server/services/database";
 
 interface ProblemSetDetailsProps {
   problemSet: ProblemSet;
+  problems: Problem[];
 }
 
 export default function ProblemSetDetails({
+  problems,
   problemSet,
 }: ProblemSetDetailsProps) {
+  const router = useRouter();
+  const [activeFilters, setActiveFilters] = useState<ProblemFilterState>(
+    getDefaultFilterStateFromQuery(router.query as Record<string, string>),
+  );
+
+  const problemsQuery = useQuery<Problem[]>(["query-problems", activeFilters], {
+    async queryFn() {
+      const response = await axiosClient.post("/problems/get-all-problems", {
+        ...prepareFilterForQuery(activeFilters),
+        problemSets: {
+          some: {
+            slug: problemSet.slug,
+          },
+        },
+      });
+
+      return response.data;
+    },
+    initialData: problems,
+  });
+
   return (
     <Page>
       <div className="flex items-start gap-x-4 lg:gap-x-8">
@@ -53,9 +89,12 @@ export default function ProblemSetDetails({
         {problemSet?.longDescription}
       </div>
 
-      <ProblemFilters />
+      <ProblemFilters
+        activeFilters={activeFilters}
+        setActiveFilters={setActiveFilters}
+      />
       <div className="rounded border border-slate-50/[0.06]">
-        {/* <ProblemList /> */}
+        <ProblemList problemsQuery={problemsQuery} />
       </div>
     </Page>
   );
@@ -73,10 +112,24 @@ export const getServerSideProps = withIronSessionSsr(
       };
     }
 
+    const problemsQuery = getDefaultFilterStateFromQuery(
+      ctx.query as Record<string, string>,
+    );
+
+    const problems = await databaseService.getAllProblems({
+      ...prepareFilterForQuery(problemsQuery),
+      problemSets: {
+        some: {
+          slug: problemSet.slug,
+        },
+      },
+    });
+
     return {
       props: {
         session: ctx.req.session,
         problemSet,
+        problems,
       },
     };
   },
