@@ -63,7 +63,6 @@ export async function createSubscription(
     amount = 0,
     authorization,
     channel,
-    ...rest
   } = await verifyTransactionReference(validation.data.reference);
 
   if (!status) {

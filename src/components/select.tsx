@@ -1,7 +1,7 @@
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import classNames from "classnames";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment } from "react";
 export interface SelectOption {
   id: string;
   name: string;

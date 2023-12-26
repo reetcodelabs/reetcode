@@ -1,7 +1,8 @@
-import { ExclamationTriangleIcon } from "@heroicons/react/20/solid";
-import { Modal, ModalProps } from "./modal";
 import { Dialog } from "@headlessui/react";
+import { ExclamationTriangleIcon } from "@heroicons/react/20/solid";
+
 import { Button } from "./button";
+import { Modal, type ModalProps } from "./modal";
 
 export function ConfirmAlert({ ...props }: ModalProps) {
   return (

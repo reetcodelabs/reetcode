@@ -11,9 +11,9 @@ import { type Difficulty } from "@prisma/client";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import {
-  Dispatch,
+  type Dispatch,
   Fragment,
-  SetStateAction,
+  type SetStateAction,
   useCallback,
   useEffect,
   useMemo,

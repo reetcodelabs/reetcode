@@ -1,6 +1,7 @@
 import {
   SandpackCodeEditor,
   SandpackFileExplorer,
+  type SandpackPredefinedTemplate,
   SandpackPreview,
   SandpackProvider,
 } from "@codesandbox/sandpack-react";
@@ -8,26 +9,23 @@ import * as sandpackThemes from "@codesandbox/sandpack-themes";
 import { BookOpenIcon } from "@heroicons/react/24/outline";
 import {
   type MouseEventHandler,
-  useEffect,
-  useState,
-  useMemo,
   useCallback,
+  useEffect,
+  useMemo,
+  useState,
 } from "react";
 
 import { Button } from "@/components/button";
 import { TestCases } from "@/components/problems/TestCases";
-import { Select, SelectOption } from "@/components/select";
+import { Select, type SelectOption } from "@/components/select";
 import { Tabs } from "@/components/tabs";
-import { withIronSessionSsr } from "@/utils/session";
 import {
-  ProblemWithTemplate,
   databaseService,
+  type ProblemWithTemplate,
+  type TemplateWithStarterFiles,
 } from "@/server/services/database";
-import { useQuery } from "@tanstack/react-query";
 import { axiosClient } from "@/utils/axios";
-
-import { Template, type Prisma, File } from "@prisma/client";
-import { AxiosError } from "axios";
+import { withIronSessionSsr } from "@/utils/session";
 
 const themes = [
   {
@@ -211,9 +209,12 @@ function useFetchTemplateFiles() {
     setIsFetching(true);
 
     try {
-      const response = await axiosClient.post("/problems/get-template-files", {
-        templateId,
-      });
+      const response = await axiosClient.post<TemplateWithStarterFiles>(
+        "/problems/get-template-files",
+        {
+          templateId,
+        },
+      );
 
       setIsFetching(false);
 
@@ -249,16 +250,11 @@ export default function ProblemEditor({
     isLoadingWindowSize,
     questionContainerHeight,
   } = useProblemInterface();
-  const [confirmSwitchToTemplate, setConfirmSwitchToTemplate] =
-    useState<SelectOption | null>(null);
   const [template, setTemplate] = useState<SelectOption>(
     () =>
       problem.problemTemplates.find((template) => template.default === true)!,
   );
-  const { isFetching: isFetchingTemplateFiles, fetchTemplateFiles } =
-    useFetchTemplateFiles();
-
-  console.log({ isFetchingTemplateFiles });
+  const { fetchTemplateFiles } = useFetchTemplateFiles();
 
   async function onTemplateSelectChanged(selected: SelectOption) {
     // if starter files fetched, switch template
@@ -274,6 +270,11 @@ export default function ProblemEditor({
 
     // if not, fetch starter files then switch template
     const templateWithStarterFiles = await fetchTemplateFiles(selected.id);
+
+    if (!templateWithStarterFiles) {
+      // there was an error.
+      return;
+    }
 
     // replate template in state with one with starter files.
     setProblem((current) => ({
@@ -304,7 +305,6 @@ export default function ProblemEditor({
   );
 
   const files = useMemo(() => {
-    // activeTemplate?.starterFiles
     const filesMap: Record<string, string> = {};
 
     for (const file of activeTemplate?.starterFiles ?? []) {
@@ -322,8 +322,8 @@ export default function ProblemEditor({
     <SandpackProvider
       files={files}
       className="h-full"
-      template={activeTemplate?.sandpackTemplate as any}
       theme={sandpackThemes[theme?.id as SandpackThemeKey]}
+      template={activeTemplate?.sandpackTemplate as SandpackPredefinedTemplate}
     >
       <div className="flex flex-col">
         <main className="flex w-full flex-1 bg-slate-800 p-2">

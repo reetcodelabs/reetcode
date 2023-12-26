@@ -1,8 +1,8 @@
-import { z } from "zod";
-import prisma from "@/server/prisma";
-import { databaseService } from "@/server/services/database";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { z } from "zod";
+
 import { invalidPayloadResponse } from "@/server/response";
+import { databaseService } from "@/server/services/database";
 
 const GetAllProblemsFilterSchema = z.object({
   difficulty: z

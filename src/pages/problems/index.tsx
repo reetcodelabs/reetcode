@@ -1,9 +1,11 @@
-import { Difficulty, type Problem } from "@prisma/client";
+import { type Difficulty, type Problem } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
-import { axiosClient } from "@/utils/axios";
 import {
-  ProblemFilterState,
   ProblemFilters,
+  type ProblemFilterState,
   QUERY_PARAMS_DELIMITER,
 } from "@/components/ProblemFilters";
 import { ProblemList } from "@/components/problems/ProblemList";
@@ -11,10 +13,8 @@ import { ProblemSetCard } from "@/components/problems/ProblemSetCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import ProblemSets from "@/seed/problem-sets.json";
 import { databaseService } from "@/server/services/database";
+import { axiosClient } from "@/utils/axios";
 import { withIronSessionSsr } from "@/utils/session";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { useRouter } from "next/router";
 
 const recommendedProblemSets = ProblemSets.slice(0, 4);
 
@@ -44,7 +44,7 @@ export default function Problems({ problems = [] }: ProblemsProps) {
 
   const problemsQuery = useQuery<Problem[]>(["query-problems", activeFilters], {
     async queryFn() {
-      const response = await axiosClient.post(
+      const response = await axiosClient.post<Problem[]>(
         "/problems/get-all-problems",
         prepareFilterForQuery(activeFilters),
       );

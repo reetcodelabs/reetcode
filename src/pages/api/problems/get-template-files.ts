@@ -1,6 +1,7 @@
+import { type NextApiRequest, type NextApiResponse } from "next";
 import { z } from "zod";
+
 import prisma from "@/server/prisma";
-import { NextApiRequest, NextApiResponse } from "next";
 import { invalidPayloadResponse } from "@/server/response";
 
 const GetTemplateFilesSchema = z.object({

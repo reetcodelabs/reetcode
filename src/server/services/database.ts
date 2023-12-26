@@ -1,4 +1,4 @@
-import type { Prisma, PrismaClient } from "@prisma/client";
+import type { File, Prisma, Template } from "@prisma/client";
 
 import prisma, { type PrismaClientSingleton } from "@/server/prisma";
 
@@ -68,8 +68,6 @@ export class DatabaseService {
       }),
     ]);
 
-    type TemplateWithStarterFiles = NonNullable<typeof problem>["templates"][0];
-
     return {
       ...problem,
       problemTemplates: templates as unknown as TemplateWithStarterFiles[],
@@ -78,6 +76,8 @@ export class DatabaseService {
 }
 
 export const databaseService = new DatabaseService(prisma);
+
+export type TemplateWithStarterFiles = Template & { starterFiles: File[] };
 
 export type ProblemWithTemplate = NonNullable<
   Awaited<ReturnType<typeof databaseService.getProblemBySlug>>

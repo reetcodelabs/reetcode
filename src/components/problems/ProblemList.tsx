@@ -4,13 +4,13 @@ import {
   ClockIcon,
 } from "@heroicons/react/24/outline";
 import { Difficulty, type Problem } from "@prisma/client";
+import { type DefinedUseQueryResult } from "@tanstack/react-query";
 import Link from "next/link";
 
+import { SUGGESTION_FORM_LINK } from "@/env";
 import { technologiesLogos } from "@/utils/technologies";
 
 import { Badge } from "../badge";
-import { DefinedUseQueryResult } from "@tanstack/react-query";
-import { SUGGESTION_FORM_LINK } from "@/env";
 
 interface ProblemProps {
   problem: Problem & { careerPath?: { slug?: string } | null };

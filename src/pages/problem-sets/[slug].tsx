@@ -1,23 +1,24 @@
 import { BeakerIcon, ClockIcon } from "@heroicons/react/24/outline";
-import { Problem, type ProblemSet } from "@prisma/client";
+import { type Problem, type ProblemSet } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 import { Page } from "@/components/Page";
 import {
-  ProblemFilterState,
   ProblemFilters,
+  type ProblemFilterState,
 } from "@/components/ProblemFilters";
+import { ProblemList } from "@/components/problems/ProblemList";
 import ProblemSetsData from "@/seed/problem-sets.json";
+import { databaseService } from "@/server/services/database";
+import { axiosClient } from "@/utils/axios";
 import { withIronSessionSsr } from "@/utils/session";
-import { useRouter } from "next/router";
+
 import {
   getDefaultFilterStateFromQuery,
   prepareFilterForQuery,
 } from "../problems";
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { axiosClient } from "@/utils/axios";
-import { ProblemList } from "@/components/problems/ProblemList";
-import { databaseService } from "@/server/services/database";
 
 interface ProblemSetDetailsProps {
   problemSet: ProblemSet;
@@ -35,14 +36,17 @@ export default function ProblemSetDetails({
 
   const problemsQuery = useQuery<Problem[]>(["query-problems", activeFilters], {
     async queryFn() {
-      const response = await axiosClient.post("/problems/get-all-problems", {
-        ...prepareFilterForQuery(activeFilters),
-        problemSets: {
-          some: {
-            slug: problemSet.slug,
+      const response = await axiosClient.post<Problem[]>(
+        "/problems/get-all-problems",
+        {
+          ...prepareFilterForQuery(activeFilters),
+          problemSets: {
+            some: {
+              slug: problemSet.slug,
+            },
           },
         },
-      });
+      );
 
       return response.data;
     },
