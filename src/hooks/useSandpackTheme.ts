@@ -1,6 +1,7 @@
-import { SelectOption } from "@/components/select";
 import * as defaultThemes from "@codesandbox/sandpack-themes";
 import { useMemo, useState } from "react";
+
+import { type SelectOption } from "@/components/select";
 
 export const listOfThemes = [
   {

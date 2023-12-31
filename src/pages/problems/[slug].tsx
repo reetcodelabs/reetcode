@@ -18,6 +18,7 @@ import { Button } from "@/components/button";
 import { TestCases } from "@/components/problems/TestCases";
 import { Select, type SelectOption } from "@/components/select";
 import { Tabs } from "@/components/tabs";
+import { type SandpackThemeKey, useSandpackTheme } from "@/hooks/useSandpackTheme";
 import {
   databaseService,
   type ProblemWithTemplate,
@@ -25,7 +26,6 @@ import {
 } from "@/server/services/database";
 import { axiosClient } from "@/utils/axios";
 import { withIronSessionSsr } from "@/utils/session";
-import { SandpackThemeKey, useSandpackTheme } from "@/hooks/useSandpackTheme";
 
 function useWindowResized() {
   const [size, setSize] = useState<{ width: number; height: number }>({
