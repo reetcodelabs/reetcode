@@ -108,7 +108,7 @@ async function seedProblems(
 
         const allTemplateFiles = Fs.readdirSync(folderLocation, {
           recursive: true,
-        });
+        }).filter((file) => !file.includes("node_modules"));
 
         const allTemplateFilesContent = allTemplateFiles.map((fileName) => {
           const filePath = Path.resolve(folderLocation, fileName as string);
