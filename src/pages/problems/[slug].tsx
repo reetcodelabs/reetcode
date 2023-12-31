@@ -5,7 +5,6 @@ import {
   SandpackPreview,
   SandpackProvider,
 } from "@codesandbox/sandpack-react";
-import * as sandpackThemes from "@codesandbox/sandpack-themes";
 import { BookOpenIcon } from "@heroicons/react/24/outline";
 import {
   type MouseEventHandler,
@@ -26,76 +25,7 @@ import {
 } from "@/server/services/database";
 import { axiosClient } from "@/utils/axios";
 import { withIronSessionSsr } from "@/utils/session";
-
-const themes = [
-  {
-    id: "atomDark",
-    name: "Atom Dark",
-  },
-  {
-    id: "nightOwl",
-    name: "Night Owl",
-  },
-  {
-    id: "amethyst",
-    name: "Amethyst",
-  },
-  {
-    id: "aquaBlue",
-    name: "Aqua Blue",
-  },
-  {
-    id: "cobalt2",
-    name: "Cobalt 2",
-  },
-  {
-    id: "cyberpunk",
-    name: "Cyberpunk",
-  },
-  {
-    id: "dracula",
-    name: "Dracula",
-  },
-  {
-    id: "ecoLight",
-    name: "Ecolight",
-  },
-  {
-    id: "freeCodeCampDark",
-    name: "Freecodecamp Dark",
-  },
-  {
-    id: "githubLight",
-    name: "Github Light",
-  },
-  {
-    id: "gruvboxDark",
-    name: "Gruvbox Dark",
-  },
-  {
-    id: "gruvboxLight",
-    name: "Gruvbox Light",
-  },
-  {
-    id: "levelUp",
-    name: "Level Up",
-  },
-  {
-    id: "monokaiPro",
-    name: "Monokai Pro",
-  },
-  {
-    id: "neoCyan",
-    name: "Neo Cyan",
-  },
-
-  {
-    id: "sandpackDark",
-    name: "Sandpack Dark",
-  },
-];
-
-type SandpackThemeKey = keyof typeof sandpackThemes;
+import { SandpackThemeKey, useSandpackTheme } from "@/hooks/useSandpackTheme";
 
 function useWindowResized() {
   const [size, setSize] = useState<{ width: number; height: number }>({
@@ -300,9 +230,7 @@ export default function ProblemEditor({
     return activeTemplate!;
   }, [template]);
 
-  const [theme, setTheme] = useState<SelectOption>(
-    () => themes.find((theme) => theme?.id === "sandpackDark") ?? themes[0]!,
-  );
+  const { themes, setTheme, theme, sandpackThemes } = useSandpackTheme();
 
   const files = useMemo(() => {
     const filesMap: Record<string, string> = {};

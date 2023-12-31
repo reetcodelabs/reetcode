@@ -66,8 +66,8 @@
         "folder": "vue-ts"
       },
       {
-        "sandpackTemplate": "react-ts",
-        "folder": "react-ts"
+        "sandpackTemplate": "vite-react-ts",
+        "folder": "vite-react-ts"
       },
       {
         "sandpackTemplate": "vanilla-ts",
