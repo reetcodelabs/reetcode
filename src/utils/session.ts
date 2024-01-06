@@ -13,6 +13,7 @@ declare module "iron-session" {
     user?: {
       id: string;
       email: string;
+      apiKey: string | null;
       subscription?: Subscription | null;
     };
   }

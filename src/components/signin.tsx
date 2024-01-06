@@ -16,7 +16,12 @@ import { Alert } from "./Notification";
 import { RenderIf } from "./RenderIf";
 
 const providers = [
-  { name: "Github", icon: "https://img.clerk.com/static/github.svg?width=160" },
+  {
+    name: "Github",
+    icon: "https://dashboard.hookdeck.com/images/github-icon.svg",
+    // style: filter: invert(1);
+    style: { filter: "invert(1)" },
+  },
   {
     name: "Google",
     icon: "https://img.clerk.com/static/google.svg?width=160",
@@ -146,7 +151,12 @@ export function SignInOrSignUp() {
               className="focused-link group flex h-10 w-full items-center justify-between rounded-md border border-slate-50/[0.15] bg-slate-900 px-2 text-sm text-white transition ease-linear hover:bg-slate-800 focus-visible:outline-offset-1"
             >
               <span className="flex items-center">
-                <img src={provider.icon} alt="Google icon" className="mr-3" />
+                <img
+                  src={provider.icon}
+                  alt="Google icon"
+                  style={provider.style}
+                  className="mr-3 h-5 w-5"
+                />
                 Continue with {provider.name}
               </span>
               <ArrowRightIcon className="mr-4 h-4 w-4 opacity-0 transition ease-linear group-hover:translate-x-1 group-hover:opacity-100" />

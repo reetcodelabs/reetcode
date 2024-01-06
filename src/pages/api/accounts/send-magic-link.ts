@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
 import { env } from "@/env";
-import { db } from "@/server/db";
+import prisma from "@/server/prisma";
 import { invalidPayloadResponse } from "@/server/response";
 import { MailcoachEmails, sendTransactionalEmail } from "@/utils/mailcoach";
 
@@ -26,12 +26,13 @@ export default async function sendMagicLink(
   }
 
   // create user in database
-  const user = await db.user.upsert({
+  const user = await prisma.user.upsert({
     where: {
       email: validation.data.email,
     },
     create: {
       email: validation.data.email,
+      apiKey: Crypto.randomUUID(),
     },
     update: {},
   });
@@ -40,7 +41,7 @@ export default async function sendMagicLink(
 
   const expires = dayjs().add(1, "hour").toDate();
 
-  await db.verificationToken.upsert({
+  await prisma.verificationToken.upsert({
     where: {
       email: validation.data.email,
     },
@@ -62,8 +63,6 @@ export default async function sendMagicLink(
   if (validation.data.callbackURL) {
     magicLink.searchParams.append("callbackURL", validation.data.callbackURL);
   }
-
-  console.log({ url: magicLink.href });
 
   await sendTransactionalEmail(
     MailcoachEmails.EMAIL_VERIFICATION_LINK,

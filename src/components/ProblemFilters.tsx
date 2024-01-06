@@ -7,63 +7,266 @@ import {
 } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { type Difficulty } from "@prisma/client";
 import classNames from "classnames";
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
-import { Fragment, useState } from "react";
+import { useRouter } from "next/router";
+import {
+  type Dispatch,
+  Fragment,
+  type SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+
+import { RenderIf } from "./RenderIf";
 
 const sortOptions = [
-  { name: "Difficulty", href: "#", current: true },
-  { name: "Duration", href: "#", current: false },
-  { name: "Newest", href: "#", current: false },
+  { name: "Difficulty: Easy to Hard", value: "easy-to-hard", current: true },
+  { name: "Difficulty: Hard to easy", value: "hard-to-easy", current: true },
 ];
 
-const filters = [
+interface FilterOption {
+  value: string;
+  label: string;
+  checked: boolean;
+}
+interface Filter {
+  id: string;
+  name: string;
+  activeCount: number;
+  activeValue: string;
+  options: FilterOption[];
+}
+
+const filters: Filter[] = [
   {
     id: "career-path",
     name: "Career Paths",
+    activeCount: 0,
+    activeValue: "",
     options: [
-      { value: "frontend", label: "Frontend Engineering", checked: false },
-      { value: "backend", label: "Backend Engineering", checked: true },
+      {
+        value: "frontend-engineering",
+        label: "Frontend Engineering",
+        checked: false,
+      },
+      {
+        value: "backend-engineering",
+        label: "Backend Engineering",
+        checked: true,
+      },
     ],
   },
   {
     id: "difficulty",
     name: "Difficulty",
+    activeCount: 0,
+    activeValue: "",
     options: [
-      { value: "easy", label: "Easy", checked: false },
-      { value: "medium", label: "Medium", checked: false },
-      { value: "hard", label: "Hard", checked: false },
+      { value: "EASY", label: "Easy", checked: false },
+      { value: "MEDIUM", label: "Medium", checked: false },
+      { value: "HARD", label: "Hard", checked: false },
     ],
   },
-  {
-    id: "company",
-    name: "Company",
-    options: [
-      { value: "udemy", label: "Udemy", checked: false },
-      { value: "shopify", label: "Shopify", checked: false },
-      { value: "Google", label: "Google", checked: false },
-    ],
-  },
-];
-const activeFilters = [
-  { value: "frontend-engineering", label: "Frontend engineering" },
 ];
 
-export function ProblemFilters() {
+export interface ProblemFilterState {
+  difficulty?: {
+    in: Difficulty[];
+  };
+  careerPath: {
+    slug: {
+      in: string[];
+    };
+  };
+}
+
+export const QUERY_PARAMS_DELIMITER = "__";
+
+export function ProblemFilters({
+  activeFilters,
+  setActiveFilters,
+}: {
+  activeFilters: ProblemFilterState;
+  setActiveFilters: Dispatch<SetStateAction<ProblemFilterState>>;
+}) {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+
+  const listOfFilters: Filter[] = useMemo(() => {
+    const activeFilterCounts: Record<string, number> = {
+      difficulty: activeFilters?.difficulty?.in?.length ?? 0,
+      "career-path": activeFilters?.careerPath?.slug?.in?.length ?? 0,
+    };
+
+    const activeFilterValues: Record<string, string> = {
+      difficulty:
+        activeFilters?.difficulty?.in
+          ?.map((difficulty) => difficulty?.toLowerCase())
+          ?.join(", ") ?? "",
+      "career-path": activeFilters?.careerPath?.slug?.in?.join(", ") ?? "",
+    };
+
+    return filters.map((filter) => {
+      return {
+        ...filter,
+        activeCount: activeFilterCounts[filter.id] ?? 0,
+        activeValue: activeFilterValues[filter.id] ?? "",
+      };
+    });
+  }, [activeFilters]);
+
+  const listOfActiveFilters: Filter[] = useMemo(
+    () => listOfFilters.filter((filter) => filter.activeCount > 0),
+    [listOfFilters],
+  );
+
+  const getURLValueForActiveFilter = (filter: string) => {
+    switch (filter) {
+      case "difficulty":
+        return (
+          activeFilters?.difficulty?.in?.join(QUERY_PARAMS_DELIMITER) ??
+          undefined
+        );
+      case "career-path":
+        return (
+          activeFilters?.careerPath?.slug?.in?.join(QUERY_PARAMS_DELIMITER) ??
+          undefined
+        );
+      default:
+        return undefined;
+    }
+  };
+
+  const onRemoveFilter = (filter: Filter) => {
+    switch (filter.id) {
+      case "difficulty":
+        setActiveFilters((current) => ({ ...current, difficulty: { in: [] } }));
+        return;
+      case "career-path":
+        setActiveFilters((current) => ({
+          ...current,
+          careerPath: { slug: { in: [] } },
+        }));
+      default:
+        break;
+    }
+  };
+
+  // sync filter values to URL
+  useEffect(() => {
+    const filterNames = ["difficulty", "career-path"];
+
+    const params = new URLSearchParams(
+      router.query?.slug ? { slug: router.query.slug as string } : {},
+    );
+
+    const filters: Record<"key" | "value", string>[] = [];
+
+    for (const filter of filterNames) {
+      const value = getURLValueForActiveFilter(filter);
+
+      if (value) {
+        filters.push({ key: filter, value });
+      }
+    }
+
+    for (const filter of filters) {
+      params.append(filter.key, filter.value);
+    }
+
+    void router.replace(
+      { pathname: router.pathname, query: params.toString() },
+      undefined,
+      {
+        shallow: true,
+      },
+    );
+  }, [activeFilters]);
+
+  const setDifficultyFilter = useCallback(
+    (option: FilterOption, value: string) => {
+      setActiveFilters((current) => {
+        const difficultyValue = value as Difficulty;
+        let difficulties: Difficulty[] = [...(current.difficulty?.in ?? [])];
+
+        if (current.difficulty?.in?.includes(difficultyValue)) {
+          difficulties = difficulties.filter(
+            (difficulty) => difficulty !== difficultyValue,
+          );
+        } else {
+          difficulties = [...difficulties, difficultyValue];
+        }
+
+        return {
+          ...current,
+          difficulty: {
+            in: difficulties,
+          },
+        };
+      });
+    },
+    [],
+  );
+
+  const setCareerPathFilter = useCallback(
+    (option: FilterOption, careerPathValue: string) => {
+      setActiveFilters((current) => {
+        let careerPaths: string[] = [...(current.careerPath?.slug?.in || [])];
+
+        if (careerPaths.includes(careerPathValue)) {
+          careerPaths = careerPaths.filter((path) => path !== careerPathValue);
+        } else {
+          careerPaths = [...careerPaths, careerPathValue];
+        }
+
+        return {
+          ...current,
+          careerPath: {
+            slug: {
+              in: careerPaths,
+            },
+          },
+        };
+      });
+    },
+    [],
+  );
+
+  const onOptionChanged = (
+    filter: Filter,
+    option: FilterOption,
+    value: string,
+  ) => {
+    switch (filter.id) {
+      case "difficulty":
+        setDifficultyFilter(option, value);
+        return;
+      case "career-path":
+        setCareerPathFilter(option, value);
+        return;
+      default:
+        break;
+    }
+  };
+
+  const getFilterOptionDefaultValue = (
+    filter: Filter,
+    option: FilterOption,
+  ) => {
+    switch (filter.id) {
+      case "difficulty":
+        return activeFilters.difficulty?.in?.includes(
+          option.value as Difficulty,
+        );
+      case "career-path":
+        return activeFilters.careerPath?.slug?.in?.includes(option.value);
+      default:
+        break;
+    }
+  };
 
   return (
     <div className="rounded-lg border border-slate-50/[0.06]">
@@ -107,7 +310,7 @@ export function ProblemFilters() {
 
                 {/* Filters */}
                 <form className="mt-4">
-                  {filters.map((section) => (
+                  {listOfFilters.map((section) => (
                     <Disclosure
                       as="div"
                       key={section.name}
@@ -143,7 +346,17 @@ export function ProblemFilters() {
                                     name={`${section.id}[]`}
                                     defaultValue={option.value}
                                     type="checkbox"
-                                    defaultChecked={option.checked}
+                                    onChange={(event) =>
+                                      onOptionChanged(
+                                        section,
+                                        option,
+                                        event.target.value,
+                                      )
+                                    }
+                                    defaultChecked={getFilterOptionDefaultValue(
+                                      section,
+                                      option,
+                                    )}
                                     className="h-4 w-4 rounded text-indigo-600 focus:ring-indigo-500"
                                   />
                                   <label
@@ -195,23 +408,22 @@ export function ProblemFilters() {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <Menu.Items className="absolute left-0 z-10 mt-2 w-40 origin-top-left rounded-md bg-slate-900 shadow-2xl ring-1 ring-slate-50/[0.06] ring-opacity-5 focus:outline-none">
+                <Menu.Items className="absolute left-0 z-10 mt-2 w-64 origin-top-left rounded-md bg-slate-900 shadow-2xl ring-1 ring-slate-50/[0.06] ring-opacity-5 focus:outline-none">
                   <div className="py-1">
                     {sortOptions.map((option) => (
                       <Menu.Item key={option.name}>
                         {({ active }) => (
-                          <a
-                            href={option.href}
+                          <button
                             className={classNames(
                               option.current
                                 ? "font-medium text-white"
                                 : "text-slate-400",
                               active ? "bg-slate-800" : "",
-                              "block px-4 py-2 text-sm",
+                              "block w-full px-4 py-2 text-sm",
                             )}
                           >
                             {option.name}
-                          </a>
+                          </button>
                         )}
                       </Menu.Item>
                     ))}
@@ -231,7 +443,7 @@ export function ProblemFilters() {
             <div className="hidden sm:block">
               <div className="flow-root">
                 <Popover.Group className="-mx-4 flex items-center divide-x divide-gray-200">
-                  {filters.map((section, sectionIdx) => (
+                  {listOfFilters.map((section) => (
                     <Popover
                       key={section.name}
                       className="relative inline-block px-4 text-left"
@@ -240,9 +452,9 @@ export function ProblemFilters() {
                         {({ open }) => (
                           <>
                             <span>{section.name}</span>
-                            {sectionIdx === 0 ? (
+                            {section?.activeCount ? (
                               <span className="ml-1.5 rounded bg-gray-200 px-1.5 py-0.5 text-xs font-semibold tabular-nums text-gray-700">
-                                1
+                                {section?.activeCount}
                               </span>
                             ) : null}
                             <ChevronDownIcon
@@ -279,7 +491,17 @@ export function ProblemFilters() {
                                   name={`${section.id}[]`}
                                   defaultValue={option.value}
                                   type="checkbox"
-                                  defaultChecked={option.checked}
+                                  onChange={(event) =>
+                                    onOptionChanged(
+                                      section,
+                                      option,
+                                      event.target.value,
+                                    )
+                                  }
+                                  defaultChecked={getFilterOptionDefaultValue(
+                                    section,
+                                    option,
+                                  )}
                                   className="h-4 w-4 rounded text-indigo-600 focus:ring-indigo-500"
                                 />
                                 <label
@@ -315,36 +537,49 @@ export function ProblemFilters() {
             />
 
             <div className="mt-2 sm:ml-4 sm:mt-0">
-              <div className="-m-1 flex flex-wrap items-center">
-                {activeFilters.map((activeFilter) => (
-                  <span
-                    key={activeFilter.value}
-                    className="m-1 inline-flex items-center rounded-full border border-slate-50/[0.06] bg-slate-800 py-1.5 pl-3 pr-2 text-sm font-medium text-slate-400"
-                  >
-                    <span>{activeFilter.label}</span>
-                    <button
-                      type="button"
-                      className="focused-link ml-1 inline-flex h-4 w-4 flex-shrink-0 rounded-full p-1 text-slate-400 hover:bg-gray-200 hover:text-slate-800"
+              <RenderIf if={listOfActiveFilters.length === 0}>
+                <p className="text-xs text-slate-400">
+                  No filters applied yet.
+                </p>
+              </RenderIf>
+              <RenderIf if={listOfActiveFilters.length > 0}>
+                <div className="-m-1 flex flex-wrap items-center">
+                  {listOfActiveFilters.map((filter) => (
+                    <span
+                      key={filter.id}
+                      className="m-1 inline-flex items-center rounded-full border border-slate-50/[0.06] bg-slate-800 py-1.5 pl-3 pr-2 text-sm font-medium text-slate-400"
                     >
-                      <span className="sr-only">
-                        Remove filter for {activeFilter.label}
+                      <span className="flex items-center">
+                        <span>{filter.name}:</span>
+                        <span className="ml-1 text-white">
+                          {filter.activeValue}
+                        </span>
                       </span>
-                      <svg
-                        className="h-2 w-2"
-                        stroke="currentColor"
-                        fill="none"
-                        viewBox="0 0 8 8"
+                      <button
+                        type="button"
+                        className="focused-link ml-1 inline-flex h-4 w-4 flex-shrink-0 rounded-full p-1 text-slate-400 hover:bg-gray-200 hover:text-slate-800"
+                        onClick={() => onRemoveFilter(filter)}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeWidth="1.5"
-                          d="M1 1l6 6m0-6L1 7"
-                        />
-                      </svg>
-                    </button>
-                  </span>
-                ))}
-              </div>
+                        <span className="sr-only">
+                          Remove filter for {filter.name}
+                        </span>
+                        <svg
+                          className="h-2 w-2"
+                          stroke="currentColor"
+                          fill="none"
+                          viewBox="0 0 8 8"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeWidth="1.5"
+                            d="M1 1l6 6m0-6L1 7"
+                          />
+                        </svg>
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </RenderIf>
             </div>
           </div>
         </div>

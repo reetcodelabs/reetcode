@@ -4,18 +4,20 @@ import classNames from "classnames";
 import { Fragment, type PropsWithChildren } from "react";
 import { twMerge as tw } from "tailwind-merge";
 
+export interface ModalProps {
+  className?: string;
+  open?: boolean;
+  hideCloseIcon?: boolean;
+  setOpen: (value: boolean) => void;
+}
+
 export function Modal({
   children,
   className,
   open,
   setOpen,
   hideCloseIcon,
-}: PropsWithChildren<{
-  className?: string;
-  open?: boolean;
-  hideCloseIcon?: boolean;
-  setOpen: (value: boolean) => void;
-}>) {
+}: PropsWithChildren<ModalProps>) {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
