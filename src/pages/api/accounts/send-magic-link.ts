@@ -32,6 +32,7 @@ export default async function sendMagicLink(
     },
     create: {
       email: validation.data.email,
+      apiKey: Crypto.randomUUID(),
     },
     update: {},
   });
@@ -62,8 +63,6 @@ export default async function sendMagicLink(
   if (validation.data.callbackURL) {
     magicLink.searchParams.append("callbackURL", validation.data.callbackURL);
   }
-
-  console.log({ url: magicLink.href });
 
   await sendTransactionalEmail(
     MailcoachEmails.EMAIL_VERIFICATION_LINK,

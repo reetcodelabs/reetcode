@@ -1,8 +1,14 @@
-import { CheckIcon, LockClosedIcon } from "@heroicons/react/24/outline";
+import {
+  CheckIcon,
+  ClipboardDocumentCheckIcon,
+  LockClosedIcon,
+} from "@heroicons/react/24/outline";
 import { type IronSessionData } from "iron-session";
 import { type PropsWithChildren } from "react";
+import toast from "react-hot-toast";
 
 import { Button } from "@/components/button";
+import { Alert } from "@/components/Notification";
 import { RenderIf } from "@/components/RenderIf";
 import { useSession } from "@/hooks/useSession";
 import { premiumPlanFeatures } from "@/pages/pricing";
@@ -36,6 +42,27 @@ function Card({ children, title, description }: PropsWithChildren<CardProps>) {
 
 export default function AccountSettings({ session }: AccountSettingsProps) {
   const { subscription } = useSession({ session });
+
+  async function copyApiKeyToClipboard() {
+    if (!navigator.clipboard) {
+      return;
+    }
+
+    const apiKey = session?.user?.apiKey ?? "";
+
+    await navigator.clipboard.writeText(apiKey);
+
+    toast.custom(
+      () => (
+        <Alert
+          variant="success"
+          title="Success."
+          description="Api key copied to clipboard !"
+        />
+      ),
+      { position: "top-center" },
+    );
+  }
 
   return (
     <div className="w-full">
@@ -124,6 +151,20 @@ export default function AccountSettings({ session }: AccountSettingsProps) {
               Join the premium discord
             </Button>
           </div>
+        </Card>
+        <Card
+          title="Reetcode API / CLI Key"
+          description="You may use this API Key with our CLI or to access our public API"
+        >
+          <button
+            onClick={copyApiKeyToClipboard}
+            className="mt-5 flex w-full items-center justify-between rounded bg-slate-900 p-4 text-sm text-white"
+          >
+            <span className="text-sm font-medium text-white">
+              {session?.user?.apiKey}
+            </span>
+            <ClipboardDocumentCheckIcon className="h-6 w-6" />
+          </button>
         </Card>
       </div>
     </div>

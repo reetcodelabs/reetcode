@@ -16,7 +16,12 @@ import { Alert } from "./Notification";
 import { RenderIf } from "./RenderIf";
 
 const providers = [
-  { name: "Github", icon: "https://img.clerk.com/static/github.svg?width=160" },
+  {
+    name: "Github",
+    icon: "https://dashboard.hookdeck.com/images/github-icon.svg",
+    // style: filter: invert(1);
+    style: { filter: "invert(1)" },
+  },
   {
     name: "Google",
     icon: "https://img.clerk.com/static/google.svg?width=160",
@@ -149,6 +154,7 @@ export function SignInOrSignUp() {
                 <img
                   src={provider.icon}
                   alt="Google icon"
+                  style={provider.style}
                   className="mr-3 h-5 w-5"
                 />
                 Continue with {provider.name}

@@ -67,6 +67,7 @@ export async function confirmMagicLink(
       id: true,
       email: true,
       subscription: true,
+      apiKey: true,
     },
   });
 
@@ -74,6 +75,7 @@ export async function confirmMagicLink(
   request.session.user = {
     id: user.id,
     email: user.email,
+    apiKey: user?.apiKey,
     subscription: user?.subscription,
   };
 
