@@ -30,7 +30,3 @@ deno compile --allow-net --allow-read --allow-write --allow-run main.ts --target
 zip -j build/x86_64-unknown-linux-gnu.zip build/x86_64-unknown-linux-gnu/reetcode
 
 rm -rf build/x86_64-unknown-linux-gnu
-
-echo "Copying builds to next public folder.."
-
-cp -a build/ ../public/cli/build
