@@ -52,6 +52,7 @@ export class DatabaseService {
               starterFiles: true,
             },
           },
+          problemSets: true,
         },
         cacheStrategy: {
           // ttl: 24 * 60 * 60, // 24 hours cache strategy.

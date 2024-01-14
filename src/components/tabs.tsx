@@ -1,88 +1,58 @@
+import { Tab } from "@headlessui/react";
 import classNames from "classnames";
-import type { ReactNode } from "react";
-import { useState } from "react";
+import { type PropsWithChildren } from "react";
+import { twMerge } from "tailwind-merge";
 
-interface Tab {
-  name: string;
-  value: string;
-  current?: boolean;
-  content: ReactNode;
-}
-
-export function Tabs({ tabs = [] }: { tabs?: Tab[] }) {
-  const [currentIndex, setCurrentIndex] = useState<number>(
-    () => tabs?.findIndex((tab) => tab?.current) || 0,
+export const TAB_LIST_CLASSNAMES = (className?: string) =>
+  twMerge(
+    "flex items-center gap-x-6 h-16 border-b border-slate-50/[0.06] px-3 text-sm font-semibold leading-6 text-gray-400 overflow-x-auto",
+    className,
   );
 
-  const currentTab = tabs[currentIndex];
+export const TAB_BUTTON_CLASSNAMES = (selected: boolean, className?: string) =>
+  twMerge(
+    classNames(
+      "focus-within:outline-none focus-within:outline-offset-8 focus-within:outline-indigo-500 h-full px-6 font-sans transition ease-linear hover:text-white flex-shrink-0",
+      {
+        "border-b-2 border-indigo-500 font-semibold text-indigo-500": selected,
+      },
+      className,
+    ),
+  );
 
+export function TabList({
+  children,
+  className,
+}: PropsWithChildren<{ className?: string }>) {
   return (
-    <>
-      <div className="sticky top-0 z-10 rounded-t-md bg-slate-900">
-        <div className=" mx-auto max-w-7xl">
-          <div className="h-12 sm:hidden">
-            <label htmlFor="tabs" className="sr-only">
-              Select a tab
-            </label>
-            <select
-              id="tabs"
-              name="tabs"
-              className="block w-full rounded-md border-none bg-white/5 py-2 pl-3 pr-10 text-base text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm"
-              defaultValue={currentTab?.name}
-              onChange={(event) => {
-                setCurrentIndex(parseInt(event.target.value));
-              }}
-            >
-              {tabs.map((tab, idx) => (
-                <option key={tab.name} value={idx}>
-                  {tab.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="hidden h-12 sm:block">
-            <nav className="flex h-full items-center border-b border-slate-50/[0.06]">
-              <ul
-                role="list"
-                className="flex min-w-full flex-none gap-x-6 px-3 text-sm font-semibold leading-6 text-gray-400"
-              >
-                {tabs.map((tab, idx) => (
-                  <li key={tab.name}>
-                    <button
-                      onClick={() => setCurrentIndex(idx)}
-                      className={classNames(
-                        "focused-link font-sans transition ease-linear hover:text-white",
-                        {
-                          "text-indigo-500": idx === currentIndex,
-                        },
-                      )}
-                    >
-                      {tab.name}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </div>
+    <Tab.List
+      className={twMerge(
+        "flex h-full items-center gap-x-6 border-b border-slate-50/[0.06] px-3 text-sm font-semibold leading-6 text-gray-400",
+        className,
+      )}
+    >
+      {children}
+    </Tab.List>
+  );
+}
 
-      <div className="relative w-full">
-        {tabs.map((tab, idx) => (
-          <div
-            key={tab.value}
-            className={classNames(
-              "absolute w-full opacity-0 transition ease-linear",
-              {
-                "opacity-100": currentIndex === idx,
-              },
-            )}
-            style={{ zIndex: idx + 1 }}
-          >
-            {tab?.content}
-          </div>
-        ))}
-      </div>
-    </>
+export function TabButton({
+  selected,
+  children,
+}: PropsWithChildren<{ className?: string; selected?: boolean }>) {
+  return (
+    <button
+      className={twMerge(
+        classNames(
+          "focused-link h-full px-6 font-sans transition ease-linear hover:text-white",
+          {
+            "border-b-2 border-indigo-500 font-semibold text-indigo-500":
+              selected,
+          },
+        ),
+      )}
+    >
+      {children}
+    </button>
   );
 }

@@ -1,384 +1,181 @@
+import { Tab } from "@headlessui/react";
+import { AcademicCapIcon, StarIcon } from "@heroicons/react/20/solid";
 import {
-  SandpackCodeEditor,
-  SandpackFileExplorer,
-  type SandpackPredefinedTemplate,
-  SandpackPreview,
-  SandpackProvider,
-} from "@codesandbox/sandpack-react";
-import { BookOpenIcon } from "@heroicons/react/24/outline";
-import {
-  type MouseEventHandler,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+  CheckIcon,
+  ClockIcon,
+  CodeBracketIcon,
+  CommandLineIcon,
+  FolderIcon,
+} from "@heroicons/react/24/outline";
+import { Fragment } from "react";
 
 import { Button } from "@/components/button";
-import { TestCases } from "@/components/problems/TestCases";
-import { Select, type SelectOption } from "@/components/select";
-import { Tabs } from "@/components/tabs";
-import { type SandpackThemeKey, useSandpackTheme } from "@/hooks/useSandpackTheme";
+import { TAB_BUTTON_CLASSNAMES, TAB_LIST_CLASSNAMES } from "@/components/tabs";
 import {
   databaseService,
   type ProblemWithTemplate,
-  type TemplateWithStarterFiles,
 } from "@/server/services/database";
-import { axiosClient } from "@/utils/axios";
 import { withIronSessionSsr } from "@/utils/session";
 
-function useWindowResized() {
-  const [size, setSize] = useState<{ width: number; height: number }>({
-    width: 0,
-    height: 0,
-  });
-
-  useEffect(() => {
-    function handleWindowResized() {
-      setSize({ width: window.innerWidth, height: window.innerHeight });
-    }
-
-    setSize({ width: window.innerWidth, height: window.innerHeight });
-
-    window.addEventListener("resize", handleWindowResized);
-
-    return () => window.removeEventListener("resize", handleWindowResized);
-  }, []);
-
-  return size;
-}
-
-function useResize({
-  initialSize = { x: 0, y: 0 },
-}: {
-  initialSize?: { x: number; y: number };
-}) {
-  const [size, setSize] = useState(initialSize);
-
-  useEffect(() => {
-    if (size.y <= 0 || size.x <= 0) {
-      setSize(initialSize);
-    }
-  }, [initialSize]);
-
-  const onResize = (mouseDownEvent: MouseEvent) => {
-    const startSize = size;
-    const startPosition = { x: mouseDownEvent.pageX, y: mouseDownEvent.pageY };
-
-    function onMouseMove(mouseMoveEvent: MouseEvent) {
-      setSize(() => ({
-        x: startSize.x - startPosition.x + mouseMoveEvent.pageX,
-        y: startSize.y - startPosition.y + mouseMoveEvent.pageY,
-      }));
-    }
-
-    function onMouseUp() {
-      document.body.removeEventListener("mousemove", onMouseMove);
-      // uncomment the following line if not using `{ once: true }`
-      // document.body.removeEventListener("mouseup", onMouseUp);
-    }
-
-    document.body.addEventListener("mousemove", onMouseMove);
-    document.body.addEventListener("mouseup", onMouseUp, { once: true });
-  };
-
-  return { onResize, size };
-}
-
-export function useProblemInterface() {
-  const { width: windowWidth, height } = useWindowResized();
-
-  const questionContainerHeight = height - 70;
-  const defaultQuestionContainerWidth = windowWidth * 0.32; // 32% by default
-
-  const isLoadingWindowSize = windowWidth === 0 && height === 0;
-
-  const defaultEditorHeight = questionContainerHeight * 0.3;
-
-  const defaultPreviewHeight =
-    questionContainerHeight - defaultEditorHeight - 12;
-
-  const { onResize, size: previewSize } = useResize({
-    initialSize: { x: windowWidth, y: defaultPreviewHeight },
-  });
-
-  const { onResize: onQuestionAreaResize, size: questionAreaSize } = useResize({
-    initialSize: { x: defaultQuestionContainerWidth, y: height },
-  });
-
-  const questionContainerWidth = questionAreaSize.x;
-  const previewAndEditorContainerWidth = windowWidth - questionContainerWidth;
-
-  const editorHeight = previewSize.y - 36;
-
-  const previewHeight = questionContainerHeight - editorHeight - 16;
-
-  return {
-    previewHeight,
-    editorHeight,
-    previewAndEditorContainerWidth,
-    questionContainerWidth,
-    onQuestionAreaResize,
-    questionAreaSize,
-    onResize,
-    previewSize,
-    defaultPreviewHeight,
-    isLoadingWindowSize,
-    defaultQuestionContainerWidth,
-    questionContainerHeight,
-    windowWidth,
-    height,
-  };
-}
-
-function useFetchTemplateFiles() {
-  const [isError, setIsError] = useState(false);
-  const [isFetching, setIsFetching] = useState(false);
-
-  const fetchTemplateFiles = useCallback(async (templateId: string) => {
-    setIsFetching(true);
-
-    try {
-      const response = await axiosClient.post<TemplateWithStarterFiles>(
-        "/problems/get-template-files",
-        {
-          templateId,
-        },
-      );
-
-      setIsFetching(false);
-
-      return response.data;
-    } catch (error) {
-      setIsFetching(false);
-      setIsError(false);
-
-      return null;
-    }
-  }, []);
-
-  return {
-    isError,
-    isFetching,
-    fetchTemplateFiles,
-  };
-}
-
-export default function ProblemEditor({
-  problem: defaultProblem,
-}: {
+interface ProblemProps {
   problem: ProblemWithTemplate;
-}) {
-  const [problem, setProblem] = useState<ProblemWithTemplate>(defaultProblem);
-  const {
-    previewHeight,
-    editorHeight,
-    previewAndEditorContainerWidth,
-    questionContainerWidth,
-    onQuestionAreaResize,
-    onResize,
-    isLoadingWindowSize,
-    questionContainerHeight,
-  } = useProblemInterface();
-  const [template, setTemplate] = useState<SelectOption>(
-    () =>
-      problem.problemTemplates.find((template) => template.default === true)!,
+}
+
+export default function Problem({ problem }: ProblemProps) {
+  const problemSet = problem?.problemSets?.[0];
+
+  const ProblemActions = (
+    <div className="mt-6 flex flex-col space-y-3">
+      <Button className="flex items-center justify-center py-3">
+        <CodeBracketIcon className="mr-3 h-5 w-5" />
+        Start in online editor
+      </Button>
+      <Button
+        className="flex items-center justify-center py-3"
+        variant="secondary"
+      >
+        <CommandLineIcon className="mr-3 h-5 w-5" />
+        Download and work locally
+      </Button>
+    </div>
   );
-  const { fetchTemplateFiles } = useFetchTemplateFiles();
 
-  async function onTemplateSelectChanged(selected: SelectOption) {
-    // if starter files fetched, switch template
-    const hasStarterFiles =
-      problem.problemTemplates.find((t) => t.id === selected.id)
-        ?.starterFiles !== undefined;
+  const ProblemHighlights = (
+    <div className="mt-6 flex items-center justify-around text-slate-400">
+      <div className="flex flex-col items-center">
+        <div className="mb-2 flex items-center text-white">
+          <StarIcon className="mr-1.5 h-6 w-6 fill-current text-yellow-400" />{" "}
+          <span className="mt-1 text-xl font-bold">5</span>
+        </div>
+        <span className="text-xs">12 reviews</span>
+      </div>
 
-    if (hasStarterFiles) {
-      setTemplate(selected);
-
-      return;
-    }
-
-    // if not, fetch starter files then switch template
-    const templateWithStarterFiles = await fetchTemplateFiles(selected.id);
-
-    if (!templateWithStarterFiles) {
-      // there was an error.
-      return;
-    }
-
-    // replate template in state with one with starter files.
-    setProblem((current) => ({
-      ...current,
-      problemTemplates: current.problemTemplates.map((template) =>
-        template.id === selected.id ? templateWithStarterFiles : template,
-      ),
-    }));
-    setTemplate(selected);
-  }
-
-  const activeTemplate = useMemo(() => {
-    const activeTemplate = problem.problemTemplates.find(
-      (t) => t.id === template.id,
-    );
-
-    const defaultTemplate = problem.templates?.[0];
-
-    if (activeTemplate?.id === defaultTemplate?.id) {
-      return defaultTemplate!;
-    }
-
-    return activeTemplate!;
-  }, [template]);
-
-  const { themes, setTheme, theme, sandpackThemes } = useSandpackTheme();
-
-  const files = useMemo(() => {
-    const filesMap: Record<string, string> = {};
-
-    for (const file of activeTemplate?.starterFiles ?? []) {
-      filesMap[file.path] = file.content;
-    }
-
-    return filesMap;
-  }, [template]);
-
-  if (isLoadingWindowSize) {
-    return <BookOpenIcon className="h-32 w-32" />;
-  }
+      <div className="flex flex-col items-center">
+        <div className="mb-2 flex items-center text-white">
+          <AcademicCapIcon className="mr-1.5 h-6 w-6 fill-current text-purple-400" />{" "}
+          <span className="mt-1 text-xl font-bold">37</span>
+        </div>
+        <span className="text-xs">total completions</span>
+      </div>
+    </div>
+  );
 
   return (
-    <SandpackProvider
-      files={files}
-      className="h-full"
-      theme={sandpackThemes[theme?.id as SandpackThemeKey]}
-      template={activeTemplate?.sandpackTemplate as SandpackPredefinedTemplate}
-    >
-      <div className="flex flex-col">
-        <main className="flex w-full flex-1 bg-slate-800 p-2">
-          <div
-            className="relative transition ease-linear"
-            style={{
-              width: questionContainerWidth,
-              height: questionContainerHeight,
-            }}
-          >
-            <div
-              className=" box-border h-full w-full overflow-y-auto rounded-lg border border-slate-50/[0.06] bg-slate-900"
-              style={{ height: "calc(100vh - 4.25rem)" }}
-            >
-              <div
-                className="absolute -right-2 z-10 h-full w-2 cursor-col-resize rounded-sm bg-indigo-500 opacity-0 transition ease-linear hover:opacity-100"
-                onMouseDown={
-                  onQuestionAreaResize as unknown as MouseEventHandler
-                }
-              ></div>
-              <Tabs
-                tabs={[
-                  {
-                    name: "Description",
-                    value: "description",
-                    current: true,
-                    content: (
-                      <div
-                        className="prose prose-sm prose-invert space-y-4 p-2 text-slate-400"
-                        dangerouslySetInnerHTML={{
-                          __html: problem.brief ?? "",
-                        }}
-                      ></div>
-                    ),
-                  },
-                  {
-                    name: "Solution",
-                    value: "solution",
-                    current: false,
-                    content: <div className="w-full"></div>,
-                  },
-                ]}
+    <>
+      <div className="mx-auto flex max-w-6xl flex-col px-6 pb-24 pt-12  lg:flex-row lg:px-0 ">
+        <div className="items-startlg:pr-6 flex flex-1 flex-col">
+          <div className="flex gap-x-4 lg:gap-x-8">
+            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded border border-slate-50/[0.06] bg-slate-800 shadow lg:h-40 lg:w-40">
+              <img
+                className="h-6 w-6 lg:h-16 lg:w-16"
+                src={problemSet?.icon}
+                alt={`Problem set: ${problemSet?.name}`}
               />
-            </div>
-          </div>
-          <div
-            className="relative h-full pl-2"
-            style={{ width: previewAndEditorContainerWidth }}
-          >
-            <div
-              style={{ height: editorHeight }}
-              className="relative mb-2 w-full overflow-y-auto rounded-lg border border-slate-50/[0.06] bg-slate-900"
-            >
-              <div className="absolute top-0 z-10 flex h-12 w-full items-center border-b border-slate-50/[0.06] px-2">
-                <div className="flex w-full items-center">
-                  <div className="w-full max-w-[12rem]">
-                    <Select
-                      options={themes}
-                      onChange={(selected) => {
-                        setTheme(selected);
-                      }}
-                      value={theme}
-                    />
-                  </div>
-                </div>
-                <div className="flex h-full w-full items-center justify-end gap-x-4">
-                  <div className="w-full max-w-[12rem]">
-                    <Select
-                      options={problem.problemTemplates.map((template) => ({
-                        id: template.id,
-                        name: template.name,
-                      }))}
-                      value={template}
-                      onChange={onTemplateSelectChanged}
-                    />
-                  </div>
-                  <Button>Run code</Button>
-                </div>
-              </div>
-              <div className="flex h-full pt-12">
-                <SandpackFileExplorer className="max-w-[12rem]" />
-                <SandpackCodeEditor showLineNumbers className="rounded-lg" />
-              </div>
             </div>
 
-            <div
-              style={{ height: previewHeight }}
-              className="relative box-border w-full rounded-lg border-2 border-slate-900 bg-slate-900"
-            >
-              <div
-                className="absolute -top-2 h-2 w-full cursor-row-resize rounded-sm bg-indigo-500 opacity-0 transition ease-linear hover:opacity-100"
-                onMouseDown={onResize as unknown as MouseEventHandler}
-              ></div>
-              <Tabs
-                tabs={[
-                  {
-                    name: "Preview",
-                    value: "preview",
-                    current: true,
-                    content: (
-                      <SandpackPreview
-                        className="h-full w-full rounded-lg"
-                        showOpenInCodeSandbox={false}
-                        style={{ height: previewHeight - 43 }}
-                      />
-                    ),
-                  },
-                  {
-                    name: "Test cases",
-                    value: "test cases",
-                    current: false,
-                    content: (
-                      <div
-                        className="overflow-y-auto"
-                        style={{ height: previewHeight - 64 }}
-                      >
-                        <TestCases />
-                      </div>
-                    ),
-                  },
-                ]}
-              />
+            <div className="flex flex-col">
+              <h1 className="text-lg font-bold text-white lg:text-3xl">
+                {problem?.name}
+              </h1>
+
+              <div className="mt-1 flex items-center gap-x-4 text-sm leading-5 text-slate-400 lg:my-4">
+                <p className="flex items-center">
+                  <FolderIcon className="mr-2 h-4 w-4 stroke-current text-indigo-500" />
+
+                  <span>{problemSet?.name}</span>
+                </p>
+
+                <p className="flex items-center">
+                  <ClockIcon className="mr-2 h-4 w-4 stroke-current text-blue-500" />
+
+                  <span>{problem?.completionDuration} mins</span>
+                </p>
+              </div>
+
+              <p className="mt-2 hidden max-w-2xl text-sm text-slate-400 lg:flex">
+                {problem?.description}
+              </p>
             </div>
           </div>
-        </main>
+
+          <div className="mt-6 rounded-md border border-slate-50/[0.06] bg-slate-800 p-4 text-sm text-slate-400">
+            {problem?.description}
+          </div>
+
+          <div className="lg:hidden">
+            {ProblemHighlights}
+
+            {ProblemActions}
+          </div>
+
+          <div className="mt-6 w-full">
+            <Tab.Group manual>
+              <Tab.List
+                className={TAB_LIST_CLASSNAMES("sticky top-16 bg-slate-900")}
+              >
+                {["Project brief", "Solution", "Community submissions"].map(
+                  (item) => (
+                    <Tab key={item} as={Fragment}>
+                      {({ selected }) => (
+                        <button className={TAB_BUTTON_CLASSNAMES(selected)}>
+                          {item}
+                        </button>
+                      )}
+                    </Tab>
+                  ),
+                )}
+              </Tab.List>
+              <Tab.Panels>
+                <Tab.Panel>
+                  <div
+                    className="prose prose-invert pt-6"
+                    dangerouslySetInnerHTML={{ __html: problem?.brief ?? "" }}
+                  ></div>
+                  <div
+                    className="prose prose-invert pt-6"
+                    dangerouslySetInnerHTML={{ __html: problem?.brief ?? "" }}
+                  ></div>
+                  <div
+                    className="prose prose-invert pt-6"
+                    dangerouslySetInnerHTML={{ __html: problem?.brief ?? "" }}
+                  ></div>
+                </Tab.Panel>
+                <Tab.Panel>Content 2</Tab.Panel>
+                <Tab.Panel>Content 3</Tab.Panel>
+              </Tab.Panels>
+            </Tab.Group>
+          </div>
+        </div>
+
+        <div className="sticky mt-6 hidden w-full flex-shrink-0 self-start rounded-lg border border-slate-700 p-6 shadow-lg lg:top-28 lg:mt-0 lg:block lg:w-96">
+          <div className="relative h-[198px] w-full rounded-lg border border-slate-700 bg-slate-200"></div>
+
+          {ProblemHighlights}
+
+          {ProblemActions}
+
+          <ul className="mt-6 flex flex-col space-y-1">
+            {[
+              "4 starter templates",
+              "Detailed solution video",
+              "TS / Vue / React / JS / NextJS",
+              4,
+              5,
+            ].map((feature) => (
+              <li
+                key={feature}
+                className="flex items-center text-sm text-slate-400"
+              >
+                <CheckIcon className="mr-2 h-4 w-4 text-green-500" />
+                {feature}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-    </SandpackProvider>
+
+      <div className="w-full border-t border-slate-700"></div>
+    </>
   );
 }
 

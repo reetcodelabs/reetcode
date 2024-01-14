@@ -105,7 +105,8 @@ export function MainLayout({
   const router = useRouter();
 
   const isHome = router.pathname === "/";
-  const isProblemPage = router.pathname === "/problems/[slug]";
+  // const isProblemPage = router.pathname === "/problems/[slug]";
+  const isProblemPage = false;
 
   const openAuthenticationDialog = () => {
     openSignInPopup();
