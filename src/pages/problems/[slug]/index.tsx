@@ -63,7 +63,7 @@ export default function Problem({ problem }: ProblemProps) {
   return (
     <>
       <div className="mx-auto flex max-w-6xl flex-col px-6 pb-24 pt-12  lg:flex-row lg:px-0 ">
-        <div className="items-startlg:pr-6 flex flex-1 flex-col">
+        <div className="flex flex-1 flex-col items-start lg:pr-6">
           <div className="flex gap-x-4 lg:gap-x-8">
             <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded border border-slate-50/[0.06] bg-slate-800 shadow lg:h-40 lg:w-40">
               <img

@@ -105,8 +105,7 @@ export function MainLayout({
   const router = useRouter();
 
   const isHome = router.pathname === "/";
-  // const isProblemPage = router.pathname === "/problems/[slug]";
-  const isProblemPage = false;
+  const isProblemEditorPage = router.pathname === "/problems/[slug]/editor";
 
   const openAuthenticationDialog = () => {
     openSignInPopup();
@@ -132,7 +131,7 @@ export function MainLayout({
 
   return (
     <>
-      <RenderIf if={!isProblemPage}>
+      <RenderIf if={!isProblemEditorPage}>
         {subscription?.isExpiringSoon || subscription?.isExpired ? (
           <Banner
             title={
@@ -150,7 +149,7 @@ export function MainLayout({
       </RenderIf>
       <Toaster position="bottom-center" toastOptions={{ duration: 6000 }} />
       <SignInOrSignUp />
-      {isProblemPage ? null : (
+      {isProblemEditorPage ? null : (
         <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex justify-center overflow-hidden">
           <div className="flex w-[108rem] flex-none justify-end">
             <picture>
@@ -184,15 +183,15 @@ export function MainLayout({
       >
         <header
           className={classNames("", {
-            "mx-auto max-w-7xl bg-transparent": !isHome && !isProblemPage,
-            "px-3": isProblemPage,
+            "mx-auto max-w-7xl bg-transparent": !isHome && !isProblemEditorPage,
+            "px-3": isProblemEditorPage,
           })}
         >
           <nav
             className={classNames("flex items-center justify-between", {
               "p-6 md:px-8": isHome,
-              "px-6 py-4 xl:px-0": !isHome && !isProblemPage,
-              "px-6 py-2 xl:px-0": isProblemPage,
+              "px-6 py-4 xl:px-0": !isHome && !isProblemEditorPage,
+              "px-6 py-2 xl:px-0": isProblemEditorPage,
             })}
             aria-label="Global"
           >
@@ -220,7 +219,11 @@ export function MainLayout({
                 <Bars3Icon className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
-            <div className="hidden lg:flex lg:gap-x-12">
+            <div
+              className={classNames("hidden", {
+                "lg:flex lg:gap-x-12": !isProblemEditorPage,
+              })}
+            >
               {navigation.map((item) => (
                 <Link
                   key={item.name}
@@ -232,6 +235,13 @@ export function MainLayout({
               ))}
               <Navigation />
             </div>
+
+            <div
+              className={classNames("hidden", {
+                "lg:flex lg:gap-x-12": isProblemEditorPage,
+              })}
+            ></div>
+
             <div className="hidden items-center gap-x-6 lg:flex lg:flex-1 lg:justify-end">
               {session?.user?.subscription ? null : (
                 <Link

@@ -34,3 +34,7 @@ Use the Cowrywise referral modal for this task.
 ## Filter the products
 
 - Add a filter to a products catalog search. This filter should allow for sending multiple options to the API. Inspiration is: Boring project Mono filtering.
+
+## Remove the feature flags
+
+- Slack just migrated to the new designs using feature flags. Now that all customers are on the new plan, remove the feature flags from the codebase.

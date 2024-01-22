@@ -55,8 +55,8 @@ export class DatabaseService {
           problemSets: true,
         },
         cacheStrategy: {
-          // ttl: 24 * 60 * 60, // 24 hours cache strategy.
-          ttl: 0, // 0 hours cache strategy (invalidate cache).
+          ttl: 24 * 60 * 60, // 24 hours cache strategy.
+          // ttl: 0, // 0 hours cache strategy (invalidate cache).
         },
       }),
       this.prisma.template.findMany({

@@ -96,5 +96,5 @@ html {
 }
 
 .sp-preview-container {
-  @apply rounded-b-md !bg-slate-900;
+  @apply box-border !rounded-none border-b-2 border-l-2 border-r-2 border-slate-900;
 }
