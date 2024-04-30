@@ -2,12 +2,18 @@ import { autocompletion } from "@codemirror/autocomplete";
 import { javascript } from "@codemirror/lang-javascript";
 import {
   SandpackCodeEditor,
-  SandpackFileExplorer,
   SandpackPreview,
   SandpackProvider,
+  useSandpack,
 } from "@codesandbox/sandpack-react";
 import * as defaultThemes from "@codesandbox/sandpack-themes";
 
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ResizablePanels";
+import { cn } from "@/lib/utils";
 import {
   databaseService,
   type ProblemWithTemplate,
@@ -22,77 +28,72 @@ interface ProblemProps {
 // const EditorPreview = dynamic(() => import("@/components/editor/Preview"));
 // const EditorTests = dynamic(() => import("@/components/editor/Tests"));
 
+function ListOfEditableFiles() {
+  const { sandpack } = useSandpack();
+
+  const listOfFiles = Object.keys(sandpack.files).map((name) => ({ name }));
+
+  return (
+    <div className="flex h-10 w-full items-center border-b border-[#444344] bg-transparent ">
+      {listOfFiles.map((file) => (
+        <button
+          key={file.name}
+          className={cn(
+            "h-full px-3 transition ease-linear hover:bg-[#444344]",
+            {
+              "bg-[#444344]": file.name === sandpack.activeFile,
+            },
+          )}
+          onClick={function () {
+            sandpack.setActiveFile(file.name);
+          }}
+        >
+          {file.name}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function ProblemEditor({ problem }: ProblemProps) {
   return (
-    <>
-      {/* <Tab.Group manual>
-        <Tab.List
-          className={TAB_LIST_CLASSNAMES(
-            "sticky top-12 h-10 bg-slate-900 text-sm",
-          )}
-        >
-          {["Project brief", "Solution", "Community submissions"].map(
-            (item) => (
-              <Tab key={item} as={Fragment}>
-                {({ selected }) => (
-                  <button
-                    className={TAB_BUTTON_CLASSNAMES(selected, "text-sm")}
-                  >
-                    {item}
-                  </button>
-                )}
-              </Tab>
-            ),
-          )}
-        </Tab.List>
-        <Tab.Panels>
-          <Tab.Panel>
-            <CodeEditor />
-          </Tab.Panel>
-          <Tab.Panel>
-            <EditorPreview />
-          </Tab.Panel>
-          <Tab.Panel>
-            <EditorTests />
-          </Tab.Panel>
-        </Tab.Panels>
-      </Tab.Group> */}
-      <SandpackProvider template="react-ts" theme={defaultThemes.amethyst}>
-        <div className="flex h-[calc(100vh-50px)] w-full bg-red-500">
-          <div className="relative flex w-[55%]">
-            <div className="relative h-full w-[256px] flex-shrink-0">
-              <SandpackFileExplorer className="h-full" />
-              <button className="absolute right-0 top-0 bg-green-200 p-1">
-                Collapse
-              </button>
-            </div>
-            <div className="h-full flex-1">
-              <SandpackCodeEditor
-                className="h-full"
-                showLineNumbers
-                showInlineErrors
-                showTabs={false}
-                showRunButton
-                wrapContent
-                extensions={[autocompletion(), javascript()]}
-              />
-            </div>
+    <SandpackProvider
+      template="react-ts"
+      theme={defaultThemes.monokaiPro}
+      className="h-[calc(100vh-58px)]"
+    >
+      <ResizablePanelGroup direction="horizontal">
+        <ResizablePanel defaultSize={50} className="flex items-center">
+          <div className="h-full flex-1">
+            <ListOfEditableFiles />
+            <SandpackCodeEditor
+              className="h-full"
+              showLineNumbers
+              showInlineErrors
+              showTabs={false}
+              showRunButton
+              wrapContent
+              extensions={[autocompletion(), javascript()]}
+            />
+            {/* <MonacoEditor /> */}
           </div>
-          <div className="flex w-[45%] flex-col bg-blue-500">
-            <div className="h-[60%] bg-gray-600">
+        </ResizablePanel>
+        <ResizableHandle withHandle />
+        <ResizablePanel defaultSize={50}>
+          <ResizablePanelGroup direction="vertical">
+            <ResizablePanel defaultSize={25}>
               <SandpackPreview className="h-full rounded-none" />
-            </div>
-            <div className="flex-1"></div>
-          </div>
-        </div>
-      </SandpackProvider>
-      {/* <Sandpack template="react-ts" options={{ showConsole: true }} /> */}
-      {/* <SandpackProvider template="nextjs" className="h-full">
-        <div className="flex flex-col">
-          <main className="flex w-full flex-1 bg-slate-800 p-2"></main>
-        </div>
-      </SandpackProvider> */}
-    </>
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel defaultSize={75}>
+              <div className="flex h-full items-center justify-center p-6">
+                <span className="font-semibold">Three</span>
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </SandpackProvider>
   );
 }
 

@@ -47,10 +47,6 @@ export default async function downloadProblem(
         },
       },
     },
-    cacheStrategy: {
-      // ttl: 24 * 60 * 60, // 24 hours cache strategy.
-      ttl: 0, // 0 hours cache strategy (invalidate cache).
-    },
   });
 
   return response.json(problem);

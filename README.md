@@ -15,6 +15,13 @@ https://preply.com/en/tutor/488216#reviews
 2. Run performance check on the website, and show that some images are causing poor load times.
 3. Task is to fix the loading of these images so they load at the correct time thus improving TTI of web page.
 
+### Defer offscreen background images task
+
+1. Build a statically generated site, a site generated from a CMS like Contentful or Directus. Or use an open source website fork. Or just a HTML, CSS and JS template index.html file. This site should have a component right down at the bottom that has a heavy sized background image.
+2. Run a performance check such that in the diagnosis, Lighthouse recommends deferring images.
+2. Task is to fix the loading of this background image so it loads at the correct time thus improving the TTI of the web page. (hint: use intersection observer.)
+
+
 ## Fix time to interactive
 
 - Youtube video embedded on landing page is making it load slowly, and the data shows that only 33% of customers visiting the page click and watch the video. 
@@ -38,3 +45,36 @@ Use the Cowrywise referral modal for this task.
 ## Remove the feature flags
 
 - Slack just migrated to the new designs using feature flags. Now that all customers are on the new plan, remove the feature flags from the codebase.
+
+## Dynamic card component
+
+- Implement a css only dynamic card component
+- You are provided with the Javascript and HTML, and you are required to write only CSS to solve the challenge
+- Example markup:
+
+```html
+<div class="card">
+    <div class="card-media-wrapper" data-media-count="3">
+        <div class="card-media" role="img" style="background-image: url('...')">
+
+        </div>
+    </div>
+
+    <div class="card-text-wrapper">
+        Lorem ...
+    </div>
+
+    <div class="card-actions-wrapper">
+        <button>Delete card</button>
+        <button>View more...</button>
+    </div>
+</div>
+```
+
+You are to style something similar to the designs in the image /public/buffer-dynamic-card.png
+
+## Google Translate Language Search
+
+- Implement the fuzzy search feature on Google Translate Languages
+- As user searches, instantly display the results, highlighting in bold the part of the result that closely matched the query searched for. (Google Translate Search Languages)
+

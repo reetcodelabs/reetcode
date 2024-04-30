@@ -28,10 +28,6 @@ export class DatabaseService {
         techStack: true,
         completionDuration: true,
       },
-      cacheStrategy: {
-        // ttl: 24 * 60 * 60, // 24 hours cache strategy.
-        ttl: 0, // 0 hours cache strategy (invalidate cache).
-      },
     });
 
     return problems;
@@ -54,20 +50,12 @@ export class DatabaseService {
           },
           problemSets: true,
         },
-        cacheStrategy: {
-          ttl: 24 * 60 * 60, // 24 hours cache strategy.
-          // ttl: 0, // 0 hours cache strategy (invalidate cache).
-        },
       }),
       this.prisma.template.findMany({
         where: {
           problem: {
             slug,
           },
-        },
-        cacheStrategy: {
-          // ttl: 24 * 60 * 60, // 24 hours cache strategy.
-          ttl: 0, // 0 hours cache strategy (invalidate cache).
         },
       }),
     ]);

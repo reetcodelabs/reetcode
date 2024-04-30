@@ -7,9 +7,11 @@ import {
   CommandLineIcon,
   FolderIcon,
 } from "@heroicons/react/24/outline";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 
 import { Button } from "@/components/button";
+import { DownloadProblemAndWorkLocally } from "@/components/problems/DownloadProblemAndWorkLocally";
+import { StartProblemInOnlineEditor } from "@/components/problems/StartProblemInOnlineEditor";
 import { TAB_BUTTON_CLASSNAMES, TAB_LIST_CLASSNAMES } from "@/components/tabs";
 import {
   databaseService,
@@ -23,16 +25,22 @@ interface ProblemProps {
 
 export default function Problem({ problem }: ProblemProps) {
   const problemSet = problem?.problemSets?.[0];
+  const [downloadModalOpen, setDownloadModalOpen] = useState(false);
+  const [startInOnlineEditor, setStartInOnlineEditor] = useState(false);
 
   const ProblemActions = (
-    <div className="mt-6 flex flex-col space-y-3">
-      <Button className="flex items-center justify-center py-3">
+    <div className="mt-6 flex w-full flex-col space-y-3">
+      <Button
+        className="flex w-full items-center justify-center py-3 lg:w-auto"
+        onClick={() => setStartInOnlineEditor(true)}
+      >
         <CodeBracketIcon className="mr-3 h-5 w-5" />
         Start in online editor
       </Button>
       <Button
         className="flex items-center justify-center py-3"
         variant="secondary"
+        onClick={() => setDownloadModalOpen(true)}
       >
         <CommandLineIcon className="mr-3 h-5 w-5" />
         Download and work locally
@@ -41,7 +49,7 @@ export default function Problem({ problem }: ProblemProps) {
   );
 
   const ProblemHighlights = (
-    <div className="mt-6 flex items-center justify-around text-slate-400">
+    <div className="mt-6 flex w-full items-center justify-around text-slate-400">
       <div className="flex flex-col items-center">
         <div className="mb-2 flex items-center text-white">
           <StarIcon className="mr-1.5 h-6 w-6 fill-current text-yellow-400" />{" "}
@@ -62,6 +70,16 @@ export default function Problem({ problem }: ProblemProps) {
 
   return (
     <>
+      <DownloadProblemAndWorkLocally
+        problem={problem}
+        isOpen={downloadModalOpen}
+        setIsOpen={setDownloadModalOpen}
+      />
+      <StartProblemInOnlineEditor
+        problem={problem}
+        isOpen={startInOnlineEditor}
+        setIsOpen={setStartInOnlineEditor}
+      />
       <div className="mx-auto flex max-w-6xl flex-col px-6 pb-24 pt-12  lg:flex-row lg:px-0 ">
         <div className="flex flex-1 flex-col items-start lg:pr-6">
           <div className="flex gap-x-4 lg:gap-x-8">
@@ -102,7 +120,7 @@ export default function Problem({ problem }: ProblemProps) {
             {problem?.description}
           </div>
 
-          <div className="lg:hidden">
+          <div className="w-full lg:hidden">
             {ProblemHighlights}
 
             {ProblemActions}

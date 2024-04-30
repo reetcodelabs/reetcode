@@ -1,19 +1,19 @@
+import {
+  type CareerPath,
+  type Difficulty,
+  PrismaClient,
+  type ProblemSet,
+  type TechStack,
+} from "@prisma/client";
 import Consola from "consola";
 import Fs from "fs";
 import Path from "path";
-import { fileURLToPath } from "url";
-import {
-  CareerPath,
-  Difficulty,
-  PrismaClient,
-  ProblemSet,
-  TechStack,
-} from "@prisma/client";
 import Showdown from "showdown";
+import { fileURLToPath } from "url";
 
-import problemsData from "../src/seed/problems.json";
-import problemSetsData from "../src/seed/problem-sets.json";
 import careerPathsData from "../src/seed/career-paths.json";
+import problemSetsData from "../src/seed/problem-sets.json";
+import problemsData from "../src/seed/problems.json";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = Path.dirname(__filename);

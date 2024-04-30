@@ -1,15 +1,13 @@
-import Kia from "https://deno.land/x/kia@0.4.1/mod.ts";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import * as Fs from "https://deno.land/std@0.211.0/fs/mod.ts";
 import * as Path from "https://deno.land/std@0.211.0/path/mod.ts";
-
 import {
   error_log,
   warning_log,
 } from "https://deno.land/x/denomander@0.9.3/mod.ts";
+import Kia from "https://deno.land/x/kia@0.4.1/mod.ts";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 import type { ProblemInterface } from "../types/problem.ts";
-
 import { client, PRODUCTION_URL } from "../utils/api-client.ts";
 
 export interface DownloadCommandArgs {

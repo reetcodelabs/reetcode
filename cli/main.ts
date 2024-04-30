@@ -1,7 +1,6 @@
-import { program } from "./program.ts";
-
 // commands
 import { DownloadCommand } from "./commands/download.ts";
+import { program } from "./program.ts";
 
 program
   .command("download", "Download problem with template starter files.")

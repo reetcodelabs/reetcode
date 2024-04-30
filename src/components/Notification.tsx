@@ -1,22 +1,37 @@
-import { CheckCircleIcon } from "@heroicons/react/20/solid";
-import { XCircleIcon } from "@heroicons/react/24/outline";
+import {
+  CheckCircleIcon,
+  InformationCircleIcon,
+  XCircleIcon,
+} from "@heroicons/react/20/solid";
 import classNames from "classnames";
+import { type PropsWithChildren } from "react";
 
 interface AlertProps {
   className?: string;
-  variant?: "success" | "error";
+  variant?: "success" | "error" | "info";
   title?: string;
   description?: string;
+  asToast?: boolean;
 }
 
-export function Alert({ className, variant, title, description }: AlertProps) {
+export function Alert({
+  className,
+  variant,
+  title,
+  description,
+  asToast = true,
+  children,
+}: PropsWithChildren<AlertProps>) {
   return (
     <div
       className={classNames(
-        "min-w-[32rem] rounded-md p-4 transition ease-linear",
+        "rounded-md p-4 transition ease-linear",
         {
           "bg-red-600": variant === "error",
           "bg-green-600": variant === "success",
+          "border border-blue-700 bg-transparent text-white hover:bg-blue-800":
+            variant === "info",
+          "min-w-[32rem]": asToast,
         },
         className,
       )}
@@ -33,11 +48,20 @@ export function Alert({ className, variant, title, description }: AlertProps) {
               aria-hidden="true"
             />
           ) : null}
+
+          {variant === "info" ? (
+            <InformationCircleIcon
+              className="h-5 w-5 text-white"
+              aria-hidden="true"
+            />
+          ) : null}
         </div>
         <div className="ml-3">
-          <h3 className="text-sm font-medium text-white">{title}</h3>
+          <h3 className={classNames("text-sm font-medium text-white")}>
+            {title}
+          </h3>
           <div className="mt-2 text-xs text-white">
-            <p>{description}</p>
+            {description ? <p>{description}</p> : children}
           </div>
         </div>
       </div>
