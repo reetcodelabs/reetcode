@@ -8,11 +8,11 @@ export function TestCases() {
   return (
     <div className="h-full w-full overflow-y-auto px-6">
       <div className="mb-4 pt-6">
-        <h3 className="text-lg font-semibold">Test results</h3>
+        <h3 className="text-lg font-semibold text-white">Test results</h3>
         <p className="mt-1 text-xs text-slate-400">0/10 test cases passed.</p>
       </div>
       <div className="grid grid-cols-1 gap-y-2 pb-8">
-        {[1, 2, 3, 4, 5, 6, 7, 8].map((x) => (
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map((x) => (
           <button
             className="focused-link w-full rounded-sm border border-slate-50/[0.06] bg-slate-800 p-3 focus-within:outline-offset-0"
             key={x}
@@ -25,7 +25,7 @@ export function TestCases() {
                   <XCircleIcon className="h-6 w-6 stroke-current text-red-500" />
                 )}
 
-                <span className="ml-4">
+                <span className="ml-4 text-white">
                   {x % 2 === 0
                     ? "Test case #1 passed: A user can see a list of all quizzes."
                     : "Test case #2 failed: A user can add a discount code"}

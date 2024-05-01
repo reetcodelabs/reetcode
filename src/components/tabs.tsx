@@ -1,58 +1,53 @@
-import { Tab } from "@headlessui/react";
-import classNames from "classnames";
-import { type PropsWithChildren } from "react";
-import { twMerge } from "tailwind-merge";
+import * as React from "react";
+import * as TabsPrimitive from "@radix-ui/react-tabs";
 
-export const TAB_LIST_CLASSNAMES = (className?: string) =>
-  twMerge(
-    "flex items-center gap-x-6 h-16 border-b border-slate-50/[0.06] px-3 text-sm font-semibold leading-6 text-gray-400 overflow-x-auto",
-    className,
-  );
+import { cn } from "@/lib/utils";
 
-export const TAB_BUTTON_CLASSNAMES = (selected: boolean, className?: string) =>
-  twMerge(
-    classNames(
-      "focus-within:outline-none focus-within:outline-offset-8 focus-within:outline-indigo-500 h-full px-6 font-sans transition ease-linear hover:text-white flex-shrink-0",
-      {
-        "border-b-2 border-indigo-500 font-semibold text-indigo-500": selected,
-      },
+const Tabs = TabsPrimitive.Root;
+
+const TabsList = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.List
+    ref={ref}
+    className={cn(
+      "justify-left inline-flex h-10 w-full items-center border-b border-slate-50/[0.06] bg-slate-900 text-white xl:h-12",
       className,
-    ),
-  );
+    )}
+    {...props}
+  />
+));
+TabsList.displayName = TabsPrimitive.List.displayName;
 
-export function TabList({
-  children,
-  className,
-}: PropsWithChildren<{ className?: string }>) {
-  return (
-    <Tab.List
-      className={twMerge(
-        "flex h-full items-center gap-x-6 border-b border-slate-50/[0.06] px-3 text-sm font-semibold leading-6 text-gray-400",
-        className,
-      )}
-    >
-      {children}
-    </Tab.List>
-  );
-}
+const TabsTrigger = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Trigger
+    ref={ref}
+    className={cn(
+      "flex h-full items-center border-r border-slate-50/[0.06] px-3 text-sm text-white transition ease-linear hover:bg-slate-50/[0.06] hover:bg-slate-50/[0.06] disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-l data-[state=active]:border-slate-50/[0.06] data-[state=active]:bg-slate-50/[0.06]",
+      className,
+    )}
+    {...props}
+  />
+));
+TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
-export function TabButton({
-  selected,
-  children,
-}: PropsWithChildren<{ className?: string; selected?: boolean }>) {
-  return (
-    <button
-      className={twMerge(
-        classNames(
-          "focused-link h-full px-6 font-sans transition ease-linear hover:text-white",
-          {
-            "border-b-2 border-indigo-500 font-semibold text-indigo-500":
-              selected,
-          },
-        ),
-      )}
-    >
-      {children}
-    </button>
-  );
-}
+const TabsContent = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Content
+    ref={ref}
+    className={cn(
+      "ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      className,
+    )}
+    {...props}
+  />
+));
+TabsContent.displayName = TabsPrimitive.Content.displayName;
+
+export { Tabs, TabsList, TabsTrigger, TabsContent };
