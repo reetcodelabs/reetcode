@@ -21,7 +21,7 @@ export default function ProblemEditor({ problem }: ProblemProps) {
     <SandpackProvider
       template="react-ts"
       theme={defaultThemes.cobalt2}
-      className="h-[calc(100vh-60px)]"
+      className="h-[calc(100vh-57px)]"
     >
       <Panels problem={problem} />
     </SandpackProvider>

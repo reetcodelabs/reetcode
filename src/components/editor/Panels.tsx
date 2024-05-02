@@ -18,13 +18,17 @@ import {
 } from "@/components/ResizablePanels";
 import { Select } from "@/components/select";
 
-import Box3d from "@/iconoir/box-3d.svg";
+import TerminalTag from "@/iconoir/terminal-tag.svg";
 import EmptyPage from "@/iconoir/empty-page.svg";
 import Eye from "@/iconoir/eye.svg";
 import Tube from "@/iconoir/tube.svg";
+import Community from "@/iconoir/community.svg";
+import Academic from "@/iconoir/academic.svg";
+import MediaVideoList from "@/iconoir/media-video-list.svg";
 import { ProblemWithTemplate } from "@/server/services/database";
 import { useEffect, useState } from "react";
 import { TestCases } from "../problems/TestCases";
+import { FakeTabs } from "../FakeTabs";
 
 function ListOfEditableFiles() {
   const { sandpack } = useSandpack();
@@ -113,9 +117,9 @@ export function EditorPanels({ problem }: EditorPanelsProps) {
 
   const isMdDevice = useMediaQuery(QUERY_BREAKPOINTS.MD);
 
-  const sandpack = useSandpack()
+  const sandpack = useSandpack();
   const sandpackClient = useSandpackClient();
-  const sandpackNavigation = useSandpackNavigation()
+  const sandpackNavigation = useSandpackNavigation();
 
   console.log({ sandpackNavigation, sandpack, sandpackClient });
 
@@ -131,25 +135,50 @@ export function EditorPanels({ problem }: EditorPanelsProps) {
     <ResizablePanelGroup direction="horizontal">
       <ResizablePanel
         minSize={0}
-        defaultSize={isMdDevice ? 50 : 100}
-        className="flex flex-col overflow-auto overflow-y-auto"
+        defaultSize={isMdDevice ? 35 : 100}
+        className="flex flex-col"
       >
-        <div className="flex h-full w-full flex-col">
-          <PanelTabs
+        <div className="flex h-full w-full flex-col overflow-y-auto">
+          <FakeTabs
             tabs={[
-              { title: "Description", active: true, key: "description" },
-              { title: "Solution", active: false, key: "solution" },
-              { title: "Comments", active: false, key: "comments" },
+              {
+                title: "Description",
+                key: "description",
+                icon: () => <Academic className="mr-2" />,
+              },
+              {
+                title: "Solution",
+                key: "solution",
+                icon: () => <MediaVideoList className="mr-2" />,
+              },
+              {
+                title: "Comments",
+                key: "comments",
+                icon: () => <Community className="mr-2" />,
+              },
             ]}
-          />
-          <div
-            className="prose prose-invert mx-auto w-full max-w-none flex-grow px-6 pb-16 pt-6"
-            dangerouslySetInnerHTML={{ __html: problem?.brief ?? "" }}
-          ></div>
+          >
+            {({ activeTab, classNames }) => (
+              <>
+                <div className={`${classNames("description")} overflow-y-auto`}>
+                  <div
+                    className="prose prose-invert mx-auto w-full max-w-none flex-grow px-6 pb-16 pt-6"
+                    dangerouslySetInnerHTML={{ __html: problem?.brief ?? "" }}
+                  ></div>
+                </div>
+                <div className={classNames("solution")}>
+                  Watch the solution video here.
+                </div>
+                <div className={classNames("comments")}>
+                  Read comments from other hackers here.
+                </div>
+              </>
+            )}
+          </FakeTabs>
         </div>
       </ResizablePanel>
       <ResizableHandle className="text-white" withHandle />
-      <ResizablePanel minSize={0} defaultSize={isMdDevice ? 50 : 0}>
+      <ResizablePanel minSize={0} defaultSize={isMdDevice ? 65 : 0}>
         <ResizablePanelGroup direction="vertical">
           <ResizablePanel minSize={30} defaultSize={40}>
             <div className="h-full flex-1">
@@ -168,7 +197,7 @@ export function EditorPanels({ problem }: EditorPanelsProps) {
           </ResizablePanel>
           <ResizableHandle withHandle className="text-white" />
           <ResizablePanel minSize={30} defaultSize={60}>
-            <Tabs
+            {/* <Tabs
               onValueChange={(selected) => {
                 if (selected === "preview") {
                   sandpack.sandpack.runSandpack();
@@ -203,7 +232,45 @@ export function EditorPanels({ problem }: EditorPanelsProps) {
               <TabsContent value="tests" className="overflow-y-auto">
                 <TestCases />
               </TabsContent>
-            </Tabs>
+            </Tabs> */}
+
+            <FakeTabs
+              tabs={[
+                {
+                  title: "Preview",
+                  key: "preview",
+                  icon: () => <Eye className="mr-3" />,
+                },
+                {
+                  title: "Console",
+                  key: "console",
+                  icon: () => <TerminalTag className="mr-3" />,
+                },
+                {
+                  title: "Tests",
+                  key: "tests",
+                  icon: () => <Tube className="mr-3" />,
+                },
+              ]}
+            >
+              {({ activeTab, classNames }) => (
+                <>
+                  <div className={classNames("preview")}>
+                    <SandpackPreview
+                        showNavigator
+                      showOpenInCodeSandbox={false}
+                      style={{ height: "calc(100% - 48px)" }}
+                    />
+                  </div>
+                  <div className={classNames("console")}>
+                    <SandpackConsole style={{ height: "calc(100% - 48px)" }} />
+                  </div>
+                  <div className={classNames("tests")}>
+                    <TestCases />
+                  </div>
+                </>
+              )}
+            </FakeTabs>
 
             {/* <PanelTabs
               tabs={[

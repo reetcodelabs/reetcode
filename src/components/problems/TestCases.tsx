@@ -6,7 +6,10 @@ import {
 
 export function TestCases() {
   return (
-    <div className="h-full w-full overflow-y-auto px-6">
+    <div
+      style={{ height: "calc(100% - 48px)" }}
+      className="w-full overflow-y-auto px-6"
+    >
       <div className="mb-4 pt-6">
         <h3 className="text-lg font-semibold text-white">Test results</h3>
         <p className="mt-1 text-xs text-slate-400">0/10 test cases passed.</p>
