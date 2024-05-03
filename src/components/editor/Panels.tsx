@@ -29,6 +29,7 @@ import { ProblemWithTemplate } from "@/server/services/database";
 import { useEffect, useState } from "react";
 import { TestCases } from "../problems/TestCases";
 import { FakeTabs } from "../FakeTabs";
+import { MonacoEditor } from "../problems/MonacoEditor";
 
 function ListOfEditableFiles() {
   const { sandpack } = useSandpack();
@@ -132,7 +133,7 @@ export function EditorPanels({ problem }: EditorPanelsProps) {
   }
 
   return (
-    <ResizablePanelGroup direction="horizontal">
+    <ResizablePanelGroup direction="horizontal" className="flex-grow">
       <ResizablePanel
         minSize={0}
         defaultSize={isMdDevice ? 35 : 100}
@@ -192,48 +193,11 @@ export function EditorPanels({ problem }: EditorPanelsProps) {
                 wrapContent
                 // extensions={[autocompletion(), javascript()]}
               />
-              {/* <MonacoEditor /> */}
+              <MonacoEditor />
             </div>
           </ResizablePanel>
           <ResizableHandle withHandle className="text-white" />
           <ResizablePanel minSize={30} defaultSize={60}>
-            {/* <Tabs
-              onValueChange={(selected) => {
-                if (selected === "preview") {
-                  sandpack.sandpack.runSandpack();
-                }
-              }}
-              defaultValue="preview"
-              className="h-full w-full overflow-y-auto"
-            >
-              <TabsList className="sticky top-0 z-[100]">
-                <TabsTrigger value="preview">
-                  <Eye className="mr-2" />
-                  Preview
-                </TabsTrigger>
-                <TabsTrigger value="console">
-                  <Tube className="mr-2" />
-                  Console
-                </TabsTrigger>
-                <TabsTrigger value="tests">
-                  <Tube className="mr-2" />
-                  Tests
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="console" className="h-[88%]">
-                <SandpackConsole />
-              </TabsContent>
-              <TabsContent value="preview" className="h-[88%]">
-                <SandpackPreview
-                  className="h-full rounded-none"
-                  showOpenInCodeSandbox={false}
-                />
-              </TabsContent>
-              <TabsContent value="tests" className="overflow-y-auto">
-                <TestCases />
-              </TabsContent>
-            </Tabs> */}
-
             <FakeTabs
               tabs={[
                 {
@@ -257,7 +221,7 @@ export function EditorPanels({ problem }: EditorPanelsProps) {
                 <>
                   <div className={classNames("preview")}>
                     <SandpackPreview
-                        showNavigator
+                      showNavigator
                       showOpenInCodeSandbox={false}
                       style={{ height: "calc(100% - 48px)" }}
                     />
@@ -271,27 +235,6 @@ export function EditorPanels({ problem }: EditorPanelsProps) {
                 </>
               )}
             </FakeTabs>
-
-            {/* <PanelTabs
-              tabs={[
-                {
-                  title: "Preview",
-                  active: true,
-                  key: "preview",
-                  icon: () => <Eye className="mr-3" />,
-                },
-                {
-                  title: "Tests",
-                  active: false,
-                  key: "tests",
-                  icon: () => <Tube className="mr-3" />,
-                },
-              ]}
-            /> */}
-            {/* <div className="flex h-full items-center justify-center p-6">
-                <span className="font-semibold">Three</span>
-              </div> */}
-            {/* <SandpackPreview className="h-full rounded-none" /> */}
           </ResizablePanel>
         </ResizablePanelGroup>
       </ResizablePanel>

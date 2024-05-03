@@ -105,6 +105,7 @@ export function MainLayout({
   const router = useRouter();
 
   const isHome = router.pathname === "/";
+  const isAdminPage = router.pathname.includes('admin')
   const isProblemEditorPage = router.pathname === "/problems/[slug]/editor";
 
   const openAuthenticationDialog = () => {
@@ -128,6 +129,10 @@ export function MainLayout({
   );
 
   const hasBanner = subscription?.isExpiringSoon || subscription?.isExpired;
+
+  if (isAdminPage) {
+    return <main>{children}</main>;
+  }
 
   return (
     <>
