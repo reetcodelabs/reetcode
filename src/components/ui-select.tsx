@@ -1,5 +1,3 @@
-"use client";
-
 import {
   CheckIcon as Check,
   ChevronDownIcon as ChevronDown,
@@ -23,7 +21,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-md border border-slate-50/[0.06] bg-slate-900 px-3 py-2 text-sm placeholder:text-white text-white focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      "flex h-10 w-full items-center justify-between rounded-md border border-slate-50/[0.06] bg-slate-900 px-3 py-2 text-sm text-white placeholder:text-white focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
       className,
     )}
     {...props}
