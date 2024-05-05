@@ -6,30 +6,28 @@ import {
   useSandpackClient,
   useSandpackNavigation,
 } from "@codesandbox/sandpack-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/tabs";
+import { useEffect, useState } from "react";
 
-import { cn } from "@/lib/utils";
-
-import { QUERY_BREAKPOINTS, useMediaQuery } from "@/hooks/useMediaQuery";
 import {
-  ResizablePanelGroup,
-  ResizablePanel,
   ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
 } from "@/components/ResizablePanels";
 import { Select } from "@/components/select";
-
-import TerminalTag from "@/iconoir/terminal-tag.svg";
+import { QUERY_BREAKPOINTS, useMediaQuery } from "@/hooks/useMediaQuery";
+import Academic from "@/iconoir/academic.svg";
+import Community from "@/iconoir/community.svg";
 import EmptyPage from "@/iconoir/empty-page.svg";
 import Eye from "@/iconoir/eye.svg";
-import Tube from "@/iconoir/tube.svg";
-import Community from "@/iconoir/community.svg";
-import Academic from "@/iconoir/academic.svg";
 import MediaVideoList from "@/iconoir/media-video-list.svg";
-import { ProblemWithTemplate } from "@/server/services/database";
-import { useEffect, useState } from "react";
-import { TestCases } from "../problems/TestCases";
+import TerminalTag from "@/iconoir/terminal-tag.svg";
+import Tube from "@/iconoir/tube.svg";
+import { cn } from "@/lib/utils";
+import { type ProblemWithTemplate } from "@/server/services/database";
+
 import { FakeTabs } from "../FakeTabs";
 import { MonacoEditor } from "../problems/MonacoEditor";
+import { TestCases } from "../problems/TestCases";
 
 function ListOfEditableFiles() {
   const { sandpack } = useSandpack();
@@ -114,7 +112,6 @@ interface EditorPanelsProps {
 
 export function EditorPanels({ problem }: EditorPanelsProps) {
   const [showPanels, setShowPanels] = useState(false);
-  const [showPreview, setShowPreview] = useState(true);
 
   const isMdDevice = useMediaQuery(QUERY_BREAKPOINTS.MD);
 
@@ -159,7 +156,7 @@ export function EditorPanels({ problem }: EditorPanelsProps) {
               },
             ]}
           >
-            {({ activeTab, classNames }) => (
+            {({ classNames }) => (
               <>
                 <div className={`${classNames("description")} overflow-y-auto`}>
                   <div
@@ -217,11 +214,10 @@ export function EditorPanels({ problem }: EditorPanelsProps) {
                 },
               ]}
             >
-              {({ activeTab, classNames }) => (
+              {({ classNames }) => (
                 <>
                   <div className={classNames("preview")}>
                     <SandpackPreview
-                      showNavigator
                       showOpenInCodeSandbox={false}
                       style={{ height: "calc(100% - 48px)" }}
                     />

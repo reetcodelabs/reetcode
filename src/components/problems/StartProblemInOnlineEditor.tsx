@@ -1,14 +1,20 @@
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { useMutation } from "@tanstack/react-query";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { type Dispatch, type SetStateAction, useState } from "react";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui-select";
 import { type ProblemWithTemplate } from "@/server/services/database";
 
 import { Button } from "../button";
 import { Modal } from "../modal";
-import { Select, type SelectOption } from "../select";
+import { type SelectOption } from "../select";
 
 export interface StartProblemInOnlineEditorProps {
   isOpen: boolean;
@@ -22,7 +28,7 @@ export function StartProblemInOnlineEditor({
   setIsOpen,
 }: StartProblemInOnlineEditorProps) {
   const { push } = useRouter();
-  const [template, setTemplate] = useState<SelectOption>(
+  const [template] = useState<SelectOption>(
     () =>
       problem.problemTemplates.find((template) => template.default === true)!,
   );
@@ -57,7 +63,8 @@ export function StartProblemInOnlineEditor({
         >
           Select a template
         </label>
-        <Select
+
+        {/* <Select
           options={
             problem?.problemTemplates.map((template) => ({
               id: template.id,
@@ -66,7 +73,17 @@ export function StartProblemInOnlineEditor({
           }
           value={template}
           onChange={setTemplate}
-        />
+        /> */}
+        <Select>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Template" />
+          </SelectTrigger>
+          <SelectContent>
+            {problem?.problemTemplates?.map(template => (
+              <SelectItem value={template?.name} className="capitalize">{template?.name}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <Button

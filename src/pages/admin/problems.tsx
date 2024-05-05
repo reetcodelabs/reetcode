@@ -1,3 +1,7 @@
+import { PlusIcon, XCircleIcon } from "@heroicons/react/20/solid";
+import { CheckIcon } from "@heroicons/react/24/outline";
+import { useMemo, useState } from "react";
+
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { Label } from "@/components/label";
@@ -5,12 +9,11 @@ import { Select } from "@/components/select";
 import { Textarea } from "@/components/textarea";
 import { cn } from "@/lib/utils";
 import {
-  ProblemWithTemplate,
   databaseService,
+  type ProblemWithTemplate,
+  type TemplateWithStarterFiles,
 } from "@/server/services/database";
 import { withIronSessionSsr } from "@/utils/session";
-import { PlusIcon, XCircleIcon } from "@heroicons/react/20/solid";
-import { useMemo, useState } from "react";
 
 interface AdminProblemsProps {
   problems: ProblemWithTemplate[];
@@ -19,9 +22,12 @@ interface AdminProblemsProps {
 export default function AdminProblems({ problems }: AdminProblemsProps) {
   const [searchProblems, setSearchProblems] = useState("");
   const [selectedProblem, setSelectedProblem] =
-   useState<ProblemWithTemplate | null>(null);
- 
- console.log({selectedProblem})
+    useState<ProblemWithTemplate | null>(null);
+  const [selectedTemplateFilesType, setSelectedTemplateFilesType] = useState<
+    "solution" | "problem" | null
+  >(null);
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<TemplateWithStarterFiles | null>(null);
 
   const filteredProblems = useMemo(() => {
     if (!searchProblems) {
@@ -53,7 +59,7 @@ export default function AdminProblems({ problems }: AdminProblemsProps) {
             </Button>
           )}
         </div>
-        {filteredProblems.map((problem, idx) => {
+        {filteredProblems.map((problem) => {
           return (
             <button
               key={problem?.id}
@@ -83,7 +89,7 @@ export default function AdminProblems({ problems }: AdminProblemsProps) {
       </div>
       <div className="flex h-full flex-grow">
         {selectedProblem && (
-          <div className="h-full w-1/2 flex-col overflow-y-auto border-r border-slate-50/[0.06]">
+          <div className="h-full w-2/5 flex-col overflow-y-auto border-r border-slate-50/[0.06]">
             <header className="sticky top-0 z-[2] flex h-12 items-center justify-between border-b border-slate-50/[0.06] bg-slate-900 px-6">
               <h1 className="font-semibold text-white">
                 {selectedProblem?.name}
@@ -148,17 +154,114 @@ export default function AdminProblems({ problems }: AdminProblemsProps) {
                     { name: "Hard", id: "HARD" },
                   ]}
                 />
-        </div>
-        
-        <div>
-         {selectedProblem.problemTemplates?.map(template => (
-          <div className="bg-red-500 h-12">{ template.name}</div>
-        ))}
-        </div>
+              </div>
+
+              <div>
+                {selectedProblem.templates?.map((template) => {
+                  const isSelectedProblemTemplate =
+                    selectedTemplateFilesType === "problem" &&
+                    template?.id === selectedTemplate?.id;
+                  const isSelectedSolutionTemplate =
+                    selectedTemplateFilesType === "solution" &&
+                    template?.id === selectedTemplate?.id;
+
+                  return (
+                    <div className="flex items-center" key={template?.id}>
+                      <button
+                        type="button"
+                        className={cn(
+                          "flex h-10 w-full items-center border border-slate-50/[0.06] px-4 text-xs capitalize text-white",
+                          {
+                            "bg-slate-50/[0.06]": isSelectedProblemTemplate,
+                          },
+                        )}
+                        onClick={() => {
+                          setSelectedTemplate(template as unknown as TemplateWithStarterFiles);
+                          setSelectedTemplateFilesType("problem");
+                        }}
+                      >
+                        Template files:{" "}
+                        <span className="font-semibold">{template.name}</span>
+                        {isSelectedProblemTemplate && (
+                          <CheckIcon className="ml-2 h-4 w-4" />
+                        )}
+                      </button>
+                      <button
+                        type="button"
+                        className={cn(
+                          "flex h-10 w-full items-center border border-slate-50/[0.06] px-4 text-xs capitalize text-white",
+                          {
+                            "bg-slate-50/[0.06]": isSelectedSolutionTemplate,
+                          },
+                        )}
+                        onClick={() => {
+                          setSelectedTemplate(
+                            template as unknown as TemplateWithStarterFiles,
+                          );
+                          setSelectedTemplateFilesType("solution");
+                        }}
+                      >
+                        Solution files:{" "}
+                        <span className="font-semibold">{template.name}</span>
+                        {isSelectedSolutionTemplate && (
+                          <CheckIcon className="ml-2 h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
+                  );
+                })}
+
+                <Button
+                  type="button"
+                  className="mt-4 flex w-full items-center justify-center"
+                >
+                  <PlusIcon className="h-4 w-4" /> Add a template
+                </Button>
+              </div>
             </form>
           </div>
         )}
-        <div className="w-1/2"></div>
+        <div className="flex h-full flex-grow overflow-hidden">
+          {selectedTemplate && (
+            <div className="flex w-full flex-col overflow-y-auto">
+              <header className="sticky top-0 z-[2] flex h-12 w-full flex-shrink-0 items-center justify-between border-b border-slate-50/[0.06] bg-slate-900 px-6">
+                <h1 className="font-semibold text-white">
+                  <span>
+                    {selectedTemplateFilesType === "problem"
+                      ? "Problem files for template:"
+                      : "Solution files for template:"}
+                  </span>{" "}
+                  {selectedTemplate?.name}
+                </h1>
+
+                <div className="space-x-4">
+                  <Button variant="secondary">Delete</Button>
+                  <Button>Save template files</Button>
+                </div>
+              </header>
+
+              <div className="w-full">
+                {(selectedTemplateFilesType === "problem"
+                  ? selectedTemplate?.starterFiles
+                  : selectedTemplate?.solutionFiles
+                ).map((file) => (
+                  <div className="flex w-full flex-col border-b border-white p-6">
+                    <Input
+                      defaultValue={file.path}
+                      className="mb-4 text-white"
+                    />
+                    <Textarea
+                      className="w-full"
+                      key={file.id}
+                      id={`filePath-${file.id}`}
+                      defaultValue={file.content}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -166,7 +269,20 @@ export default function AdminProblems({ problems }: AdminProblemsProps) {
 
 export const getServerSideProps = withIronSessionSsr(
   async function getServerSideProps(ctx) {
-    const problems = await databaseService.getAllProblems();
+    const problems = await databaseService.getAllProblems(
+      {},
+      {
+        templates: {
+          select: {
+            id: true,
+            name: true,
+            sandpackTemplate: true,
+            starterFiles: true,
+            solutionFiles: true,
+          },
+        },
+      },
+    );
 
     return {
       props: {

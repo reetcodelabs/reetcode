@@ -5,7 +5,7 @@ import prisma, { type PrismaClientSingleton } from "@/server/prisma";
 export class DatabaseService {
   constructor(private prisma: PrismaClientSingleton) {}
 
-  async getAllProblems(filters?: Prisma.ProblemFindManyArgs["where"]) {
+  async getAllProblems(filters?: Prisma.ProblemFindManyArgs["where"], selects?: Prisma.ProblemFindManyArgs['select']) {
     const hasActiveFilters = filters && Object.keys(filters).length > 0;
 
     const problems = await this.prisma.problem.findMany({
@@ -27,6 +27,7 @@ export class DatabaseService {
         },
         techStack: true,
         completionDuration: true,
+        ...selects
       },
     });
 
@@ -69,7 +70,7 @@ export class DatabaseService {
 
 export const databaseService = new DatabaseService(prisma);
 
-export type TemplateWithStarterFiles = Template & { starterFiles: File[] };
+export type TemplateWithStarterFiles = Template & { starterFiles: File[], solutionFiles: File[] };
 
 export type ProblemWithTemplate = NonNullable<
   Awaited<ReturnType<typeof databaseService.getProblemBySlug>>

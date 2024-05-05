@@ -1,4 +1,3 @@
-import { Tab } from "@headlessui/react";
 import { AcademicCapIcon, StarIcon } from "@heroicons/react/20/solid";
 import {
   CheckIcon,
@@ -7,12 +6,12 @@ import {
   CommandLineIcon,
   FolderIcon,
 } from "@heroicons/react/24/outline";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/button";
 import { DownloadProblemAndWorkLocally } from "@/components/problems/DownloadProblemAndWorkLocally";
 import { StartProblemInOnlineEditor } from "@/components/problems/StartProblemInOnlineEditor";
-import { TAB_BUTTON_CLASSNAMES, TAB_LIST_CLASSNAMES } from "@/components/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/tabs";
 import {
   databaseService,
   type ProblemWithTemplate,
@@ -127,41 +126,17 @@ export default function Problem({ problem }: ProblemProps) {
           </div>
 
           <div className="mt-6 w-full">
-            <Tab.Group manual>
-              <Tab.List
-                className={TAB_LIST_CLASSNAMES("sticky top-16 bg-slate-900")}
-              >
-                {["Project brief", "Solution", "Community submissions"].map(
-                  (item) => (
-                    <Tab key={item} as={Fragment}>
-                      {({ selected }) => (
-                        <button className={TAB_BUTTON_CLASSNAMES(selected)}>
-                          {item}
-                        </button>
-                      )}
-                    </Tab>
-                  ),
-                )}
-              </Tab.List>
-              <Tab.Panels>
-                <Tab.Panel>
-                  <div
-                    className="prose prose-invert pt-6"
-                    dangerouslySetInnerHTML={{ __html: problem?.brief ?? "" }}
-                  ></div>
-                  <div
-                    className="prose prose-invert pt-6"
-                    dangerouslySetInnerHTML={{ __html: problem?.brief ?? "" }}
-                  ></div>
-                  <div
-                    className="prose prose-invert pt-6"
-                    dangerouslySetInnerHTML={{ __html: problem?.brief ?? "" }}
-                  ></div>
-                </Tab.Panel>
-                <Tab.Panel>Content 2</Tab.Panel>
-                <Tab.Panel>Content 3</Tab.Panel>
-              </Tab.Panels>
-            </Tab.Group>
+            <Tabs defaultValue={"brief"}>
+              <TabsList>
+                <TabsTrigger value="brief">Project brief</TabsTrigger>
+              </TabsList>
+              <TabsContent value="brief">
+                <div
+                  className="prose prose-invert pt-6"
+                  dangerouslySetInnerHTML={{ __html: problem?.brief ?? "" }}
+                ></div>
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
 

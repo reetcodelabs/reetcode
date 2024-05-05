@@ -1,6 +1,8 @@
+import { type ReactNode, useState } from "react";
+
 import { cn } from "@/lib/utils";
+
 import { Select } from "./select";
-import { ReactNode, useState } from "react";
 
 export interface PanelTab {
   key: string;

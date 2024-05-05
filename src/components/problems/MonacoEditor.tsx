@@ -1,6 +1,4 @@
 import {
-  FileTabs,
-  SandpackStack,
   useActiveCode,
   useSandpack,
 } from "@codesandbox/sandpack-react";
