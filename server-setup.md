@@ -17,4 +17,6 @@ Grant database access using command `grant all privileges on database reetcode t
 10. Clone reetcode codebase
 11. Install node using this article https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04
 12. Setup pm2 and nginx for nextjs https://docs.digitalocean.com/developer-center/deploying-a-next.js-application-on-a-digitalocean-droplet/
-13. 
+Start command: `pm2 start npm --name "staging.reetcode.com" -- start`
+12. Set up certbot using https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04#prerequisites
+13. Configure cert using command `sudo certbot --nginx -d staging.reetcode.com -d www.staging.reetcode.com`

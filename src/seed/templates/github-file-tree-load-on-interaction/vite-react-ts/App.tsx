@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useState } from "react";
 import classNames from "classnames";
 
 const Icons = {
@@ -48,10 +48,19 @@ function FilesContainerHeader() {
 }
 
 function FilesContainer() {
+  const [state, setState] = useState(12)
   return (
     <div className="files-container">
       <FilesContainerHeader />
       <TreeContainer />
+
+      <button onClick={() => setState((current) => current + 10)}>
+        Increment value
+      </button>
+      <p>Value: {state}</p>
+      <button onClick={() => setState((current) => current - 10)}>
+        Decrement value
+      </button>
     </div>
   );
 }

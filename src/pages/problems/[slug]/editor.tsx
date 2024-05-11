@@ -1,12 +1,18 @@
 import {
+  type SandpackFile,
+  type SandpackFiles,
+  type SandpackPredefinedTemplate,
   SandpackProvider,
+  useSandpack,
 } from "@codesandbox/sandpack-react";
 import * as defaultThemes from "@codesandbox/sandpack-themes";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
+import { LOCAL_STORAGE_CACHE_KEY } from "@/components/editor/Panels";
 import ArrowLeft from "@/iconoir/arrow-left.svg";
-import MenuScale from '@/iconoir/menu-scale.svg'
+import MenuScale from "@/iconoir/menu-scale.svg";
 import { cn } from "@/lib/utils";
 import {
   databaseService,
@@ -18,18 +24,53 @@ interface ProblemProps {
   problem: ProblemWithTemplate;
 }
 
-const ACTIVATE_CONTEXT_MENU = false
+const ACTIVATE_CONTEXT_MENU = false;
 
-const Panels = dynamic(() => import('@/components/editor/Panels'))
+const Panels = dynamic(() => import("@/components/editor/Panels"));
 
 export default function ProblemEditor({ problem }: ProblemProps) {
-  const [openContextMenu, setOpenContextMenu] = useState(false)
+  const [openContextMenu, setOpenContextMenu] = useState(false);
+
+  const template = useMemo(() => {
+    return (problem?.template ??
+      problem.problemTemplates?.find((template) => template.default === true))!;
+  }, []);
+
+  const files = useMemo(() => {
+    const files: Record<string, SandpackFile> = {};
+
+    if (problem?.solution && problem?.solution?.files.length > 0) {
+      problem.solution.files.forEach((file) => {
+        files[file.path] = {
+          code: file.content,
+          hidden: false,
+          readOnly: false,
+        };
+      });
+    } else {
+      template?.starterFiles?.forEach((file) => {
+        const isTestFile =
+          file.path.includes("spec") || file.path.includes("test");
+
+        if (!isTestFile) {
+          files[file.path] = {
+            code: file.content,
+            hidden: false,
+            readOnly: false,
+          };
+        }
+      });
+    }
+
+    return files;
+  }, [template]);
 
   return (
     <SandpackProvider
-      template="react-ts"
-      theme={defaultThemes.cobalt2}
+      files={files}
+      theme={defaultThemes.monokaiPro}
       className="flex h-[calc(100vh-57px)]"
+      template={template?.sandpackTemplate as SandpackPredefinedTemplate}
     >
       {ACTIVATE_CONTEXT_MENU && (
         <div
@@ -49,7 +90,7 @@ export default function ProblemEditor({ problem }: ProblemProps) {
         </div>
       )}
 
-      <Panels problem={problem} />
+      <Panels problem={problem} template={template} />
     </SandpackProvider>
   );
 }
@@ -58,6 +99,8 @@ export const getServerSideProps = withIronSessionSsr(
   async function getServerSideProps(ctx) {
     const problem = await databaseService.getProblemBySlug(
       ctx.query.slug as string,
+      ctx.query.template as string,
+      ctx.req.session?.user?.id,
     );
 
     return {

@@ -1,12 +1,13 @@
 import {
   SandpackCodeEditor,
   SandpackConsole,
+  type SandpackFiles,
   SandpackPreview,
   useSandpack,
-  useSandpackClient,
-  useSandpackNavigation,
 } from "@codesandbox/sandpack-react";
+import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
 
 import {
   ResizableHandle,
@@ -15,6 +16,7 @@ import {
 } from "@/components/ResizablePanels";
 import { Select } from "@/components/select";
 import { QUERY_BREAKPOINTS, useMediaQuery } from "@/hooks/useMediaQuery";
+import useThrottleFn from "@/hooks/useThrottleFn";
 import Academic from "@/iconoir/academic.svg";
 import Community from "@/iconoir/community.svg";
 import EmptyPage from "@/iconoir/empty-page.svg";
@@ -23,7 +25,9 @@ import MediaVideoList from "@/iconoir/media-video-list.svg";
 import TerminalTag from "@/iconoir/terminal-tag.svg";
 import Tube from "@/iconoir/tube.svg";
 import { cn } from "@/lib/utils";
+import { useClientIronSession } from "@/providers/SessionProvider";
 import { type ProblemWithTemplate } from "@/server/services/database";
+import { axiosClient } from "@/utils/axios";
 
 import { FakeTabs } from "../FakeTabs";
 import { MonacoEditor } from "../problems/MonacoEditor";
@@ -108,22 +112,84 @@ function PanelTabs({ tabs, onTabSelected }: PanelTabsProps) {
 
 interface EditorPanelsProps {
   problem: ProblemWithTemplate;
+  template: ProblemWithTemplate["template"];
 }
+export const LOCAL_STORAGE_CACHE_KEY = (
+  problemId: string,
+  templateId: string,
+) => `problem-${problemId}-${templateId}`;
 
-export function EditorPanels({ problem }: EditorPanelsProps) {
+export function EditorPanels({ problem, template }: EditorPanelsProps) {
   const [showPanels, setShowPanels] = useState(false);
 
   const isMdDevice = useMediaQuery(QUERY_BREAKPOINTS.MD);
+  const {
+    sandpack: { files, updateFile },
+  } = useSandpack();
 
-  const sandpack = useSandpack();
-  const sandpackClient = useSandpackClient();
-  const sandpackNavigation = useSandpackNavigation();
+  const [debouncedFiles] = useDebounce(files, 2000);
 
-  console.log({ sandpackNavigation, sandpack, sandpackClient });
+  const { session } = useClientIronSession();
+
+  const saveSolutionMutation = useMutation({
+    async mutationFn() {
+      if (!session?.user) {
+        localStorage.setItem(
+          LOCAL_STORAGE_CACHE_KEY(
+            problem.id!,
+            template?.id as unknown as string,
+          ),
+          JSON.stringify(debouncedFiles),
+        );
+
+        return;
+      }
+
+      await axiosClient.post("/problems/save-solution/", {
+        files: Object.keys(debouncedFiles).map((file) => ({
+          path: file,
+          code: debouncedFiles[file]?.code,
+        })),
+        problemId: problem.id,
+        templateId: template?.id,
+      });
+    },
+  });
 
   useEffect(() => {
     setShowPanels(true);
+
+    if (session?.user) {
+      return;
+    }
+
+    const localFileCache = localStorage.getItem(
+      LOCAL_STORAGE_CACHE_KEY(problem.id!, template?.id as unknown as string),
+    );
+
+    try {
+      if (localFileCache) {
+        updateFile(JSON.parse(localFileCache) as SandpackFiles);
+      }
+    } catch (error) {}
   }, []);
+
+  function handleSandpackFileChanges() {
+    saveSolutionMutation.mutate();
+  }
+
+  useEffect(() => {
+    if (showPanels) {
+      handleSandpackFileChanges();
+    }
+  }, [debouncedFiles]);
+
+  useEffect(() => {
+    // window.addEventListener("beforeunload", handleSandpackFileChanges);
+
+    // return () =>
+    //   window.removeEventListener("beforeunload", handleSandpackFileChanges);
+  }, [debouncedFiles]);
 
   if (!showPanels) {
     return null;
@@ -218,6 +284,7 @@ export function EditorPanels({ problem }: EditorPanelsProps) {
                 <>
                   <div className={classNames("preview")}>
                     <SandpackPreview
+                      showNavigator
                       showOpenInCodeSandbox={false}
                       style={{ height: "calc(100% - 48px)" }}
                     />
@@ -226,7 +293,7 @@ export function EditorPanels({ problem }: EditorPanelsProps) {
                     <SandpackConsole style={{ height: "calc(100% - 48px)" }} />
                   </div>
                   <div className={classNames("tests")}>
-                    <TestCases />
+                    <TestCases problem={problem} template={template} />
                   </div>
                 </>
               )}

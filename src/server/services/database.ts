@@ -5,7 +5,10 @@ import prisma, { type PrismaClientSingleton } from "@/server/prisma";
 export class DatabaseService {
   constructor(private prisma: PrismaClientSingleton) {}
 
-  async getAllProblems(filters?: Prisma.ProblemFindManyArgs["where"], selects?: Prisma.ProblemFindManyArgs['select']) {
+  async getAllProblems(
+    filters?: Prisma.ProblemFindManyArgs["where"],
+    selects?: Prisma.ProblemFindManyArgs["select"],
+  ) {
     const hasActiveFilters = filters && Object.keys(filters).length > 0;
 
     const problems = await this.prisma.problem.findMany({
@@ -27,15 +30,15 @@ export class DatabaseService {
         },
         techStack: true,
         completionDuration: true,
-        ...selects
+        ...selects,
       },
     });
 
     return problems;
   }
 
-  async getProblemBySlug(slug: string) {
-    const [problem, templates] = await this.prisma.$transaction([
+  async getProblemBySlug(slug: string, templateName?: string, authenticatedUserId?: string) {
+    const [problem, templates, template] = await this.prisma.$transaction([
       this.prisma.problem.findFirst({
         where: {
           slug,
@@ -47,6 +50,7 @@ export class DatabaseService {
             },
             include: {
               starterFiles: true,
+              solutionFiles: true,
             },
           },
           problemSets: true,
@@ -59,10 +63,35 @@ export class DatabaseService {
           },
         },
       }),
+      this.prisma.template.findFirst({
+        where: {
+          problem: {
+            slug,
+          },
+          name: templateName,
+        },
+        include: {
+          starterFiles: true,
+          solutionFiles: true,
+        }
+      }),
     ]);
+
+    const solution = await this.prisma.solution.findFirst({
+      where: {
+        problemId: problem?.id,
+        templateId: template?.id,
+        userId: authenticatedUserId
+      },
+      include: {
+        files: true
+      }
+    })
 
     return {
       ...problem,
+      template,
+      solution,
       problemTemplates: templates as unknown as TemplateWithStarterFiles[],
     };
   }
@@ -70,7 +99,10 @@ export class DatabaseService {
 
 export const databaseService = new DatabaseService(prisma);
 
-export type TemplateWithStarterFiles = Template & { starterFiles: File[], solutionFiles: File[] };
+export type TemplateWithStarterFiles = Template & {
+  starterFiles: File[];
+  solutionFiles: File[];
+};
 
 export type ProblemWithTemplate = NonNullable<
   Awaited<ReturnType<typeof databaseService.getProblemBySlug>>

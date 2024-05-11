@@ -11,6 +11,7 @@ import { Fragment } from "react";
 
 import { Flash } from "@/components/flash";
 import { MainLayout } from "@/layouts/main";
+import { SessionProvider } from "@/providers/SessionProvider";
 import { queryClient } from "@/utils/query";
 
 nProgress.configure({ trickle: true });
@@ -31,10 +32,12 @@ export default function App({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Layout session={session}>
-        <Flash />
-        <Component {...{ session, ...pageProps }} />
-      </Layout>
+      <SessionProvider session={session}>
+        <Layout session={session}>
+          <Flash />
+          <Component {...{ session, ...pageProps }} />
+        </Layout>
+      </SessionProvider>
     </QueryClientProvider>
   );
 }

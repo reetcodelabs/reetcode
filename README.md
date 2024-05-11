@@ -78,3 +78,11 @@ You are to style something similar to the designs in the image /public/buffer-dy
 - Implement the fuzzy search feature on Google Translate Languages
 - As user searches, instantly display the results, highlighting in bold the part of the result that closely matched the query searched for. (Google Translate Search Languages)
 
+# How tests Work
+
+1. Each template set of files has a file called `tests.spec.js` or `tests.spec.ts`. 
+2. We hide this file from editable results on frontend.
+3. To execute tests, we call the Execute API with this file content. 
+4. Get back results, parse it, display it.
+
+For running tests in HTML ONLY / VANILLA TEMPLATES, USE THIS TUTORIAL https://dev.to/thawkin3/how-to-unit-test-html-and-vanilla-javascript-without-a-ui-framework-4io?comments_sort=latest

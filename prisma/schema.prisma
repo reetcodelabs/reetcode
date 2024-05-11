@@ -183,7 +183,11 @@ model Solution {
     problemId  String
     templateId String
 
+    latestTestResults String? @db.Text()
+
     files File[]
+
+    completed Boolean? @default(false)
 
     @@unique([problemId, userId, templateId])
 }

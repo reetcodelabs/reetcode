@@ -29,6 +29,7 @@ export const env = createEnv({
     IRON_SESSION_PASSWORD: z.string(),
 
     APP_URL: z.string(),
+    RCE_API_URL: z.string(),
   },
 
   /**
@@ -58,8 +59,8 @@ export const env = createEnv({
     NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY:
       process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
     IRON_SESSION_PASSWORD: process.env.IRON_SESSION_PASSWORD,
-
     APP_URL: process.env.APP_URL,
+    RCE_API_URL: process.env.RCE_API_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
