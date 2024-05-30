@@ -1,16 +1,12 @@
 import {
   type SandpackFile,
-  type SandpackFiles,
   type SandpackPredefinedTemplate,
   SandpackProvider,
-  useSandpack,
 } from "@codesandbox/sandpack-react";
 import * as defaultThemes from "@codesandbox/sandpack-themes";
 import dynamic from "next/dynamic";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
-import { LOCAL_STORAGE_CACHE_KEY } from "@/components/editor/Panels";
 import ArrowLeft from "@/iconoir/arrow-left.svg";
 import MenuScale from "@/iconoir/menu-scale.svg";
 import { cn } from "@/lib/utils";
@@ -29,7 +25,7 @@ const ACTIVATE_CONTEXT_MENU = false;
 const Panels = dynamic(() => import("@/components/editor/Panels"));
 
 export default function ProblemEditor({ problem }: ProblemProps) {
-  const [openContextMenu, setOpenContextMenu] = useState(false);
+  const [openContextMenu, setOpenContextMenu] = useState<boolean>(false);
 
   const template = useMemo(() => {
     return (problem?.template ??

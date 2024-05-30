@@ -16,7 +16,6 @@ import {
 } from "@/components/ResizablePanels";
 import { Select } from "@/components/select";
 import { QUERY_BREAKPOINTS, useMediaQuery } from "@/hooks/useMediaQuery";
-import useThrottleFn from "@/hooks/useThrottleFn";
 import Academic from "@/iconoir/academic.svg";
 import Community from "@/iconoir/community.svg";
 import EmptyPage from "@/iconoir/empty-page.svg";
@@ -182,13 +181,6 @@ export function EditorPanels({ problem, template }: EditorPanelsProps) {
     if (showPanels) {
       handleSandpackFileChanges();
     }
-  }, [debouncedFiles]);
-
-  useEffect(() => {
-    // window.addEventListener("beforeunload", handleSandpackFileChanges);
-
-    // return () =>
-    //   window.removeEventListener("beforeunload", handleSandpackFileChanges);
   }, [debouncedFiles]);
 
   if (!showPanels) {

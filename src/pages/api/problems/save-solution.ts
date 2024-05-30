@@ -45,7 +45,7 @@ export async function handleSaveSolution(
     },
   });
 
-  const u = await prisma.user.findFirst({
+  await prisma.user.findFirst({
     where: {
       id: session?.user?.id,
     },
