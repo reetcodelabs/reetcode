@@ -158,7 +158,21 @@ export async function parseRuntimeOutputJestTests(
 ): Promise<TestResults> {
   const [rawOutput, jsonOutput] = output.split(TEST_RESULTS_DELIMITER);
 
-  const results = JSON.parse(jsonOutput ?? "") as JestParsedTestResult;
+  let results: JestParsedTestResult = {
+    tests: [],
+    summary: {
+      runnerOutput: "",
+    },
+    numFailedTests: 0,
+    numPassedTests: 0,
+    numTotalTests: 0,
+    testResults: [],
+    runnerOutput: "",
+  };
+
+  try {
+    results = JSON.parse(jsonOutput ?? "") as JestParsedTestResult;
+  } catch (error) {}
 
   const tests = results.testResults[0]?.assertionResults ?? [];
 

@@ -16,7 +16,7 @@ import {
 import Tube from "@/iconoir/tube.svg";
 import { type ProblemWithTemplate } from "@/server/services/database";
 import { axiosClient } from "@/utils/axios";
-import type { TestResults } from '@/utils/rce'
+import type { TestResults } from "@/utils/rce";
 
 interface TestCasesProps {
   problem: ProblemWithTemplate;
@@ -44,9 +44,9 @@ export function TestCases({ problem, template }: TestCasesProps) {
         },
       );
 
-      setResults(response.data.data)
+      setResults(response.data.data);
 
-      return response.data
+      return response.data;
     },
   });
 
@@ -61,6 +61,8 @@ export function TestCases({ problem, template }: TestCasesProps) {
     </Button>
   );
 
+  console.log({ results });
+
   return (
     <div
       style={{ height: "calc(100% - 48px)" }}
@@ -72,16 +74,22 @@ export function TestCases({ problem, template }: TestCasesProps) {
             <div className="">
               <h3 className="text-lg font-semibold text-white">Test results</h3>
               <p className="mt-1 text-xs text-slate-400">
-                {results.summary.passed}/
-                {results.summary.total} test cases passed.
+                {results.summary.passed}/{results.summary.total} test cases
+                passed.
               </p>
             </div>
 
             {runTestButton}
           </div>
+          {results?.rawOutputHtml && (
+            <div
+              className="my-4 w-full [&>pre]:p-4"
+              dangerouslySetInnerHTML={{ __html: results?.rawOutputHtml }}
+            ></div>
+          )}
           <div className="grid grid-cols-1 gap-y-2 pb-8">
             {results.tests.map((testCase, idx) => {
-              const testPassed = testCase.status === 'passed'
+              const testPassed = testCase.status === "passed";
 
               return (
                 <Collapsible>

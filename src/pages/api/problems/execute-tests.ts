@@ -49,43 +49,59 @@ export async function handleExecuteProblemTests(
     return invalidPayloadResponse(response);
   }
 
-  const testFile = template.starterFiles.find((file) =>
-    file.path.includes("tests.spec.") || file.path.includes('test.spec.'),
+  const testFile = template.starterFiles.find(
+    (file) =>
+      file.path.includes("tests.spec.") || file.path.includes("test.spec."),
+  );
+
+  const allowedFiles = validation?.data?.files?.filter(
+    (file) =>
+      !file?.path?.includes("test.spec") &&
+      !file?.path?.includes("tests.spec") &&
+      file?.code &&
+      !Object?.keys(STUBS).some((stub) => stub.includes(file?.path)) &&
+      !["package.json", "package-lock.json"].some((forbiddenFile) =>
+        file?.path?.includes(forbiddenFile),
+      ),
   );
 
   try {
+    const payload = {
+      language: "Javascript",
+      files: [
+        {
+          name: "test.js",
+          code: STUBS["test.jest.js"],
+          entrypoint: true,
+        },
+        {
+          name: "babel.config.json",
+          code: STUBS["babel.config.json"],
+          entrypoint: false,
+        },
+        {
+          name: testFile?.path?.startsWith("tests/")
+            ? testFile?.path
+            : `tests/${testFile?.path}`,
+          code: testFile?.content,
+          entrypoint: false,
+        },
+        ...allowedFiles.map((file) => ({
+          code: file.code,
+          name: file?.path,
+          entrypoint: false,
+        })),
+      ],
+    };
+
     const rceResponse = await rceClient.post<{ runtime: { output: string } }>(
       "/execute",
-      {
-        language: "Javascript",
-        files: [
-          {
-            name: "test.js",
-            code: STUBS["test.jest.js"],
-            entrypoint: true,
-          },
-          {
-            name: "babel.config.json",
-            code: STUBS["babel.config.json"],
-            entrypoint: false,
-          },
-          {
-            name: testFile?.path?.startsWith("tests/")
-              ? testFile?.path
-              : `tests/${testFile?.path}`,
-            code: testFile?.content,
-            entrypoint: false,
-          },
-          // ...
-        ],
-      },
+      payload,
     );
 
     const results = await parseRuntimeOutputJestTests(
       rceResponse.data.runtime.output,
     );
-
-    console.log({results})
 
     return response.json({
       data: results,
@@ -99,4 +115,4 @@ export async function handleExecuteProblemTests(
   }
 }
 
-export default withIronSessionApiRoute(handleExecuteProblemTests)
+export default withIronSessionApiRoute(handleExecuteProblemTests);
