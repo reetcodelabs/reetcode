@@ -153,10 +153,17 @@ export interface JestParsedTestResult {
   }[];
 }
 
+function sanitizeOutput(output: string) {
+  // Clean up all references to the path of the file locations.
+  return output.replace(/\/code\/code_executor_\d{5}/g, "");
+}
+
 export async function parseRuntimeOutputJestTests(
   output: string,
 ): Promise<TestResults> {
-  const [rawOutput, jsonOutput] = output.split(TEST_RESULTS_DELIMITER);
+  const [rawOutput, jsonOutput] = sanitizeOutput(output).split(
+    TEST_RESULTS_DELIMITER,
+  );
 
   let results: JestParsedTestResult = {
     tests: [],

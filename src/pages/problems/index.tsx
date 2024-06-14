@@ -11,36 +11,33 @@ import {
 import { ProblemList } from "@/components/problems/ProblemList";
 import { ProblemSetCard } from "@/components/problems/ProblemSetCard";
 import { SectionHeading } from "@/components/SectionHeading";
+import { useClientIronSession } from "@/providers/SessionProvider";
 import ProblemSets from "@/seed/problem-sets.json";
-import { databaseService } from "@/server/services/database";
+import {
+  databaseService,
+  SelectedAllProblemSets,
+} from "@/server/services/database";
 import { axiosClient } from "@/utils/axios";
 import { withIronSessionSsr } from "@/utils/session";
 
 const recommendedProblemSets = ProblemSets.slice(0, 4);
 
-const stats = [
-  { name: "Completed problems", stat: 13, subtitle: "of 43 problems" },
-  {
-    name: "Completed quizzes",
-    stat: 3,
-    subtitle: "of 13 quizzes",
-  },
-  {
-    name: "Completed videos",
-    stat: 2,
-    subtitle: "of 13 solutions",
-  },
-];
-
 interface ProblemsProps {
   problems: Problem[];
+  progress: {
+    totalProblems: number;
+    completedProblems: number;
+    percentageCompleted: number;
+  };
 }
 
-export default function Problems({ problems = [] }: ProblemsProps) {
+export default function Problems({ problems = [], progress }: ProblemsProps) {
   const router = useRouter();
   const [activeFilters, setActiveFilters] = useState<ProblemFilterState>(
     getDefaultFilterStateFromQuery(router.query as Record<string, string>),
   );
+
+  const { session } = useClientIronSession();
 
   const problemsQuery = useQuery<Problem[]>(["query-problems", activeFilters], {
     async queryFn() {
@@ -54,26 +51,31 @@ export default function Problems({ problems = [] }: ProblemsProps) {
     initialData: problems,
   });
 
+  console.log({ progress });
+
   return (
     <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 px-6 pb-48 pt-12 xl:px-0">
-      <section className="flex w-full flex-col">
-        <SectionHeading
-          title="Your progress"
-          description={`You've solved a total of 13 out of the 27 problems on reetcode so far. Keep going!`}
-          // link={{ title: "Explore all problem sets", href: "/" }}
-        />
+      {session?.user && (
+        <section className="flex w-full flex-col">
+          <SectionHeading
+            title="Your progress"
+            description={
+              progress?.completedProblems > 0
+                ? `You've solved a total of ${progress?.completedProblems} out of the ${progress?.totalProblems} problems on reetcode so far. Keep going!`
+                : `You've not solved any problems on reetcode yet. We're excited to see you start solving problems.`
+            }
+            // link={{ title: "Explore all problem sets", href: "/" }}
+          />
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {stats.map((stat) => (
-            <div
-              key={stat.name}
-              className="w-full rounded-lg border border-slate-50/[0.06] bg-slate-800 p-4"
-            >
-              <h3 className="text-base font-normal text-white">{stat.name}</h3>
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div className="w-full rounded-lg border border-slate-50/[0.06] bg-slate-800 p-4">
+              <h3 className="text-base font-normal text-white">
+                Completed problems
+              </h3>
               <div className="mt-2 flex items-baseline text-2xl font-semibold text-indigo-400">
-                {stat.stat}
+                {progress?.completedProblems?.toString()}
                 <span className="ml-2 text-sm font-medium text-slate-400">
-                  {stat.subtitle}
+                  {`of ${progress?.totalProblems} problems`}
                 </span>
               </div>
 
@@ -81,14 +83,16 @@ export default function Problems({ problems = [] }: ProblemsProps) {
                 <div className="h-2 w-full rounded-full bg-slate-700">
                   <div
                     className="h-2 rounded-full bg-indigo-500"
-                    style={{ width: "45%" }}
+                    style={{
+                      width: `${Math.max(progress?.percentageCompleted, 3)}%`,
+                    }}
                   ></div>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       <section className="flex w-full flex-col">
         <SectionHeading
@@ -99,7 +103,10 @@ export default function Problems({ problems = [] }: ProblemsProps) {
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {recommendedProblemSets.map((problemSet) => (
-            <ProblemSetCard key={problemSet?.slug} {...problemSet} />
+            <ProblemSetCard
+              key={problemSet?.slug}
+              problemSet={problemSet as unknown as SelectedAllProblemSets[0]}
+            />
           ))}
         </div>
       </section>
@@ -152,14 +159,16 @@ export const getServerSideProps = withIronSessionSsr(
       ctx.query as Record<string, string>,
     );
 
-    const problems = await databaseService.getAllProblems(
-      prepareFilterForQuery(problemsQuery),
-    );
+    const [problems, progress] = await Promise.all([
+      databaseService.getAllProblems(prepareFilterForQuery(problemsQuery)),
+      databaseService.getAllProgressStats(ctx.req.session?.user?.id),
+    ]);
 
     return {
       props: {
         session: ctx.req.session,
         problems,
+        progress,
       },
     };
   },

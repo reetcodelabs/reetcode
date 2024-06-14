@@ -1,5 +1,5 @@
-import { BeakerIcon, ClockIcon } from "@heroicons/react/24/outline";
-import { type Problem, type ProblemSet } from "@prisma/client";
+import { BeakerIcon } from "@heroicons/react/24/outline";
+import { type Problem } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -10,7 +10,6 @@ import {
   type ProblemFilterState,
 } from "@/components/ProblemFilters";
 import { ProblemList } from "@/components/problems/ProblemList";
-import ProblemSetsData from "@/seed/problem-sets.json";
 import { databaseService } from "@/server/services/database";
 import { axiosClient } from "@/utils/axios";
 import { withIronSessionSsr } from "@/utils/session";
@@ -21,7 +20,9 @@ import {
 } from "../problems";
 
 interface ProblemSetDetailsProps {
-  problemSet: ProblemSet;
+  problemSet: NonNullable<
+    Awaited<ReturnType<typeof databaseService.getSingleProblemSet>>
+  >;
   problems: Problem[];
 }
 
@@ -59,7 +60,7 @@ export default function ProblemSetDetails({
         <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded border border-slate-50/[0.06] bg-slate-800 shadow lg:h-28 lg:w-28">
           <img
             src={problemSet?.icon}
-            alt={problemSet?.name}
+            alt={problemSet.name}
             className="h-12 w-12"
           />
         </div>
@@ -73,13 +74,7 @@ export default function ProblemSetDetails({
             <p className="flex items-center">
               <BeakerIcon className="mr-1 h-4 w-4 fill-current text-indigo-500" />
 
-              <span>322 problems</span>
-            </p>
-
-            <p className="flex items-center">
-              <ClockIcon className="mr-1 h-4 w-4 stroke-current text-blue-500" />
-
-              <span>412 mins</span>
+              <span>{problemSet._count?.problems} problems</span>
             </p>
           </div>
 
@@ -106,8 +101,8 @@ export default function ProblemSetDetails({
 
 export const getServerSideProps = withIronSessionSsr(
   async function getServerSideProps(ctx) {
-    const problemSet = ProblemSetsData.find(
-      (problemSet) => problemSet?.slug === ctx.query.slug,
+    const problemSet = await databaseService.getSingleProblemSet(
+      ctx.query.slug as string,
     );
 
     if (!problemSet) {
@@ -115,6 +110,8 @@ export const getServerSideProps = withIronSessionSsr(
         notFound: true,
       };
     }
+
+    const slug = problemSet.slug;
 
     const problemsQuery = getDefaultFilterStateFromQuery(
       ctx.query as Record<string, string>,
@@ -124,7 +121,7 @@ export const getServerSideProps = withIronSessionSsr(
       ...prepareFilterForQuery(problemsQuery),
       problemSets: {
         some: {
-          slug: problemSet.slug,
+          slug,
         },
       },
     });

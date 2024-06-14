@@ -1,10 +1,17 @@
 import { Page } from "@/components/Page";
 import { ProblemSetCard } from "@/components/problems/ProblemSetCard";
 import { SectionHeading } from "@/components/SectionHeading";
-import ProblemSetsData from "@/seed/problem-sets.json";
+import {
+  databaseService,
+  type SelectedAllProblemSets,
+} from "@/server/services/database";
 import { withIronSessionSsr } from "@/utils/session";
 
-export default function ProblemSets() {
+interface ProblemSetsProps {
+  problemSets: SelectedAllProblemSets;
+}
+
+export default function ProblemSets({ problemSets }: ProblemSetsProps) {
   return (
     <Page>
       <section className="flex w-full flex-col">
@@ -14,8 +21,12 @@ export default function ProblemSets() {
         />
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {ProblemSetsData.map((problemSet) => (
-            <ProblemSetCard key={problemSet?.slug} expanded {...problemSet} />
+          {problemSets.map((problemSet) => (
+            <ProblemSetCard
+              key={problemSet?.slug}
+              expanded
+              problemSet={problemSet}
+            />
           ))}
         </div>
       </section>
@@ -25,9 +36,12 @@ export default function ProblemSets() {
 
 export const getServerSideProps = withIronSessionSsr(
   async function getServerSideProps(ctx) {
+    const allProblemSets = await databaseService.getAllProblemSets();
+
     return {
       props: {
         session: ctx.req.session,
+        problemSets: allProblemSets,
       },
     };
   },

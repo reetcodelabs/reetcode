@@ -13,7 +13,8 @@
       {
         "sandpackTemplate": "vanilla",
         "folder": "vanilla-js",
-        "default": true
+        "default": true,
+        "editableFiles": []
       },
       {
         "sandpackTemplate": "react",

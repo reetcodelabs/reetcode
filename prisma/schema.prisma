@@ -173,7 +173,8 @@ model Template {
 }
 
 model Solution {
-    id String @id @default(cuid())
+    id          String    @id @default(cuid())
+    completedAt DateTime?
 
     problem  Problem  @relation(fields: [problemId], references: [id])
     template Template @relation(fields: [templateId], references: [id])
@@ -186,8 +187,6 @@ model Solution {
     latestTestResults String? @db.Text()
 
     files File[]
-
-    completed Boolean? @default(false)
 
     @@unique([problemId, userId, templateId])
 }

@@ -22,6 +22,7 @@ const ExecuteTestsSchema = z.object({
 export async function handleSaveSolution(
   request: NextApiRequest,
   response: NextApiResponse,
+  doNotReturnResponse?: boolean,
 ) {
   const session = request.session;
 
@@ -99,6 +100,12 @@ export async function handleSaveSolution(
       });
     }),
   );
+
+  if (doNotReturnResponse === true) {
+    return {
+      solution: { ...solution, files },
+    };
+  }
 
   return response.json({ data: { ...solution, files } });
 }

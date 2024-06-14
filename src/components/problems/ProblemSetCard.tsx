@@ -1,18 +1,17 @@
-import { BeakerIcon, ClockIcon } from "@heroicons/react/24/outline";
-import { type ProblemSet } from "@prisma/client";
+import { BeakerIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
 
-export interface ProblemSetCardProps extends Omit<ProblemSet, "id"> {
+import type { SelectedAllProblemSets } from "@/server/services/database";
+
+export interface ProblemSetCardProps {
   expanded?: boolean;
+  problemSet: SelectedAllProblemSets[0];
 }
 
 export function ProblemSetCard({
-  name,
-  slug,
-  icon,
   expanded,
-  shortDescription,
+  problemSet: { name, slug, icon, shortDescription, _count },
 }: PropsWithChildren<ProblemSetCardProps>) {
   return (
     <Link
@@ -36,14 +35,14 @@ export function ProblemSetCard({
             <p className="flex items-center text-xs leading-5 text-gray-400">
               <BeakerIcon className="mr-1 h-4 w-4 fill-current text-indigo-500" />
 
-              <span>322 problems</span>
+              <span>{_count?.problems} problems</span>
             </p>
 
-            <p className="flex items-center text-xs leading-5 text-gray-400">
+            {/* <p className="flex items-center text-xs leading-5 text-gray-400">
               <ClockIcon className="mr-1 h-4 w-4 stroke-current text-blue-500" />
 
               <span>412 mins</span>
-            </p>
+            </p> */}
           </div>
         ) : null}
       </div>

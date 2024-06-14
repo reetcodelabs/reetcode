@@ -35,7 +35,7 @@ export default function ProblemEditor({ problem }: ProblemProps) {
   const files = useMemo(() => {
     const files: Record<string, SandpackFile> = {};
 
-    if (problem?.solution && problem?.solution?.files.length > 0) {
+    if (problem?.solution?.files && problem?.solution?.files?.length > 0) {
       problem.solution.files.forEach((file) => {
         files[file.path] = {
           code: file.content,

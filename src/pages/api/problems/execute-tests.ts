@@ -6,6 +6,8 @@ import { invalidPayloadResponse } from "@/server/response";
 import { parseRuntimeOutputJestTests, rceClient, STUBS } from "@/utils/rce";
 import { withIronSessionApiRoute } from "@/utils/session";
 
+import { handleSaveSolution } from "./save-solution";
+
 const ExecuteTestsSchema = z.object({
   problemId: z.string(),
   templateId: z.string(),
@@ -27,6 +29,12 @@ export async function handleExecuteProblemTests(
 
   if (!validation.success) {
     return invalidPayloadResponse(response);
+  }
+
+  const userId = request.session?.user?.id;
+
+  if (userId) {
+    await handleSaveSolution(request, response, true);
   }
 
   const template = await prisma.template.findFirst({
@@ -102,6 +110,25 @@ export async function handleExecuteProblemTests(
     const results = await parseRuntimeOutputJestTests(
       rceResponse.data.runtime.output,
     );
+
+    if (
+      userId &&
+      results.summary.total == results.summary.passed &&
+      results.summary.passed > 0
+    ) {
+      await prisma.solution.update({
+        where: {
+          problemId_userId_templateId: {
+            userId,
+            problemId: validation.data.problemId,
+            templateId: validation.data.templateId,
+          },
+        },
+        data: {
+          completedAt: new Date(),
+        },
+      });
+    }
 
     return response.json({
       data: results,

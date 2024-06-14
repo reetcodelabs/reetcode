@@ -105,7 +105,7 @@ export function MainLayout({
   const router = useRouter();
 
   const isHome = router.pathname === "/";
-  const isAdminPage = router.pathname.includes('admin')
+  const isAdminPage = router.pathname.includes("admin");
   const isProblemEditorPage = router.pathname === "/problems/[slug]/editor";
 
   const openAuthenticationDialog = () => {
@@ -225,8 +225,8 @@ export function MainLayout({
               </button>
             </div>
             <div
-              className={classNames("hidden", {
-                "lg:flex lg:gap-x-12": !isProblemEditorPage,
+              className={classNames("hidden lg:flex lg:gap-x-12", {
+                // "lg:flex lg:gap-x-12": !isProblemEditorPage,
               })}
             >
               {navigation.map((item) => (

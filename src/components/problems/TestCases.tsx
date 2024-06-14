@@ -6,6 +6,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 import { Button } from "@/components/button";
 import {
@@ -17,6 +18,8 @@ import Tube from "@/iconoir/tube.svg";
 import { type ProblemWithTemplate } from "@/server/services/database";
 import { axiosClient } from "@/utils/axios";
 import type { TestResults } from "@/utils/rce";
+
+import { Alert } from "../Notification";
 
 interface TestCasesProps {
   problem: ProblemWithTemplate;
@@ -44,7 +47,26 @@ export function TestCases({ problem, template }: TestCasesProps) {
         },
       );
 
-      setResults(response.data.data);
+      const testResults = response.data?.data;
+
+      setResults(testResults);
+
+      const allTestsPassed =
+        testResults?.summary?.passed === testResults?.summary?.total &&
+        testResults?.summary?.total > 0;
+
+      if (allTestsPassed) {
+        toast.custom(
+          () => (
+            <Alert
+              variant="success"
+              title="Success, all tests passed !"
+              description="Congratulations on completing this problem."
+            />
+          ),
+          { position: "top-center", duration: 25000 },
+        );
+      }
 
       return response.data;
     },

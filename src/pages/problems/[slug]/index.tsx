@@ -6,6 +6,7 @@ import {
   CommandLineIcon,
   FolderIcon,
 } from "@heroicons/react/24/outline";
+import Link from "next/link";
 import { useState } from "react";
 
 import { Button } from "@/components/button";
@@ -96,11 +97,16 @@ export default function Problem({ problem }: ProblemProps) {
               </h1>
 
               <div className="mt-1 flex items-center gap-x-4 text-sm leading-5 text-slate-400 lg:my-4">
-                <p className="flex items-center">
-                  <FolderIcon className="mr-2 h-4 w-4 stroke-current text-indigo-500" />
+                <Link
+                  href={`/problem-sets/${problemSet?.slug}`}
+                  className="underline-offset-1 transition-all hover:underline"
+                >
+                  <p className="flex items-center">
+                    <FolderIcon className="mr-2 h-4 w-4 stroke-current text-indigo-500" />
 
-                  <span>{problemSet?.name}</span>
-                </p>
+                    <span>{problemSet?.name}</span>
+                  </p>
+                </Link>
 
                 <p className="flex items-center">
                   <ClockIcon className="mr-2 h-4 w-4 stroke-current text-blue-500" />

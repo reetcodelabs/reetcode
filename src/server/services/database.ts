@@ -5,6 +5,32 @@ import prisma, { type PrismaClientSingleton } from "@/server/prisma";
 export class DatabaseService {
   constructor(private prisma: PrismaClientSingleton) {}
 
+  async getAllProgressStats(userId: string | undefined) {
+    if (!userId) {
+      return {
+        totalProblems: 0,
+        completedProblems: 0,
+        percentageCompleted: 0,
+      };
+    }
+
+    const [totalProblems, completedProblems] = await Promise.all([
+      this.prisma.problem.count(),
+      this.prisma.solution.groupBy({
+        by: ["problemId"],
+        where: { userId, NOT: { completedAt: null } },
+      }),
+    ]);
+
+    return {
+      totalProblems,
+      completedProblems: completedProblems.length,
+      percentageCompleted: Math.floor(
+        (completedProblems.length / totalProblems) * 100,
+      ),
+    };
+  }
+
   async getAllProblems(
     filters?: Prisma.ProblemFindManyArgs["where"],
     selects?: Prisma.ProblemFindManyArgs["select"],
@@ -37,7 +63,11 @@ export class DatabaseService {
     return problems;
   }
 
-  async getProblemBySlug(slug: string, templateName?: string, authenticatedUserId?: string) {
+  async getProblemBySlug(
+    slug: string,
+    templateName?: string,
+    authenticatedUserId?: string,
+  ) {
     const [problem, templates, template] = await this.prisma.$transaction([
       this.prisma.problem.findFirst({
         where: {
@@ -73,7 +103,7 @@ export class DatabaseService {
         include: {
           starterFiles: true,
           solutionFiles: true,
-        }
+        },
       }),
     ]);
 
@@ -81,23 +111,71 @@ export class DatabaseService {
       where: {
         problemId: problem?.id,
         templateId: template?.id,
-        userId: authenticatedUserId
+        userId: authenticatedUserId,
       },
       include: {
-        files: true
-      }
-    })
+        files: true,
+      },
+    });
+
+    const completedAt =
+      (solution?.completedAt as string | null)?.toString() ?? null;
 
     return {
       ...problem,
       template,
-      solution,
+      solution: {
+        ...solution,
+        completedAt,
+      },
       problemTemplates: templates as unknown as TemplateWithStarterFiles[],
     };
+  }
+
+  async getSingleProblemSet(slug: string) {
+    return this.prisma.problemSet.findUnique({
+      where: {
+        slug,
+      },
+      select: {
+        id: true,
+        icon: true,
+        name: true,
+        longDescription: true,
+        shortDescription: true,
+        slug: true,
+        _count: {
+          select: {
+            problems: true,
+          },
+        },
+      },
+    });
+  }
+
+  async getAllProblemSets() {
+    return this.prisma.problemSet.findMany({
+      select: {
+        id: true,
+        icon: true,
+        name: true,
+        slug: true,
+        shortDescription: true,
+        _count: {
+          select: {
+            problems: true,
+          },
+        },
+      },
+    });
   }
 }
 
 export const databaseService = new DatabaseService(prisma);
+
+export type SelectedAllProblemSets = NonNullable<
+  Awaited<ReturnType<typeof databaseService.getAllProblemSets>>
+>;
 
 export type TemplateWithStarterFiles = Template & {
   starterFiles: File[];
