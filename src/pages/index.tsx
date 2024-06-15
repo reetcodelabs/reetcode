@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { withIronSessionSsr } from "@/utils/session";
 
 export default function HomePage() {
@@ -23,8 +25,11 @@ export default function HomePage() {
       <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
         <div className="hidden sm:mb-8 sm:flex sm:justify-center">
           <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-slate-400 ring-1 ring-white/10 hover:ring-white/20">
-            Announcing our next round of funding.{" "}
-            <a href="#" className="focused-link font-semibold text-white">
+            Introducing the new Reetcode CLI.{" "}
+            <a
+              href="https://reetcode.com/cli"
+              className="focused-link font-semibold text-white"
+            >
               <span className="absolute inset-0" aria-hidden="true" />
               Read more <span aria-hidden="true">&rarr;</span>
             </a>
@@ -46,12 +51,12 @@ export default function HomePage() {
             >
               Get started for free
             </a>
-            <a
-              href="#"
+            <Link
+              href="/api/problems/random"
               className="focused-link text-sm font-semibold leading-6 text-white"
             >
               Try a random challenge <span aria-hidden="true">→</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

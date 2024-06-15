@@ -141,6 +141,7 @@ model Problem {
     techStack          TechStack[]
     difficulty         Difficulty  @default(MEDIUM)
     completionDuration Int?        @default(0)
+    premiumOnly        Boolean?    @default(false)
 
     careerPathId String?
     careerPath   CareerPath? @relation(fields: [careerPathId], references: [id])

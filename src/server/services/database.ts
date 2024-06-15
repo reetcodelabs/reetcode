@@ -35,7 +35,11 @@ export class DatabaseService {
     filters?: Prisma.ProblemFindManyArgs["where"],
     selects?: Prisma.ProblemFindManyArgs["select"],
   ) {
-    const hasActiveFilters = filters && Object.keys(filters).length > 0;
+    const hasActiveFilters =
+      filters &&
+      Object.keys(filters).filter(
+        (key) => (filters as Record<string, string>)[key] !== undefined,
+      ).length > 0;
 
     const problems = await this.prisma.problem.findMany({
       where: hasActiveFilters
@@ -68,44 +72,50 @@ export class DatabaseService {
     templateName?: string,
     authenticatedUserId?: string,
   ) {
-    const [problem, templates, template] = await this.prisma.$transaction([
-      this.prisma.problem.findFirst({
-        where: {
-          slug,
-        },
-        include: {
-          templates: {
-            where: {
-              default: true,
-            },
-            include: {
-              starterFiles: true,
-              solutionFiles: true,
-            },
-          },
-          problemSets: true,
-        },
-      }),
-      this.prisma.template.findMany({
-        where: {
-          problem: {
+    const [problem, templates, template, completedCount] =
+      await this.prisma.$transaction([
+        this.prisma.problem.findFirst({
+          where: {
             slug,
           },
-        },
-      }),
-      this.prisma.template.findFirst({
-        where: {
-          problem: {
-            slug,
+          include: {
+            templates: {
+              where: {
+                default: true,
+              },
+              include: {
+                starterFiles: true,
+                solutionFiles: true,
+              },
+            },
+            problemSets: true,
           },
-          name: templateName,
-        },
-        include: {
-          starterFiles: true,
-          solutionFiles: true,
-        },
-      }),
-    ]);
+        }),
+        this.prisma.template.findMany({
+          where: {
+            problem: {
+              slug,
+            },
+          },
+        }),
+        this.prisma.template.findFirst({
+          where: {
+            problem: {
+              slug,
+            },
+            name: templateName,
+          },
+          include: {
+            starterFiles: true,
+            solutionFiles: true,
+          },
+        }),
+        this.prisma.solution.groupBy({
+          by: ["problemId"],
+          orderBy: {},
+          where: { problem: { slug }, NOT: { completedAt: null } },
+        }),
+      ]);
 
     const solution = await this.prisma.solution.findFirst({
       where: {
@@ -128,6 +138,7 @@ export class DatabaseService {
         ...solution,
         completedAt,
       },
+      completedCount: completedCount.length,
       problemTemplates: templates as unknown as TemplateWithStarterFiles[],
     };
   }

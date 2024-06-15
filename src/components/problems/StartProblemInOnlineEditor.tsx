@@ -28,7 +28,7 @@ export function StartProblemInOnlineEditor({
   setIsOpen,
 }: StartProblemInOnlineEditorProps) {
   const { push } = useRouter();
-  const [template] = useState<SelectOption>(
+  const [template, setTemplate] = useState<SelectOption>(
     () =>
       problem.problemTemplates.find((template) => template.default === true)!,
   );
@@ -74,13 +74,21 @@ export function StartProblemInOnlineEditor({
           value={template}
           onChange={setTemplate}
         /> */}
-        <Select>
+        <Select
+          onValueChange={(value) => {
+            setTemplate(
+              problem.problemTemplates.find((t) => t.name === value)!,
+            );
+          }}
+        >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Template" />
           </SelectTrigger>
           <SelectContent>
-            {problem?.problemTemplates?.map(template => (
-              <SelectItem value={template?.name} className="capitalize">{template?.name}</SelectItem>
+            {problem?.problemTemplates?.map((template) => (
+              <SelectItem value={template?.name} className="capitalize">
+                {template?.name}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>

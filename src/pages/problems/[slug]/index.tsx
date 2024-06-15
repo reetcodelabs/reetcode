@@ -61,7 +61,9 @@ export default function Problem({ problem }: ProblemProps) {
       <div className="flex flex-col items-center">
         <div className="mb-2 flex items-center text-white">
           <AcademicCapIcon className="mr-1.5 h-6 w-6 fill-current text-purple-400" />{" "}
-          <span className="mt-1 text-xl font-bold">37</span>
+          <span className="mt-1 text-xl font-bold">
+            {problem?.completedCount}
+          </span>
         </div>
         <span className="text-xs">total completions</span>
       </div>
@@ -155,15 +157,12 @@ export default function Problem({ problem }: ProblemProps) {
 
           <ul className="mt-6 flex flex-col space-y-1">
             {[
-              "4 starter templates",
+              `${problem?.problemTemplates?.length} starter templates`,
               "Detailed solution video",
-              "TS / Vue / React / JS / NextJS",
-              4,
-              5,
             ].map((feature) => (
               <li
                 key={feature}
-                className="flex items-center text-sm text-slate-400"
+                className="flex items-center text-sm capitalize text-slate-400"
               >
                 <CheckIcon className="mr-2 h-4 w-4 text-green-500" />
                 {feature}

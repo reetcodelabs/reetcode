@@ -42,7 +42,7 @@ interface Filter {
 
 const filters: Filter[] = [
   {
-    id: "career-path",
+    id: "careerPath",
     name: "Career Paths",
     activeCount: 0,
     activeValue: "",
@@ -98,7 +98,7 @@ export function ProblemFilters({
   const listOfFilters: Filter[] = useMemo(() => {
     const activeFilterCounts: Record<string, number> = {
       difficulty: activeFilters?.difficulty?.in?.length ?? 0,
-      "career-path": activeFilters?.careerPath?.slug?.in?.length ?? 0,
+      careerPath: activeFilters?.careerPath?.slug?.in?.length ?? 0,
     };
 
     const activeFilterValues: Record<string, string> = {
@@ -106,7 +106,7 @@ export function ProblemFilters({
         activeFilters?.difficulty?.in
           ?.map((difficulty) => difficulty?.toLowerCase())
           ?.join(", ") ?? "",
-      "career-path": activeFilters?.careerPath?.slug?.in?.join(", ") ?? "",
+      careerPath: activeFilters?.careerPath?.slug?.in?.join(", ") ?? "",
     };
 
     return filters.map((filter) => {
@@ -130,7 +130,7 @@ export function ProblemFilters({
           activeFilters?.difficulty?.in?.join(QUERY_PARAMS_DELIMITER) ??
           undefined
         );
-      case "career-path":
+      case "careerPath":
         return (
           activeFilters?.careerPath?.slug?.in?.join(QUERY_PARAMS_DELIMITER) ??
           undefined
@@ -145,7 +145,7 @@ export function ProblemFilters({
       case "difficulty":
         setActiveFilters((current) => ({ ...current, difficulty: { in: [] } }));
         return;
-      case "career-path":
+      case "careerPath":
         setActiveFilters((current) => ({
           ...current,
           careerPath: { slug: { in: [] } },
@@ -157,7 +157,7 @@ export function ProblemFilters({
 
   // sync filter values to URL
   useEffect(() => {
-    const filterNames = ["difficulty", "career-path"];
+    const filterNames = ["difficulty", "careerPath"];
 
     const params = new URLSearchParams(
       router.query?.slug ? { slug: router.query.slug as string } : {},
@@ -244,7 +244,7 @@ export function ProblemFilters({
       case "difficulty":
         setDifficultyFilter(option, value);
         return;
-      case "career-path":
+      case "careerPath":
         setCareerPathFilter(option, value);
         return;
       default:
@@ -261,7 +261,7 @@ export function ProblemFilters({
         return activeFilters.difficulty?.in?.includes(
           option.value as Difficulty,
         );
-      case "career-path":
+      case "careerPath":
         return activeFilters.careerPath?.slug?.in?.includes(option.value);
       default:
         break;

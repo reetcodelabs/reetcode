@@ -1,7 +1,7 @@
 import { type Difficulty, type Problem } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   ProblemFilters,
@@ -15,7 +15,7 @@ import { useClientIronSession } from "@/providers/SessionProvider";
 import ProblemSets from "@/seed/problem-sets.json";
 import {
   databaseService,
-  SelectedAllProblemSets,
+  type SelectedAllProblemSets,
 } from "@/server/services/database";
 import { axiosClient } from "@/utils/axios";
 import { withIronSessionSsr } from "@/utils/session";
@@ -36,22 +36,46 @@ export default function Problems({ problems = [], progress }: ProblemsProps) {
   const [activeFilters, setActiveFilters] = useState<ProblemFilterState>(
     getDefaultFilterStateFromQuery(router.query as Record<string, string>),
   );
+  const [clientQueryActive, setClientQueryActive] = useState(false);
 
   const { session } = useClientIronSession();
 
-  const problemsQuery = useQuery<Problem[]>(["query-problems", activeFilters], {
-    async queryFn() {
-      const response = await axiosClient.post<Problem[]>(
-        "/problems/get-all-problems",
-        prepareFilterForQuery(activeFilters),
-      );
+  useEffect(() => {
+    if (clientQueryActive) return;
 
-      return response.data;
+    const filtersChanged = defaultFiltersChanged(
+      router.query as Record<string, string>,
+      activeFilters,
+    );
+
+    if (filtersChanged) {
+      setClientQueryActive(true);
+    }
+  }, [activeFilters]);
+
+  const problemsQuery = useQuery<Problem[]>(
+    ["problems-page-query-problems", activeFilters],
+    {
+      async queryFn() {
+        const response = await axiosClient.post<Problem[]>(
+          "/problems/get-all-problems",
+          prepareFilterForQuery(activeFilters),
+        );
+
+        return response.data;
+      },
+      initialData: problems,
+      enabled: clientQueryActive,
     },
-    initialData: problems,
-  });
+  );
 
-  console.log({ progress });
+  const list = useMemo(() => {
+    if (clientQueryActive) {
+      return [...problemsQuery.data];
+    }
+
+    return [...problems];
+  }, [clientQueryActive, problemsQuery]);
 
   return (
     <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 px-6 pb-48 pt-12 xl:px-0">
@@ -118,10 +142,20 @@ export default function Problems({ problems = [], progress }: ProblemsProps) {
         />
 
         <div className="mt-6 rounded border border-slate-50/[0.06]">
-          <ProblemList problemsQuery={problemsQuery} />
+          <ProblemList problemsQuery={{ ...problemsQuery, data: list }} />
         </div>
       </section>
     </div>
+  );
+}
+
+export function defaultFiltersChanged(
+  query: Record<"difficulty" | "careerPath", string>,
+  currentFilters: ProblemFilterState,
+) {
+  return (
+    JSON.stringify(getDefaultFilterStateFromQuery(query)) !==
+    JSON.stringify(currentFilters)
   );
 }
 
