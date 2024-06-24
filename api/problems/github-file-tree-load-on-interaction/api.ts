@@ -26,7 +26,16 @@ function getCurrentDirectory() {
 
 
 export const handler: RouteHandlerMethod = async (request, response) => {
-    const files = JSON.parse(Fs.readFileSync(Path.resolve(getCurrentDirectory(), 'data', 'gh_api.json')).toString()) as { tree: TreeItem[] }
+    const files = JSON.parse(
+        Fs.readFileSync(
+            Path.resolve(
+                getCurrentDirectory(),
+                'data',
+                'gh_api.json'
+            )
+        ).toString()
+    ) as { tree: TreeItem[] }
+
     const params = request.query as Record<string, string>
 
     let path = params.path ?? ''
