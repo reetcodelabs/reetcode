@@ -1,3 +1,4 @@
+import cors from '@fastify/cors'
 import { consola } from 'consola'
 import fastify from 'fastify'
 
@@ -6,6 +7,8 @@ import { defineRoutes } from './routes/routes'
 const server = fastify({
     logger: true
 })
+
+await server.register(cors, { origin: true })
 
 defineRoutes(server)
 
