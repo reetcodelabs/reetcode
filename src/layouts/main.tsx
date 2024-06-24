@@ -31,7 +31,7 @@ const solutions = ProblemSets.slice(0, 5);
 export function Navigation() {
   return (
     <Popover className="relative">
-      <Popover.Button className="focused-link inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-white">
+      <Popover.Button className="focused-link inline-flex items-center gap-x-1 leading-6 text-white">
         {({ open }) => (
           <Fragment>
             <span>Problem sets</span>
@@ -55,7 +55,7 @@ export function Navigation() {
         leaveTo="opacity-0 translate-y-1"
       >
         <Popover.Panel className="absolute left-1/2 z-10 mt-5 flex w-screen max-w-max -translate-x-1/2 px-4">
-          <div className="w-screen max-w-md flex-auto overflow-hidden rounded-sm bg-slate-900 text-sm leading-6  ring-1 ">
+          <div className="w-screen max-w-md flex-auto overflow-hidden rounded-sm bg-slate-900 leading-6  ring-1 ">
             <div className="p-4">
               {solutions.map((item) => (
                 <Link
@@ -75,11 +75,11 @@ export function Navigation() {
                     />
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-200">
+                    <p className="text-md text-slate-200">
                       {item.name}
                       <span className="absolute inset-0" />
                     </p>
-                    <p className="mt-1 text-slate-400">
+                    <p className="mt-1  text-slate-400">
                       {item?.shortDescription}
                     </p>
                   </div>
@@ -119,7 +119,7 @@ export function MainLayout({
   ) : (
     <button
       onClick={() => openAuthenticationDialog()}
-      className="text-sm font-semibold leading-6 text-white focus-within:outline-none focus-within:outline-offset-8 focus-within:outline-indigo-500"
+      className="leading-6 text-white focus-within:outline-none focus-within:outline-offset-8 focus-within:outline-indigo-500"
     >
       Log in or sign up
       <span aria-hidden="true" className="ml-1">
@@ -233,7 +233,7 @@ export function MainLayout({
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-sm font-semibold leading-6 text-white focus-within:outline-none focus-within:outline-offset-8 focus-within:outline-indigo-500"
+                  className=" leading-6 text-white focus-within:outline-none focus-within:outline-offset-8 focus-within:outline-indigo-500"
                 >
                   {item.name}
                 </Link>
@@ -251,7 +251,7 @@ export function MainLayout({
               {session?.user?.subscription ? null : (
                 <Link
                   href="/pricing"
-                  className="rounded-sm bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-indigo-500"
+                  className="rounded-sm bg-indigo-600 px-2.5 py-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-indigo-500"
                 >
                   Join Premium
                 </Link>
@@ -292,14 +292,14 @@ export function MainLayout({
                       <a
                         key={item.name}
                         href={item.href}
-                        className="focused-link -mx-3 block px-3 py-2 text-base font-semibold leading-7 text-white hover:bg-gray-800"
+                        className="focused-link -mx-3 block px-3 py-2 text-base  leading-7 text-white hover:bg-gray-800"
                       >
                         {item.name}
                       </a>
                     ))}
                   </div>
                   <div className="py-6">
-                    <button className="focused-link -mx-3 block px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800">
+                    <button className="focused-link -mx-3 block px-3 py-2.5 text-base  leading-7 text-white hover:bg-gray-800">
                       Log in
                     </button>
                   </div>

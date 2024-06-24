@@ -319,7 +319,7 @@ export function ProblemFilters({
                       {({ open }) => (
                         <>
                           <h3 className="-mx-2 -my-3 flow-root">
-                            <Disclosure.Button className="flex w-full items-center justify-between bg-slate-900 px-2 py-3 text-sm text-slate-400">
+                            <Disclosure.Button className="flex w-full items-center justify-between bg-slate-900 px-2 py-3  text-slate-400">
                               <span className="font-medium text-slate-400">
                                 {section.name}
                               </span>
@@ -361,7 +361,7 @@ export function ProblemFilters({
                                   />
                                   <label
                                     htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
-                                    className="ml-3 text-sm text-slate-400"
+                                    className="ml-3  text-slate-400"
                                   >
                                     {option.label}
                                   </label>
@@ -390,7 +390,7 @@ export function ProblemFilters({
           <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
             <Menu as="div" className="relative inline-block text-left">
               <div>
-                <Menu.Button className="focused-link group inline-flex justify-center text-sm font-medium text-slate-400 hover:text-white">
+                <Menu.Button className="focused-link group inline-flex justify-center  font-medium text-slate-400 hover:text-white">
                   Sort
                   <ChevronDownIcon
                     className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-slate-400 group-hover:text-white"
@@ -419,7 +419,7 @@ export function ProblemFilters({
                                 ? "font-medium text-white"
                                 : "text-slate-400",
                               active ? "bg-slate-800" : "",
-                              "block w-full px-4 py-2 text-sm",
+                              "block w-full px-4 py-2 ",
                             )}
                           >
                             {option.name}
@@ -434,7 +434,7 @@ export function ProblemFilters({
 
             <button
               type="button"
-              className="inline-block text-sm font-medium text-slate-400 hover:text-white sm:hidden"
+              className="inline-block  font-medium text-slate-400 hover:text-white sm:hidden"
               onClick={() => setOpen(true)}
             >
               Filters
@@ -448,12 +448,12 @@ export function ProblemFilters({
                       key={section.name}
                       className="relative inline-block px-4 text-left"
                     >
-                      <Popover.Button className="focused-link group inline-flex justify-center text-sm font-medium text-slate-400 hover:text-white">
+                      <Popover.Button className="focused-link group inline-flex justify-center  font-medium text-slate-400 hover:text-white">
                         {({ open }) => (
                           <>
                             <span>{section.name}</span>
                             {section?.activeCount ? (
-                              <span className="ml-1.5 rounded bg-gray-200 px-1.5 py-0.5 text-xs font-semibold tabular-nums text-gray-700">
+                              <span className="ml-1.5 rounded bg-gray-200 px-1.5 py-0.5 text-xs  tabular-nums text-gray-700">
                                 {section?.activeCount}
                               </span>
                             ) : null}
@@ -506,7 +506,7 @@ export function ProblemFilters({
                                 />
                                 <label
                                   htmlFor={`filter-${section.id}-${optionIdx}`}
-                                  className="ml-3 whitespace-nowrap pr-6 text-sm font-medium text-white"
+                                  className="ml-3 whitespace-nowrap pr-6  font-medium text-white"
                                 >
                                   {option.label}
                                 </label>
@@ -526,7 +526,7 @@ export function ProblemFilters({
         {/* Active filters */}
         <div className="rounded-b bg-slate-800">
           <div className="mx-auto max-w-7xl px-4 py-3 sm:flex sm:items-center sm:px-6 lg:px-8">
-            <h3 className="text-sm font-medium text-slate-400">
+            <h3 className=" font-medium text-slate-400">
               Filters
               <span className="sr-only">, active</span>
             </h3>
@@ -538,7 +538,7 @@ export function ProblemFilters({
 
             <div className="mt-2 sm:ml-4 sm:mt-0">
               <RenderIf if={listOfActiveFilters.length === 0}>
-                <p className="text-xs text-slate-400">
+                <p className="text-sm text-slate-400">
                   No filters applied yet.
                 </p>
               </RenderIf>
@@ -547,7 +547,7 @@ export function ProblemFilters({
                   {listOfActiveFilters.map((filter) => (
                     <span
                       key={filter.id}
-                      className="m-1 inline-flex items-center rounded-full border border-slate-50/[0.06] bg-slate-800 py-1.5 pl-3 pr-2 text-sm font-medium text-slate-400"
+                      className="m-1 inline-flex items-center rounded-full border border-slate-50/[0.06] bg-slate-800 py-1.5 pl-3 pr-2  font-medium text-slate-400"
                     >
                       <span className="flex items-center">
                         <span>{filter.name}:</span>

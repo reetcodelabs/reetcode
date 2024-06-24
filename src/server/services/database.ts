@@ -3,7 +3,7 @@ import type { File, Prisma, Template } from "@prisma/client";
 import prisma, { type PrismaClientSingleton } from "@/server/prisma";
 
 export class DatabaseService {
-  constructor(private prisma: PrismaClientSingleton) {}
+  constructor(private prisma: PrismaClientSingleton) { }
 
   async getAllProgressStats(userId: string | undefined) {
     if (!userId) {
@@ -44,8 +44,8 @@ export class DatabaseService {
     const problems = await this.prisma.problem.findMany({
       where: hasActiveFilters
         ? {
-            OR: [filters],
-          }
+          OR: [filters],
+        }
         : undefined,
       select: {
         id: true,
@@ -64,7 +64,18 @@ export class DatabaseService {
       },
     });
 
-    return problems;
+    console.log({ ids: problems.map(problem => problem.id), allSolutions: await this.prisma.solution.findMany() })
+
+    const completedProgresses = await this.prisma.solution.groupBy({
+      by: ["problemId"],
+      where: { id: { in: problems.map(problem => problem.id) }, NOT: { completedAt: null } },
+    })
+
+    console.log({ completedProgresses })
+
+    return problems
+
+    // return problems.map(problem => ({...problem, completedCount: completedProgresses.find(progress => progress.) }));
   }
 
   async getProblemBySlug(

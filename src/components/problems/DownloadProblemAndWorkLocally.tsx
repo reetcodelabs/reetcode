@@ -55,17 +55,14 @@ export function DownloadProblemAndWorkLocally({
       className="w-full overflow-auto sm:max-w-[32rem]"
     >
       <div className="mb-6 mt-4">
-        <h2 className="text-lg font-semibold text-white">{problem?.name}</h2>
-        <p className="text-sm text-slate-400">
+        <h2 className="text-lg  text-white">{problem?.name}</h2>
+        <p className=" text-slate-400">
           Download problem using the Reetcode CLI
         </p>
       </div>
 
       <div className="mb-6">
-        <label
-          htmlFor="Select"
-          className="mb-3 inline-block text-sm text-white"
-        >
+        <label htmlFor="Select" className="mb-3 inline-block  text-white">
           Select a template
         </label>
         <Select
@@ -103,9 +100,9 @@ export function DownloadProblemAndWorkLocally({
       <div className="mb-6">
         <button
           onClick={copyApiKeyToClipboard}
-          className="mt-5 flex w-full items-center justify-between rounded bg-slate-800 p-4 text-sm text-white transition ease-linear hover:bg-slate-700"
+          className="mt-5 flex w-full items-center justify-between rounded bg-slate-800 p-4  text-white transition ease-linear hover:bg-slate-700"
         >
-          <span className="overflow-hidden text-ellipsis whitespace-nowrap font-mono text-sm text-white">
+          <span className="overflow-hidden text-ellipsis whitespace-nowrap font-mono  text-white">
             {command}
           </span>
           <ClipboardDocumentCheckIcon className="ml-4 h-6 w-6 flex-shrink-0" />
@@ -114,7 +111,7 @@ export function DownloadProblemAndWorkLocally({
         <a
           target="_blank"
           href="https//reetcode.com/cli"
-          className="mt-2 flex w-full items-center text-sm text-slate-400 "
+          className="mt-2 flex w-full items-center  text-slate-400 "
         >
           Learn more about solving problems locally
           <ArrowRightIcon className="ml-2 h-6 w-6" />

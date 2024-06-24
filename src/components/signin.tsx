@@ -105,11 +105,11 @@ export function SignInOrSignUp() {
             <CheckIcon className="h-6 w-6 text-green-100" aria-hidden="true" />
           </div>
           <div className="mt-3 text-center sm:mt-5">
-            <h3 className="text-base font-semibold leading-6 text-white">
+            <h3 className="text-base  leading-6 text-white">
               Check your email !
             </h3>
             <div className="mt-2">
-              <p className="text-sm text-slate-400">
+              <p className=" text-slate-400">
                 We sent a sign in link to your email. Please click on the link
                 to login.
               </p>
@@ -141,14 +141,14 @@ export function SignInOrSignUp() {
         </div>
 
         <div className="mb-6 mt-4">
-          <h2 className="text-lg font-semibold text-white">Sign in</h2>
+          <h2 className="text-lg  text-white">Sign in</h2>
           <p className="text-slate-400">to your reetcode.com account</p>
         </div>
         <div className="mb-6 grid w-full grid-cols-1 gap-y-4">
           {providers.map((provider) => (
             <button
               key={provider.name}
-              className="focused-link group flex h-10 w-full items-center justify-between rounded-md border border-slate-50/[0.15] bg-slate-900 px-2 text-sm text-white transition ease-linear hover:bg-slate-800 focus-visible:outline-offset-1"
+              className="focused-link group flex h-10 w-full items-center justify-between rounded-md border border-slate-50/[0.15] bg-slate-900 px-2  text-white transition ease-linear hover:bg-slate-800 focus-visible:outline-offset-1"
             >
               <span className="flex items-center">
                 <img
@@ -172,7 +172,7 @@ export function SignInOrSignUp() {
             <div className="w-full border-t border-slate-50/[0.06]" />
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-slate-900 px-4 text-sm text-slate-400">or</span>
+            <span className="bg-slate-900 px-4  text-slate-400">or</span>
           </div>
         </div>
 
@@ -180,7 +180,7 @@ export function SignInOrSignUp() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium leading-6 text-white"
+              className="block  font-medium leading-6 text-white"
             >
               Email
             </label>
@@ -191,7 +191,7 @@ export function SignInOrSignUp() {
                 name="email"
                 autoFocus
                 required
-                className="block w-full rounded-md border-0 bg-slate-900 py-2 text-white shadow-sm ring-1 ring-inset ring-slate-50/[0.15] placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="sm: block w-full rounded-md border-0 bg-slate-900 py-2 text-white shadow-sm ring-1 ring-inset ring-slate-50/[0.15] placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
                 placeholder="you@example.com"
               />
             </div>

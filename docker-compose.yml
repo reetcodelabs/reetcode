@@ -14,6 +14,19 @@ services:
     expose:
       - 5432
 
+  problems_api:
+    container_name: reetcode-problems-api
+    build:
+      context: ./api
+    restart: always
+    environment:
+      - NODE_ENV=development
+    ports:
+      - 4400:4400
+    volumes:
+      - .:/app
+      - /app/node_modules
+
   frontend:
     container_name: reetcode-nextjs
     build:

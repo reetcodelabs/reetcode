@@ -74,7 +74,7 @@ export function TestCases({ problem, template }: TestCasesProps) {
 
   const runTestButton = (
     <Button
-      className="flex items-center px-8 py-3 font-semibold"
+      className="flex items-center px-8 py-3 "
       isLoading={executeTestsMutation.isLoading}
       onClick={() => executeTestsMutation.mutate()}
     >
@@ -94,7 +94,7 @@ export function TestCases({ problem, template }: TestCasesProps) {
         <>
           <div className="mb-4 flex items-center justify-between pt-6">
             <div className="">
-              <h3 className="text-lg font-semibold text-white">Test results</h3>
+              <h3 className="text-lg  text-white">Test results</h3>
               <p className="mt-1 text-xs text-slate-400">
                 {results.summary.passed}/{results.summary.total} test cases
                 passed.
@@ -157,10 +157,10 @@ export function TestCases({ problem, template }: TestCasesProps) {
       )}
       {!hasTestResults && (
         <div className="mx-auto mt-24 max-w-lg text-center">
-          <h3 className="mb-3 mt-2 text-xl font-semibold text-white">
+          <h3 className="mb-3 mt-2 text-xl  text-white">
             No tests have been run yet
           </h3>
-          <p className="mt-1 text-sm text-gray-400">
+          <p className="mt-1  text-gray-400">
             Running tests will check that your code meets the requirements of
             the problem brief. Once you are ready to check your work, click the
             "Run tests" button to run all automated tests.

@@ -96,9 +96,9 @@ export default function Problems({ problems = [], progress }: ProblemsProps) {
               <h3 className="text-base font-normal text-white">
                 Completed problems
               </h3>
-              <div className="mt-2 flex items-baseline text-2xl font-semibold text-indigo-400">
+              <div className="mt-2 flex items-baseline text-sm text-indigo-400">
                 {progress?.completedProblems?.toString()}
-                <span className="ml-2 text-sm font-medium text-slate-400">
+                <span className="ml-2 font-medium text-slate-400">
                   {`of ${progress?.totalProblems} problems`}
                 </span>
               </div>

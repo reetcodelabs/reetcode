@@ -75,7 +75,7 @@ function PanelTabs({ tabs, onTabSelected }: PanelTabsProps) {
             <button
               key={tab.key}
               className={cn(
-                "flex h-full items-center px-3 text-sm text-white transition ease-linear hover:bg-slate-50/[0.06]",
+                "flex h-full items-center px-3  text-white transition ease-linear hover:bg-slate-50/[0.06]",
                 {
                   "border-l border-r border-slate-50/[0.06] bg-slate-50/[0.06]":
                     tab.active,

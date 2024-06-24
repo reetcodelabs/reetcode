@@ -35,7 +35,7 @@ export function Button({
     disabled: isLoading ?? rest.disabled,
     className: tw(
       classNames(
-        "rounded-sm px-2.5 py-1.5 text-sm font-semibold  shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-8 ",
+        "rounded-sm px-2.5 py-1.5   shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-8 ",
         {
           "bg-indigo-600 text-white  hover:bg-indigo-500 focus-visible:outline-indigo-500":
             variant === "primary" && !isDisabled,

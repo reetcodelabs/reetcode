@@ -22,11 +22,11 @@ export function Select({
     <Listbox value={value} onChange={onChange}>
       {({ open }) => (
         <>
-          <Listbox.Label className="sr-only block text-sm font-medium leading-6 text-slate-400">
+          <Listbox.Label className="sr-only block  font-medium leading-6 text-slate-400">
             {label}
           </Listbox.Label>
           <div className="relative w-full">
-            <Listbox.Button className="relative h-12 w-full cursor-default rounded-md bg-slate-900 py-1 pl-6 pr-10 text-left text-white shadow-sm ring-1 ring-inset ring-slate-50/[0.06] focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <Listbox.Button className="sm: relative h-12 w-full cursor-default rounded-md bg-slate-900 py-1 pl-6 pr-10 text-left text-white shadow-sm ring-1 ring-inset ring-slate-50/[0.06] focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:leading-6">
               <span className="block truncate">{value?.name}</span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronUpDownIcon
@@ -43,7 +43,7 @@ export function Select({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute z-[100] mt-1 max-h-60 w-full overflow-auto rounded-md bg-slate-900 py-1 text-base ring-1 ring-slate-50/[0.06] ring-opacity-5 focus:outline-none sm:text-sm">
+              <Listbox.Options className="sm: absolute z-[100] mt-1 max-h-60 w-full overflow-auto rounded-md bg-slate-900 py-1 text-base ring-1 ring-slate-50/[0.06] ring-opacity-5 focus:outline-none">
                 {options.map((item) => (
                   <Listbox.Option
                     key={item.id}
@@ -59,7 +59,7 @@ export function Select({
                       <>
                         <span
                           className={classNames(
-                            selected ? "font-semibold" : "font-normal",
+                            selected ? "" : "font-normal",
                             "block truncate",
                           )}
                         >

@@ -91,9 +91,7 @@ export default function AdminProblems({ problems }: AdminProblemsProps) {
         {selectedProblem && (
           <div className="h-full w-2/5 flex-col overflow-y-auto border-r border-slate-50/[0.06]">
             <header className="sticky top-0 z-[2] flex h-12 items-center justify-between border-b border-slate-50/[0.06] bg-slate-900 px-6">
-              <h1 className="font-semibold text-white">
-                {selectedProblem?.name}
-              </h1>
+              <h1 className=" text-white">{selectedProblem?.name}</h1>
 
               <Button>Save changes</Button>
             </header>
@@ -176,12 +174,14 @@ export default function AdminProblems({ problems }: AdminProblemsProps) {
                           },
                         )}
                         onClick={() => {
-                          setSelectedTemplate(template as unknown as TemplateWithStarterFiles);
+                          setSelectedTemplate(
+                            template as unknown as TemplateWithStarterFiles,
+                          );
                           setSelectedTemplateFilesType("problem");
                         }}
                       >
                         Template files:{" "}
-                        <span className="font-semibold">{template.name}</span>
+                        <span className="">{template.name}</span>
                         {isSelectedProblemTemplate && (
                           <CheckIcon className="ml-2 h-4 w-4" />
                         )}
@@ -202,7 +202,7 @@ export default function AdminProblems({ problems }: AdminProblemsProps) {
                         }}
                       >
                         Solution files:{" "}
-                        <span className="font-semibold">{template.name}</span>
+                        <span className="">{template.name}</span>
                         {isSelectedSolutionTemplate && (
                           <CheckIcon className="ml-2 h-4 w-4" />
                         )}
@@ -225,7 +225,7 @@ export default function AdminProblems({ problems }: AdminProblemsProps) {
           {selectedTemplate && (
             <div className="flex w-full flex-col overflow-y-auto">
               <header className="sticky top-0 z-[2] flex h-12 w-full flex-shrink-0 items-center justify-between border-b border-slate-50/[0.06] bg-slate-900 px-6">
-                <h1 className="font-semibold text-white">
+                <h1 className=" text-white">
                   <span>
                     {selectedTemplateFilesType === "problem"
                       ? "Problem files for template:"

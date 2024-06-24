@@ -184,7 +184,7 @@ export default function PricingPage({ session }: PricingPageProps) {
     <div className="bg-slate-900">
       <div className="mx-auto max-w-7xl px-6 py-8 md:py-16 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="text-base font-semibold leading-7 text-indigo-400">
+          <h2 className="text-base  leading-7 text-indigo-400">
             Simple, straight forward pricing.
           </h2>
           <p className="mx-auto mt-2 max-w-2xl text-4xl font-bold leading-10 text-white sm:text-5xl">
@@ -200,27 +200,25 @@ export default function PricingPage({ session }: PricingPageProps) {
         <div className="mx-auto mt-16 flex w-full max-w-3xl flex-col gap-y-6 md:mt-32 md:flex-row">
           <div className="h-auto w-full self-start rounded-xl border-b border-l border-r border-t border-slate-50/[0.06] bg-slate-800 p-5 md:w-auto md:rounded-l-xl md:rounded-r-none md:border-r-transparent xl:p-6">
             <div className="flex items-center justify-between gap-x-4">
-              <h3 className="text-lg font-semibold leading-8 text-white">
+              <h3 className="text-2xl font-semibold leading-8 text-white">
                 Free plan
               </h3>
             </div>
 
-            <p className="mt-4 text-sm leading-6 text-gray-300">
-              No need to subscribe right away. Take advantage of our free plan.
+            <p className="mt-4  leading-6 text-gray-300">
+              No need to purchase right away. Take advantage of our free plan.
             </p>
 
             <p className="mt-6 flex items-baseline gap-x-1">
               <span className="text-4xl font-bold tracking-tight text-white">
                 ₦ 0
               </span>
-              <span className="text-sm font-semibold leading-6 text-gray-300">
-                / month
-              </span>
+              <span className=" leading-6 text-gray-300">/ month</span>
             </p>
 
             <ul
               role="list"
-              className="mt-8 space-y-3 text-sm leading-6 text-slate-400 xl:mt-10"
+              className="mt-8 space-y-3  leading-6 text-slate-400 xl:mt-10"
             >
               {freePlanFeatures.map((feature) => (
                 <li key={feature} className="flex gap-x-3">
@@ -235,63 +233,71 @@ export default function PricingPage({ session }: PricingPageProps) {
 
             <div className="mb-12"></div>
           </div>
-          <div className="w-full flex-shrink-0 rounded-xl rounded-r-xl border-2 border-indigo-600 bg-slate-900 p-5 md:-mt-20 md:w-[55%] md:rounded-l-none xl:p-6">
+          <div className="w-full flex-shrink-0 rounded-xl rounded-r-xl border-2 border-indigo-600 bg-slate-900 p-5 md:-mt-20 md:w-[55%] md:rounded-l-none xl:p-12">
             <div className="flex items-center justify-between gap-x-4">
-              <h3 className="text-lg font-semibold leading-8 text-white">
-                Premium plan
+              <h3 className="text-3xl font-semibold leading-8 text-white">
+                Get Premium
               </h3>
             </div>
 
-            <p className="mt-4 text-sm leading-6 text-gray-300">
+            <p className="mt-4  leading-6 text-gray-300">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
               accusantium reprehenderit harum commod
             </p>
 
-            <div className="mt-4 flex justify-start">
-              <RadioGroup
-                value={frequency}
-                onChange={setFrequency}
-                className="grid grid-cols-2 gap-x-1 rounded-full bg-slate-800 p-1 text-center text-xs font-semibold leading-5 text-white"
-              >
-                <RadioGroup.Label className="sr-only">
-                  Payment frequency
-                </RadioGroup.Label>
-                {frequencies.map((option) => (
-                  <RadioGroup.Option
-                    key={option.value}
-                    value={option.value}
-                    className={({ checked }) =>
-                      classNames(
-                        checked ? "bg-indigo-600" : "",
-                        "cursor-pointer rounded-full px-2.5 py-1",
-                      )
-                    }
-                  >
-                    <span>{option.label}</span>
-                  </RadioGroup.Option>
-                ))}
-              </RadioGroup>
-            </div>
+            {false && (
+              <div className="mt-4 flex justify-start">
+                <RadioGroup
+                  value={frequency}
+                  onChange={setFrequency}
+                  className="grid grid-cols-2 gap-x-1 rounded-full bg-slate-800 p-1 text-center text-xs  leading-5 text-white"
+                >
+                  <RadioGroup.Label className="sr-only">
+                    Payment frequency
+                  </RadioGroup.Label>
+                  {frequencies.map((option) => (
+                    <RadioGroup.Option
+                      key={option.value}
+                      value={option.value}
+                      className={({ checked }) =>
+                        classNames(
+                          checked ? "bg-indigo-600" : "",
+                          "cursor-pointer rounded-full px-2.5 py-1",
+                        )
+                      }
+                    >
+                      <span>{option.label}</span>
+                    </RadioGroup.Option>
+                  ))}
+                </RadioGroup>
+              </div>
+            )}
 
             <div className="mt-6 flex items-center gap-x-1">
               <div className="flex items-baseline">
                 <span className="text-4xl font-bold tracking-tight text-white">
                   {pricing[frequency]}
                 </span>
-                <span className="text-sm font-semibold leading-6 text-gray-300">
-                  / {frequency === "monthly" ? "month" : "year"}
-                </span>
+                {false && (
+                  <span className=" leading-6 text-gray-300">
+                    / {frequency === "monthly" ? "month" : "year"}
+                  </span>
+                )}
               </div>
 
-              {frequency === "annually" ? (
-                <p className="ml-6 rounded-full bg-indigo-600 px-2.5 py-1 text-xs font-semibold leading-5 text-white">
+              {frequency === "annually" && false ? (
+                <p className="ml-6 rounded-full bg-indigo-600 px-2.5 py-1 text-xs  leading-5 text-white">
                   Save over 60%
                 </p>
               ) : null}
+
+              <p className="ml-6 rounded-full bg-indigo-600 px-2.5 py-1 text-xs  leading-5 text-white">
+                ONE TIME PAYMENT
+              </p>
             </div>
 
             <RenderIf if={subscription?.isActive}>
-              <div className="mt-10 w-full rounded-sm bg-slate-800 p-4 text-sm text-white">
+              <div className="mt-10 w-full rounded-sm bg-slate-800 p-4  text-white">
                 You are currently on the premium plan ✨
                 <p className="mt-0.5 text-xs text-slate-400">
                   Expires on: {subscription?.expiresAt}
@@ -303,7 +309,7 @@ export default function PricingPage({ session }: PricingPageProps) {
               <Button
                 className="mt-4 w-full py-4"
                 isLoading={subscribeCustomer.isLoading}
-                onClick={() => onSubscribe(frequency)}
+                onClick={() => onSubscribe("lifetime")}
               >
                 {subscription?.isActive || subscription?.isExpired
                   ? "Renew your subscription"
@@ -318,7 +324,7 @@ export default function PricingPage({ session }: PricingPageProps) {
 
             <ul
               role="list"
-              className="mt-4 space-y-3 text-sm leading-6 text-slate-400 xl:mt-6"
+              className="mt-4 space-y-3  leading-6 text-slate-400 xl:mt-6"
             >
               {premiumPlanFeatures.map((feature) => (
                 <li key={feature} className="flex gap-x-3">
@@ -333,89 +339,91 @@ export default function PricingPage({ session }: PricingPageProps) {
           </div>
         </div>
       </div>
-      <div className="bg-slate-900 py-6 md:py-8">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl sm:text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Get full access forever
-            </h2>
-            <p className="mt-6 text-lg leading-8 text-slate-400">
-              Make a lifetime commitment to your career growth, get full
-              unlimited access forever by making one single purchase.
-            </p>
-          </div>
-          <div className="mx-auto mt-8 max-w-2xl rounded-3xl ring-1 ring-slate-50/[0.06] sm:mt-20 md:mt-16 lg:mx-0 lg:flex lg:max-w-none">
-            <div className="p-8 sm:p-10 lg:flex-auto">
-              <h3 className="text-2xl font-bold tracking-tight text-white">
-                Lifetime membership
-              </h3>
-              <p className="mt-6 text-base leading-7 text-slate-400">
-                Pay once, saving 60% on the monthly price, and get full access
-                to the platform forever, including all future updates.
+      {false && (
+        <div className="bg-slate-900 py-6 md:py-8">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mx-auto max-w-2xl sm:text-center">
+              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                Get full access forever
+              </h2>
+              <p className="mt-6 text-lg leading-8 text-slate-400">
+                Make a lifetime commitment to your career growth, get full
+                unlimited access forever by making one single purchase.
               </p>
-              <div className="mt-10 flex items-center gap-x-4">
-                <h4 className="flex-none text-sm font-semibold leading-6 text-indigo-600">
-                  What’s included
-                </h4>
-                <div className="h-px flex-auto bg-slate-400" />
-              </div>
-              <ul
-                role="list"
-                className="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-slate-400 sm:grid-cols-2 sm:gap-6"
-              >
-                {premiumPlanFeatures.map((feature) => (
-                  <li key={feature} className="flex gap-x-3 text-slate-400">
-                    <CheckIcon
-                      className="h-6 w-5 flex-none text-indigo-600"
-                      aria-hidden="true"
-                    />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
             </div>
-            <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
-              <div className="rounded-2xl bg-slate-800 py-10 text-center ring-1 ring-inset ring-slate-50/[0.06] lg:flex lg:flex-col lg:justify-center lg:py-16">
-                <div
-                  className={classNames("mx-auto  px-8", {
-                    "max-w-xs":
-                      session?.user?.subscription?.plan !== "LIFETIME",
-                    "max-w-full":
-                      session?.user?.subscription?.plan === "LIFETIME",
-                  })}
+            <div className="mx-auto mt-8 max-w-2xl rounded-3xl ring-1 ring-slate-50/[0.06] sm:mt-20 md:mt-16 lg:mx-0 lg:flex lg:max-w-none">
+              <div className="p-8 sm:p-10 lg:flex-auto">
+                <h3 className="text-2xl font-bold tracking-tight text-white">
+                  Lifetime membership
+                </h3>
+                <p className="mt-6 text-base leading-7 text-slate-400">
+                  Pay once, saving 60% on the monthly price, and get full access
+                  to the platform forever, including all future updates.
+                </p>
+                <div className="mt-10 flex items-center gap-x-4">
+                  <h4 className="flex-none  leading-6 text-indigo-600">
+                    What’s included
+                  </h4>
+                  <div className="h-px flex-auto bg-slate-400" />
+                </div>
+                <ul
+                  role="list"
+                  className="mt-8 grid grid-cols-1 gap-4  leading-6 text-slate-400 sm:grid-cols-2 sm:gap-6"
                 >
-                  <p className="text-base font-semibold text-white">
-                    Pay once, get access forever
-                  </p>
-                  <p className="mt-6 flex items-baseline justify-center gap-x-2">
-                    <span className="text-5xl font-bold tracking-tight text-white">
-                      ₦ 39, 990
-                    </span>
-                  </p>
-                  {session?.user?.subscription?.plan === "LIFETIME" ? (
-                    <div className="mt-10 w-full rounded-sm bg-slate-900 p-4 text-sm text-white">
-                      You are already on the lifetime plan ✨
-                    </div>
-                  ) : (
-                    <Button
-                      className="mt-10 w-full py-4"
-                      onClick={() => onSubscribe("lifetime")}
-                      isLoading={subscribeCustomer.isLoading}
-                    >
-                      Get full access forever
-                    </Button>
-                  )}
+                  {premiumPlanFeatures.map((feature) => (
+                    <li key={feature} className="flex gap-x-3 text-slate-400">
+                      <CheckIcon
+                        className="h-6 w-5 flex-none text-indigo-600"
+                        aria-hidden="true"
+                      />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
+                <div className="rounded-2xl bg-slate-800 py-10 text-center ring-1 ring-inset ring-slate-50/[0.06] lg:flex lg:flex-col lg:justify-center lg:py-16">
+                  <div
+                    className={classNames("mx-auto  px-8", {
+                      "max-w-xs":
+                        session?.user?.subscription?.plan !== "LIFETIME",
+                      "max-w-full":
+                        session?.user?.subscription?.plan === "LIFETIME",
+                    })}
+                  >
+                    <p className="text-base  text-white">
+                      Pay once, get access forever
+                    </p>
+                    <p className="mt-6 flex items-baseline justify-center gap-x-2">
+                      <span className="text-5xl font-bold tracking-tight text-white">
+                        ₦ 39, 990
+                      </span>
+                    </p>
+                    {session?.user?.subscription?.plan === "LIFETIME" ? (
+                      <div className="mt-10 w-full rounded-sm bg-slate-900 p-4  text-white">
+                        You are already on the lifetime plan ✨
+                      </div>
+                    ) : (
+                      <Button
+                        className="mt-10 w-full py-4"
+                        onClick={() => onSubscribe("lifetime")}
+                        isLoading={subscribeCustomer.isLoading}
+                      >
+                        Get full access forever
+                      </Button>
+                    )}
 
-                  <p className="mt-6 text-xs leading-5 text-slate-400">
-                    Invoices and receipts available for easy company
-                    reimbursement
-                  </p>
+                    <p className="mt-6 text-xs leading-5 text-slate-400">
+                      Invoices and receipts available for easy company
+                      reimbursement
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -70,7 +70,7 @@ export default function ProblemSetDetails({
             {problemSet?.name}
           </h1>
 
-          <div className="mt-1 flex items-center gap-x-4 text-sm leading-5 text-slate-400 lg:my-4">
+          <div className="mt-1 flex items-center gap-x-4  leading-5 text-slate-400 lg:my-4">
             <p className="flex items-center">
               <BeakerIcon className="mr-1 h-4 w-4 fill-current text-indigo-500" />
 
@@ -78,13 +78,13 @@ export default function ProblemSetDetails({
             </p>
           </div>
 
-          <p className="hidden max-w-2xl text-sm text-slate-400 lg:flex">
+          <p className="hidden max-w-2xl text-slate-400 lg:flex">
             {problemSet?.shortDescription}
           </p>
         </div>
       </div>
 
-      <div className="rounded-md border border-slate-50/[0.06] bg-slate-800 p-4 text-sm text-slate-400">
+      <div className="rounded-md border border-slate-50/[0.06] bg-slate-800 p-4 text-slate-400">
         {problemSet?.longDescription}
       </div>
 

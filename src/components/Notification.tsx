@@ -57,9 +57,7 @@ export function Alert({
           ) : null}
         </div>
         <div className="ml-3">
-          <h3 className={classNames("text-sm font-medium text-white")}>
-            {title}
-          </h3>
+          <h3 className={classNames(" font-medium text-white")}>{title}</h3>
           <div className="mt-2 text-xs text-white">
             {description ? <p>{description}</p> : children}
           </div>

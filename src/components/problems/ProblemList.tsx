@@ -61,7 +61,7 @@ export function ProblemRow({ problem }: ProblemProps) {
     >
       <div className="flex min-w-0 gap-x-4">
         <div className="min-w-0 flex-auto">
-          <div className="flex items-center text-sm font-semibold leading-6 text-white">
+          <div className="flex items-center leading-6 text-white">
             <p>{problem.name}</p>
             <div className="ml-2 flex items-center gap-x-1">
               {problem.techStack?.map((stack) => {
@@ -77,21 +77,21 @@ export function ProblemRow({ problem }: ProblemProps) {
               })}
             </div>
           </div>
-          <p className="mt-1 truncate text-xs leading-5 text-gray-400">
+          <p className="mt-1 truncate text-sm leading-5 text-gray-400">
             {problem.description}
           </p>
         </div>
       </div>
       <div className="mt-4 flex items-center lg:mt-0">
         <div className="shrink-0 sm:flex sm:flex-col sm:items-end">
-          <p className="flex items-center gap-x-2 text-sm leading-6 text-white">
+          <p className="flex items-center gap-x-2  leading-6 text-white">
             <DifficultyBadge difficulty={problem.difficulty} />
             <CareerPathBadge path={problem?.careerPath?.slug} />
           </p>
           <div className="mt-1 flex items-center text-xs leading-5 text-slate-400">
             <p className="flex items-center">
               <CheckCircleIcon className="mr-1 h-4 w-4" />
-              <span>3,111 completed</span>
+              <span>{problem?.completionDuration} completed</span>
             </p>
 
             <svg viewBox="0 0 2 2" className="mx-2 h-1 w-1 fill-current">
@@ -116,7 +116,7 @@ interface ProblemListProps {
 export function ProblemList({ problemsQuery }: ProblemListProps) {
   if (problemsQuery.data.length === 0) {
     return (
-      <div className="flex flex-col items-center py-6 text-sm">
+      <div className="flex flex-col items-center py-6 ">
         <p className="mb-3 text-center text-slate-400">
           We do not have problems that match your query yet.
         </p>

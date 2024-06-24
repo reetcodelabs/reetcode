@@ -27,10 +27,8 @@ function Card({ children, title, description }: PropsWithChildren<CardProps>) {
   return (
     <div className="bg-slate-800 shadow sm:rounded-lg">
       <div className="px-4 py-5 sm:p-6">
-        <h3 className="text-base font-semibold leading-6 text-white">
-          {title}
-        </h3>
-        <div className="mt-2 max-w-xl text-sm text-slate-400">
+        <h3 className="text-base  leading-6 text-white">{title}</h3>
+        <div className="mt-2 max-w-xl  text-slate-400">
           <p>{description}</p>
         </div>
 
@@ -86,7 +84,7 @@ export default function AccountSettings({ session }: AccountSettingsProps) {
             description="Thank you for investing in yourself and becoming part of our
           community."
           >
-            <div className="mt-6 w-full rounded bg-slate-900 px-4 py-3 text-sm text-white ">
+            <div className="mt-6 w-full rounded bg-slate-900 px-4 py-3  text-white ">
               Your subscription expires on {subscription?.expiresAt}.
             </div>
 
@@ -105,7 +103,7 @@ export default function AccountSettings({ session }: AccountSettingsProps) {
           >
             <ul
               role="list"
-              className="mt-8 grid grid-cols-1 gap-2 text-sm leading-6 text-slate-400"
+              className="mt-8 grid grid-cols-1 gap-2  leading-6 text-slate-400"
             >
               {premiumPlanFeatures.map((feature) => (
                 <li key={feature} className="flex gap-x-3 text-white">
@@ -135,7 +133,7 @@ export default function AccountSettings({ session }: AccountSettingsProps) {
                 plus other secret perks we have for you."
         >
           <RenderIf if={!subscription.isActive}>
-            <div className="mt-5 w-full rounded bg-slate-900 p-4 text-sm text-white">
+            <div className="mt-5 w-full rounded bg-slate-900 p-4  text-white">
               This feature is only available on the premium plan.
             </div>
           </RenderIf>
@@ -158,9 +156,9 @@ export default function AccountSettings({ session }: AccountSettingsProps) {
         >
           <button
             onClick={copyApiKeyToClipboard}
-            className="mt-5 flex w-full items-center justify-between rounded bg-slate-900 p-4 text-sm text-white"
+            className="mt-5 flex w-full items-center justify-between rounded bg-slate-900 p-4  text-white"
           >
-            <span className="text-sm font-medium text-white">
+            <span className=" font-medium text-white">
               {session?.user?.apiKey}
             </span>
             <ClipboardDocumentCheckIcon className="h-6 w-6" />

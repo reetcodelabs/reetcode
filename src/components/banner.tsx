@@ -26,10 +26,10 @@ export function Banner({
         },
       )}
     >
-      <p className="text-sm leading-6 text-white">
+      <p className=" leading-6 text-white">
         {href ? (
           <Link href={href}>
-            <strong className="font-semibold">{title}</strong>
+            <strong className="">{title}</strong>
             <svg
               viewBox="0 0 2 2"
               className="mx-2 inline h-0.5 w-0.5 fill-current"

@@ -50,17 +50,14 @@ export function StartProblemInOnlineEditor({
       className="w-full overflow-auto sm:max-w-[32rem]"
     >
       <div className="mb-6 mt-4">
-        <h2 className="text-lg font-semibold text-white">{problem?.name}</h2>
-        <p className="text-sm text-slate-400">
+        <h2 className="text-lg  text-white">{problem?.name}</h2>
+        <p className=" text-slate-400">
           Download problem using the Reetcode CLI
         </p>
       </div>
 
       <div className="mb-6">
-        <label
-          htmlFor="Select"
-          className="mb-3 inline-block text-sm text-white"
-        >
+        <label htmlFor="Select" className="mb-3 inline-block  text-white">
           Select a template
         </label>
 

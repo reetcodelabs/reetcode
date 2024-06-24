@@ -55,7 +55,7 @@ export default function Problem({ problem }: ProblemProps) {
           <StarIcon className="mr-1.5 h-6 w-6 fill-current text-yellow-400" />{" "}
           <span className="mt-1 text-xl font-bold">5</span>
         </div>
-        <span className="text-xs">12 reviews</span>
+        <span className="text-sm">12 reviews</span>
       </div>
 
       <div className="flex flex-col items-center">
@@ -65,7 +65,7 @@ export default function Problem({ problem }: ProblemProps) {
             {problem?.completedCount}
           </span>
         </div>
-        <span className="text-xs">total completions</span>
+        <span className="text-sm">total completions</span>
       </div>
     </div>
   );
@@ -98,7 +98,7 @@ export default function Problem({ problem }: ProblemProps) {
                 {problem?.name}
               </h1>
 
-              <div className="mt-1 flex items-center gap-x-4 text-sm leading-5 text-slate-400 lg:my-4">
+              <div className="mt-1 flex items-center gap-x-4  leading-5 text-slate-400 lg:my-4">
                 <Link
                   href={`/problem-sets/${problemSet?.slug}`}
                   className="underline-offset-1 transition-all hover:underline"
@@ -117,13 +117,13 @@ export default function Problem({ problem }: ProblemProps) {
                 </p>
               </div>
 
-              <p className="mt-2 hidden max-w-2xl text-sm text-slate-400 lg:flex">
+              <p className="mt-2 hidden max-w-2xl  text-slate-400 lg:flex">
                 {problem?.description}
               </p>
             </div>
           </div>
 
-          <div className="mt-6 rounded-md border border-slate-50/[0.06] bg-slate-800 p-4 text-sm text-slate-400">
+          <div className="mt-6 rounded-md border border-slate-50/[0.06] bg-slate-800 p-4  text-slate-400">
             {problem?.description}
           </div>
 
@@ -162,7 +162,7 @@ export default function Problem({ problem }: ProblemProps) {
             ].map((feature) => (
               <li
                 key={feature}
-                className="flex items-center text-sm capitalize text-slate-400"
+                className="flex items-center  capitalize text-slate-400"
               >
                 <CheckIcon className="mr-2 h-4 w-4 text-green-500" />
                 {feature}

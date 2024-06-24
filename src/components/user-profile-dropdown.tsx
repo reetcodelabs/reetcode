@@ -54,7 +54,7 @@ export function UserProfileDropdown({ session }: UserProfileDropdownProps) {
       <div className="hidden sm:flex sm:items-center">
         <Menu as="div" className="relative">
           <div>
-            <Menu.Button className="focused-link relative flex h-10 max-w-xs items-center rounded-full border border-slate-50/[0.06] bg-slate-900 px-3 text-sm focus:outline-offset-1 focus-visible:outline-offset-1">
+            <Menu.Button className="focused-link relative flex h-10 max-w-xs items-center rounded-full border border-slate-50/[0.06] bg-slate-900 px-3  focus:outline-offset-1 focus-visible:outline-offset-1">
               <span className=" pr-3 text-xs text-white">
                 {session?.user?.email}
               </span>
@@ -84,10 +84,7 @@ export function UserProfileDropdown({ session }: UserProfileDropdownProps) {
                 <span className="block text-xs text-slate-400" role="none">
                   Signed in as
                 </span>
-                <span
-                  className="mt-0.5 text-sm font-semibold text-white"
-                  role="none"
-                >
+                <span className="mt-0.5  text-white" role="none">
                   {session?.user?.email}
                 </span>
               </p>
@@ -97,7 +94,7 @@ export function UserProfileDropdown({ session }: UserProfileDropdownProps) {
                     {({ active }) => {
                       const className = classNames(
                         active ? "bg-slate-800 text-white" : "",
-                        "block px-4 py-2 text-sm text-slate-400",
+                        "block px-4 py-2  text-slate-400",
                       );
 
                       if (item.href) {
