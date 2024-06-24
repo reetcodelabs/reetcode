@@ -1,5 +1,6 @@
 import Fs from 'node:fs'
 import Path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import { type RouteHandlerMethod } from "fastify";
 
@@ -16,8 +17,16 @@ interface TreeItem {
     "sha": string,
 }
 
+function getCurrentDirectory() {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = Path.dirname(__filename);
+
+    return __dirname
+}
+
+
 export const handler: RouteHandlerMethod = async (request, response) => {
-    const files = JSON.parse(Fs.readFileSync(Path.resolve(__dirname, 'data', 'gh_api.json')).toString()) as { tree: TreeItem[] }
+    const files = JSON.parse(Fs.readFileSync(Path.resolve(getCurrentDirectory(), 'data', 'gh_api.json')).toString()) as { tree: TreeItem[] }
     const params = request.query as Record<string, string>
 
     let path = params.path ?? ''
