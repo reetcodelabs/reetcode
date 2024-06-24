@@ -2,14 +2,7 @@ import Fs from 'node:fs'
 import Path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { type RouteHandlerMethod } from "fastify";
-
 import { type RouteDefinition } from "../../types";
-
-export const config: RouteDefinition['config'] = {
-    url: '/github-file-tree-load-on-interaction',
-    method: 'GET'
-}
 
 interface TreeItem {
     "path": string,
@@ -24,52 +17,77 @@ function getCurrentDirectory() {
     return __dirname
 }
 
+export const routes: RouteDefinition[] = [{
+    config: {
+        url: '/github-file-tree-load-on-interaction/optimized',
+        method: 'GET'
+    },
+    async handler(request, response) {
+        const files = JSON.parse(
+            Fs.readFileSync(
+                Path.resolve(
+                    getCurrentDirectory(),
+                    'data',
+                    'gh_api.json'
+                )
+            ).toString()
+        ) as { tree: TreeItem[] }
 
-export const handler: RouteHandlerMethod = async (request, response) => {
-    const files = JSON.parse(
-        Fs.readFileSync(
-            Path.resolve(
-                getCurrentDirectory(),
-                'data',
-                'gh_api.json'
-            )
-        ).toString()
-    ) as { tree: TreeItem[] }
+        const params = request.query as Record<string, string>
 
-    const params = request.query as Record<string, string>
+        let path = params.path ?? ''
 
-    let path = params.path ?? ''
+        if (path.endsWith('/')) {
+            path = path.slice(0, -1)
+        }
 
-    if (path.endsWith('/')) {
-        path = path.slice(0, -1)
+        function transformFiles({ path, type, sha }: TreeItem) {
+            return ({
+                path,
+                type,
+                sha
+            })
+        }
+
+        if (!path) {
+            const results = files.tree.filter(item => item.path.split('/').length === 1)
+
+            await response.send(results.map(transformFiles))
+
+            return
+        }
+
+        const treeItem = files.tree.find(item => item?.path === path)
+
+        if (!treeItem) {
+            await response.send([])
+            return
+        }
+
+        const immediateTreeItems = files.tree.filter(item => {
+            const [, deepPath] = item.path.split(treeItem.path)
+
+            return item.path.startsWith(treeItem.path) && deepPath?.split('/')?.length === 2
+        })
+
+        await response.send(immediateTreeItems.map(transformFiles))
+    },
+}, {
+    config: {
+        url: '/github-file-tree-load-on-interaction/',
+        method: 'GET'
+    },
+    async handler(request, response) {
+        const tree = JSON.parse(
+            Fs.readFileSync(
+                Path.resolve(
+                    getCurrentDirectory(),
+                    'data',
+                    'gh_api_tree.json'
+                )
+            ).toString()
+        )
+
+        await response.send(tree)
     }
-
-    if (!path) {
-        const results = files.tree.filter(item => item.path.split('/').length === 1)
-
-        await response.send(results)
-
-        return
-    }
-
-    const treeItem = files.tree.find(item => item?.path === path)
-
-    if (!treeItem) {
-        await response.send([])
-        return
-    }
-
-    const immediateTreeItems = files.tree.filter(item => {
-        const [, deepPath] = item.path.split(treeItem.path)
-
-        return item.path.startsWith(treeItem.path) && deepPath?.split('/')?.length === 2
-    })
-
-    await response.send(immediateTreeItems.map(({ path, type, sha }) => ({
-        path,
-        type,
-        sha
-    })))
-}
-
-export const routes: RouteDefinition[] = [{ config, handler }]
+}]
