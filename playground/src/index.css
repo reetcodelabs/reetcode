@@ -1,14 +1,224 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+:root {
+  --color-scale-black: #1c2128;
+  --color-scale-white: #cdd9e5;
+  --color-scale-gray-0: #cdd9e5;
+  --color-scale-gray-1: #adbac7;
+  --color-scale-gray-2: #909dab;
+  --color-scale-gray-3: #768390;
+  --color-scale-gray-4: #636e7b;
+  --color-scale-gray-5: #545d68;
+  --color-scale-gray-6: #444c56;
+  --color-scale-gray-7: #373e47;
+  --color-scale-gray-8: #2d333b;
+  --color-scale-gray-9: #22272e;
+  --color-scale-blue-0: #c6e6ff;
+
+  --color-text: #adbac7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  cursor: pointer;
+  background: transparent;
+}
 
 body {
   margin: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans',
+    Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  height: 100vh;
+  background-color: var(--color-scale-gray-9);
+  overflow-y: hidden;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+main {
+  background: var(--color-scale-gray-9);
+  width: 100%;
+  height: 100vh;
+}
+
+.files-container {
+  height: 100vh;
+  width: 100%;
+  max-width: 320px;
+  border-right: 1px solid var(--color-scale-gray-7);
+
+  display: flex;
+  flex-direction: column;
+}
+
+.files-container-header {
+  padding: 16px;
+  display: flex;
+  position: sticky;
+  top: 0;
+  align-items: center;
+  border-bottom: 1px solid var(--color-scale-gray-7);
+}
+
+.files-container-header-button {
+  background: rgba(144, 157, 171, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0px;
+  height: 32px;
+  width: 32px;
+  border: none;
+  margin: 0;
+}
+
+.files-container-header-button:hover:not(:disabled) {
+  background: rgba(144, 157, 171, 0.12);
+}
+
+.files-container-header-icon {
+  fill: currentColor;
+  color: var(--color-scale-gray-4);
+}
+
+.files-container-header-title {
+  margin: 0 0 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.tree-container {
+  padding: 8px 16px 8px 16px;
+  overflow-y: auto;
+}
+
+.tree-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tree-item {
+  width: 100%;
+}
+
+.tree-item-header {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  width: 100%;
+  cursor: pointer;
+  padding-right: 4px;
+}
+
+.tree-item-header:hover {
+  background: rgba(144, 157, 171, 0.12);
+  border-radius: 6px;
+}
+
+.tree-item-expand {
+  height: 100%;
+  padding-left: 4px;
+  padding-right: 2px;
+  display: flex;
+  align-items: center;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.tree-item-expand:hover {
+  background: rgba(144, 157, 171, 0.12);
+}
+
+.tree-item-file,
+.tree-item-expand-icon,
+.tree-item-folder-expanded-icon,
+.tree-item-folder-collapsed-icon {
+  fill: currentColor;
+  color: rgb(118, 131, 144);
+  transition: ease-in-out;
+}
+
+.tree-item-expand-icon-expanded {
+  transform: rotate(90deg);
+}
+
+.tree-item-folder {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.tree-item-folder-name {
+  color: var(--color-text);
+  text-overflow: ellipsis;
+  font-size: 14px;
+  overflow: hidden;
+
+  white-space: nowrap;
+
+  padding-left: 8px;
+}
+
+.tree-item-folder-expanded-icon,
+.tree-item-folder-collapsed-icon {
+  margin-left: 8px;
+}
+
+.tree-item-file {
+  margin-left: 8px;
+}
+
+.tree-list-nested {
+  padding-left: 16px;
+}
+
+.folder-header {
+  width: 100%;
+}
+
+.tree-item-header-blob {
+  padding-left: 18px;
+}
+
+@keyframes rotate-keyframes {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.tree-loading-spinner {
+  width: 16px;
+  height: 16px;
+  color: rgb(118, 131, 144);
+  animation: 1s linear 0s infinite normal none running rotate-keyframes;
+}
+
+.tree-loading-spinner circle {
+  color: #778491;
+  line-height: 1.5;
+}
+
+.tree-loading-items {
+  width: 100%;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+}
+
+.tree-loading-items-text {
+  font-size: 14px;
+  margin-left: 6px;
+  color: #778491;
 }
