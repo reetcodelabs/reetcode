@@ -7,151 +7,126 @@ export const mockTreePaths = [
     path: '.changeset',
     type: 'tree',
     sha: '5df7198c8cdd61ed901983bb201282a424490751',
-    subtree: []
   },
   {
     path: '.eslintignore',
     type: 'blob',
     sha: '28af48ab6db00f57fde38ffdf783a39029362ee7',
-    subtree: []
   },
   {
     path: '.eslintrc.js',
     type: 'blob',
     sha: '559d5f480ef269b8c141a669e18c81bee6be77bb',
-    subtree: []
   },
   {
     path: '.gitattributes',
     type: 'blob',
     sha: 'e5a4d904e4f9c40ac936cececa1c2ddb87a2cba3',
-    subtree: []
   },
   {
     path: '.github',
     type: 'tree',
     sha: '15941ec2aedc187ede8b28a2f5589c38a104056b',
-    subtree: []
   },
   {
     path: '.husky',
     type: 'tree',
     sha: 'b622ade7252cf33efd1b9b7f7233d32d1fc6036e',
-    subtree: []
   },
   {
     path: '.prettierrc',
     type: 'blob',
     sha: '3718cf898655b5d9d6a24a696172dc9a5782927a',
-    subtree: []
   },
   {
     path: '.vale.ini',
     type: 'blob',
     sha: '7def440957fec759f9b27b2457fe01a719eafa90',
-    subtree: []
   },
   {
     path: '.vscode',
     type: 'tree',
     sha: '0274a81f8ee9ca3669295dc40f510bd2021d0043',
-    subtree: []
   },
   {
     path: '.yarn',
     type: 'tree',
     sha: 'b3ef64f9c7782412fc867f18250d322c6093d0a5',
-    subtree: []
   },
   {
     path: '.yarnrc.yml',
     type: 'blob',
     sha: 'b8a66c9613b83cb3f7b9b00837221ae81235c560',
-    subtree: []
   },
   {
     path: 'CHANGELOG.md',
     type: 'blob',
     sha: '2015bf8a1133f30c7baaeab1f7bd823eee7e8f92',
-    subtree: []
   },
   {
     path: 'CODEOWNERS',
     type: 'blob',
     sha: '147a4b7e2b6f912aee8fc2be5571850120e22462',
-    subtree: []
   },
   {
     path: 'CONTRIBUTING.md',
     type: 'blob',
     sha: 'bf0bbd269bdfc572999b92a64319aedc9b540dd6',
-    subtree: []
   },
   {
     path: 'LICENSE',
     type: 'blob',
     sha: 'b09b7e97d438e169bb977697d6b85ea3b07be76b',
-    subtree: []
   },
   {
     path: 'README.md',
     type: 'blob',
     sha: '86cad7521387267979704c8fde912831de84631b',
-    subtree: []
   },
   {
     path: 'SECURITY.md',
     type: 'blob',
     sha: 'be51b12006580c25e2d7ca5cb938e5f1d35bb374',
-    subtree: []
   },
   {
     path: 'integration-tests',
     type: 'tree',
     sha: 'b801898cb1a0f21c4a72380f028c1fc95f53a115',
-    subtree: []
   },
   {
     path: 'jest.config.js',
     type: 'blob',
     sha: '8e1beec8e0282ee489de0b54a96ecb91a00d7a04',
-    subtree: []
   },
   {
     path: 'package.json',
     type: 'blob',
     sha: '0bde02e7708e7bc57147ba0bc98cc7b400a86f20',
-    subtree: []
   },
   {
     path: 'packages',
     type: 'tree',
     sha: '08bf7c976c1ad366eebd16ecf6ba606b68dc6b1f',
-    subtree: []
   },
   {
     path: 'scripts',
     type: 'tree',
     sha: 'c0a88cca342cd08584bb586f493ca1877ca2aa85',
-    subtree: []
   },
   {
     path: 'turbo.json',
     type: 'blob',
     sha: '2a6bccb5d0ae52d00d35ba8e210848b6e49ddfdf',
-    subtree: []
   },
   {
     path: 'www',
     type: 'tree',
     sha: '1e51586aa7bd351231bfd870f664aad3a05a8ac3',
-    subtree: []
   },
   {
     path: 'yarn.lock',
     type: 'blob',
     sha: 'b90818d6830016cf4578756b60c0003a5677c908',
-    subtree: []
   },
 ]
 
@@ -265,12 +240,4 @@ export const handlers = [
       return HttpResponse.json(mockTreePaths)
     },
   ),
-  http.get(
-    'https://problems.reetcode.com/github-file-tree-load-on-interaction/',
-    async ({ request }) => {
-      await sleep(50)
-
-      return HttpResponse.json(mockTreePaths)
-    },
-  )
 ]

@@ -1,5 +1,6 @@
 export interface TreeFilePath {
-    path: string
-    sha: string
-    type: 'blob' | 'tree'
+    path: string;
+    sha: string;
+    type: "blob" | "tree";
+    subtree: TreeFilePath[];
 }

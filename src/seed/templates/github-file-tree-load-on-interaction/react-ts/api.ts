@@ -1,15 +1,13 @@
-export async function fetchFilesInPath(path: string) {
+export async function fetchFilesInTree() {
     const response = await fetch(
-        `https://problems.reetcode.com/github-file-tree-load-on-interaction/optimized?path=${path}`,
-    )
+        `https://problems.reetcode.com/github-file-tree-load-on-interaction/`
+    );
 
     try {
-        const files = await response.json()
+        const files = await response.json();
 
-        return files
+        return files;
     } catch (error) {
-        console.error(`Fetch error: ${error}`)
-
-        return []
+        console.error(`Fetch error: ${error}`);
     }
 }

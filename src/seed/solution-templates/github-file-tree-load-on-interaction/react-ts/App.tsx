@@ -1,15 +1,10 @@
-import React, {
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  createContext,
-} from "react";
 import classNames from "classnames";
-import { fetchFilesInPath } from "./api";
+import type { PropsWithChildren } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+
 import { Icons } from "./Icons";
-import { TreeFilePath } from "./types";
+import { fetchFilesInPath } from "./api";
+import type { TreeFilePath } from "./types";
 
 function FilesContainerHeader() {
   return (
@@ -30,6 +25,18 @@ function FilesContainer() {
       <TreeContainer />
     </div>
   );
+}
+
+function sortTreeItems(tree: TreeFilePath[]) {
+  return tree.sort((a, b) => {
+    if (a.type === "tree" && b.type !== "tree") {
+      return -1;
+    } else if (a.type !== "tree" && b.type === "tree") {
+      return 1;
+    } else {
+      return a.path.localeCompare(b.path);
+    }
+  });
 }
 
 function TreeContainer() {
@@ -75,9 +82,7 @@ function TreeContainer() {
   const rootFiles = useMemo(() => {
     const files = tree["/"] ?? [];
 
-    files.sort((file) => (file.type === "tree" ? -1 : 1));
-
-    return files;
+    return sortTreeItems(files);
   }, [tree]);
 
   const onPathSelected = useCallback(
@@ -137,9 +142,7 @@ function TreeItem({
   const treeFiles = useMemo(() => {
     const files = tree[item.path] ?? [];
 
-    files.sort((file) => (file.type === "tree" ? -1 : 1));
-
-    return files;
+    return sortTreeItems(files);
   }, [tree, item]);
 
   const fileDisplayName = parent

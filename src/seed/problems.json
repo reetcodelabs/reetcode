@@ -22,7 +22,7 @@
           "public/index.html",
           "tsconfig.json"
         ],
-        "editableFiles": ["styles.css", "App.tsx", "api.ts"]
+        "editableFiles": ["styles.css", "App.tsx", "api.ts", "types.ts"]
       }
     ]
   }

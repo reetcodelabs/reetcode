@@ -1,10 +1,13 @@
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import classNames from "classnames";
-import type { PropsWithChildren } from "react";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-
+import { fetchFilesInTree } from "./api";
 import { Icons } from "./Icons";
-import { fetchFilesInPath } from "./api";
-import type { TreeFilePath } from "./types";
+import { TreeFilePath } from "./types";
 
 function FilesContainerHeader() {
   return (
@@ -27,21 +30,9 @@ function FilesContainer() {
   );
 }
 
-function sortTreeItems(tree: TreeFilePath[]) {
-  return tree.sort((a, b) => {
-    if (a.type === "tree" && b.type !== "tree") {
-      return -1;
-    } else if (a.type !== "tree" && b.type === "tree") {
-      return 1;
-    } else {
-      return a.path.localeCompare(b.path);
-    }
-  });
-}
-
 function TreeContainer() {
   const [path, setPath] = useState("");
-  const [tree, setTree] = useState<Record<string, TreeFilePath[]>>({});
+  const [tree, setTree] = useState<TreeFilePath[]>([]);
   const [expandedPaths, setExpandedPaths] = useState<Record<string, boolean>>(
     {},
   );
@@ -55,35 +46,17 @@ function TreeContainer() {
     setExpandedPaths((current) => ({ ...current, [path]: !current[path] }));
   };
 
-  const loadFilesForPath = async (path = "") => {
-    togglePathExpanded(path);
+  useEffect(() => {
+    async function loadFiles() {
+      setIsLoading(true);
+      const files = await fetchFilesInTree();
+      setIsLoading(false);
 
-    if (tree[path]) {
-      return;
+      setTree(files);
     }
 
-    setIsLoading(true);
-
-    const files = await fetchFilesInPath(path);
-
-    setIsLoading(false);
-
-    const key = path ? path : "/";
-
-    setTree((current) => ({ ...current, [key]: files }));
-
-    return files;
-  };
-
-  useEffect(() => {
-    loadFilesForPath(path);
+    loadFiles();
   }, [setIsLoading]);
-
-  const rootFiles = useMemo(() => {
-    const files = tree["/"] ?? [];
-
-    return sortTreeItems(files);
-  }, [tree]);
 
   const onPathSelected = useCallback(
     (item: TreeFilePath) => {
@@ -93,22 +66,24 @@ function TreeContainer() {
         return;
       }
 
-      loadFilesForPath(item?.path);
+      togglePathExpanded(item?.path);
     },
     [tree],
   );
+
+  const sortedTree = [...tree];
+
+  sortedTree.sort((file) => (file.type === "tree" ? -1 : 1));
 
   return (
     <div className="tree-container">
       <nav className="tree-navigation">
         <ul className="tree-list">
-          {rootFiles.map((file) => (
+          {sortedTree.map((file) => (
             <TreeItem
               item={file}
-              tree={tree}
               key={file.sha}
               selectedPath={path}
-              isLoading={isLoading}
               expandedPaths={expandedPaths}
               onPathSelected={onPathSelected}
             />
@@ -120,34 +95,21 @@ function TreeContainer() {
 }
 
 function TreeItem({
-  children,
   item,
-  tree,
-  parent,
-  isLoading,
   expandedPaths,
   onPathSelected,
   selectedPath,
 }: PropsWithChildren<{
   item: TreeFilePath;
-  parent?: TreeFilePath;
-  isLoading: boolean;
   selectedPath: string;
-  tree: Record<string, TreeFilePath[]>;
   expandedPaths: Record<string, boolean>;
   onPathSelected?: (item: TreeFilePath) => void;
 }>) {
   const expanded = expandedPaths[item.path];
 
-  const treeFiles = useMemo(() => {
-    const files = tree[item.path] ?? [];
+  const sortedSubTree = [...item.subtree];
 
-    return sortTreeItems(files);
-  }, [tree, item]);
-
-  const fileDisplayName = parent
-    ? item.path.split(`${parent.path}/`)[1]
-    : item.path;
+  sortedSubTree.sort((file) => (file.type === "tree" ? -1 : 1));
 
   return (
     <li className="tree-item">
@@ -178,37 +140,22 @@ function TreeItem({
               ? Icons.expandedFolder
               : Icons.collapsedFolder}
 
-          <span className="tree-item-folder-name">{fileDisplayName}</span>
+          <span className="tree-item-folder-name">{item.path}</span>
         </div>
       </button>
 
-      {expanded ? (
-        <>
-          <ul className="tree-list tree-list-nested">
-            {item.path === selectedPath && isLoading && (
-              <div className="tree-loading-items">
-                {Icons.spinner}
-                <span className="tree-loading-items-text">Loading...</span>
-              </div>
-            )}
-            {treeFiles.map((file) => (
-              <TreeItem
-                item={file}
-                tree={tree}
-                parent={item}
-                key={file.sha}
-                isLoading={isLoading}
-                selectedPath={selectedPath}
-                expandedPaths={expandedPaths}
-                onPathSelected={onPathSelected}
-              />
-            ))}
-          </ul>
-        </>
-      ) : null}
-
-      {children ? (
-        <ul className="tree-list tree-list-nested">{children}</ul>
+      {sortedSubTree.length > 0 && expanded ? (
+        <ul className="tree-list tree-list-nested">
+          {sortedSubTree.map((subtreeItem) => (
+            <TreeItem
+              item={subtreeItem}
+              key={subtreeItem.sha}
+              selectedPath={selectedPath}
+              expandedPaths={expandedPaths}
+              onPathSelected={onPathSelected}
+            />
+          ))}
+        </ul>
       ) : null}
     </li>
   );
