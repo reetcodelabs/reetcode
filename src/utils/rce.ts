@@ -69,7 +69,7 @@ const output = Fs.readFileSync("test.output.json").toString();
 
 console.log("${TEST_RESULTS_DELIMITER}");
 console.log(output);
-`
+`,
 };
 
 const parseNdJson = <T>(jsonString: string) => {
@@ -157,6 +157,8 @@ export interface JestParsedTestResult {
   numPassedTests: number;
   numTotalTests: number;
   testResults: {
+    startTime: number;
+    endTime: number;
     assertionResults: {
       title: string;
       status: "failed" | "passed";
@@ -191,9 +193,14 @@ export async function parseRuntimeOutputJestTests(
 
   try {
     results = JSON.parse(jsonOutput ?? "") as JestParsedTestResult;
-  } catch (error) { }
+  } catch (error) {}
 
   const tests = results.testResults[0]?.assertionResults ?? [];
+
+  console.log(
+    "@@@@@@@@@@@@@@@@@@@@@@@@->TEST_DURATION:",
+    results.testResults[0]!.startTime - results.testResults[0]!.endTime,
+  );
 
   return {
     tests: await Promise.all(
