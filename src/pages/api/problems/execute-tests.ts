@@ -57,48 +57,52 @@ export async function handleExecuteProblemTests(
     return invalidPayloadResponse(response);
   }
 
-  const testFile = template.starterFiles.find(
-    (file) =>
-      file.path.includes("tests.spec.") || file.path.includes("test.spec."),
-  );
+  const allowedFiles = validation?.data?.files
+    ?.filter(
+      (file) =>
+        !file?.path?.includes("test.spec") &&
+        !file?.path?.includes("tests.spec") &&
+        file?.code &&
+        !Object?.keys(STUBS).some((stub) => stub.includes(file?.path)) &&
+        !["package.json", "package-lock.json"].some((forbiddenFile) =>
+          file?.path?.includes(forbiddenFile),
+        ) &&
+        (template?.editableFiles as string[])?.some((f: string) =>
+          file?.path.includes(f),
+        ),
+    )
+    .map((f) => ({ code: f.code, path: f.path.split("/")[1] }));
 
-  const allowedFiles = validation?.data?.files?.filter(
-    (file) =>
-      !file?.path?.includes("test.spec") &&
-      !file?.path?.includes("tests.spec") &&
-      file?.code &&
-      !Object?.keys(STUBS).some((stub) => stub.includes(file?.path)) &&
-      !["package.json", "package-lock.json"].some((forbiddenFile) =>
-        file?.path?.includes(forbiddenFile),
-      ),
-  );
+  const otherTemplateFiles = template?.starterFiles
+    ?.filter((file) => !template.editableFiles.includes(file.path))
+    .map((file) => ({
+      name: file?.path,
+      code: file.content,
+      entrypoint: false,
+    }));
 
   try {
     const payload = {
       language: "Javascript",
       files: [
         {
-          name: "test.js",
-          code: STUBS["test.jest.js"],
+          name: "test.mjs",
+          code: STUBS["test.mjs"],
           entrypoint: true,
         },
-        {
-          name: "babel.config.json",
-          code: STUBS["babel.config.json"],
-          entrypoint: false,
-        },
-        {
-          name: testFile?.path?.startsWith("tests/")
-            ? testFile?.path
-            : `tests/${testFile?.path}`,
-          code: testFile?.content,
-          entrypoint: false,
-        },
+        // {
+        //   name: testFile?.path?.startsWith("tests/")
+        //     ? testFile?.path
+        //     : `tests/${testFile?.path}`,
+        //   code: testFile?.content,
+        //   entrypoint: false,
+        // },
         ...allowedFiles.map((file) => ({
           code: file.code,
           name: file?.path,
           entrypoint: false,
         })),
+        ...otherTemplateFiles,
       ],
     };
 

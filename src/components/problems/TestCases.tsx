@@ -5,6 +5,7 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useMutation } from "@tanstack/react-query";
+import classNames from "classnames";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -83,8 +84,6 @@ export function TestCases({ problem, template }: TestCasesProps) {
     </Button>
   );
 
-  console.log({ results });
-
   return (
     <div
       style={{ height: "calc(100% - 48px)" }}
@@ -103,7 +102,7 @@ export function TestCases({ problem, template }: TestCasesProps) {
 
             {runTestButton}
           </div>
-          {results?.rawOutputHtml && (
+          {results?.rawOutputHtml && !results.tests.length && (
             <div
               className="my-4 w-full [&>pre]:p-4"
               dangerouslySetInnerHTML={{ __html: results?.rawOutputHtml }}
@@ -113,12 +112,14 @@ export function TestCases({ problem, template }: TestCasesProps) {
             {results.tests.map((testCase, idx) => {
               const testPassed = testCase.status === "passed";
 
+              const [testTitle, testExplanation] = testCase.title?.split(">>>");
+
               return (
                 <Collapsible>
                   <CollapsibleTrigger asChild>
                     <button
                       className="focused-link w-full rounded-t-sm border border-slate-50/[0.06] bg-slate-800 p-3 focus-within:outline-offset-0 [&[aria-expanded=false]]:rounded-b-sm [&[aria-expanded=true]>div>svg]:rotate-180"
-                      key={testCase.title}
+                      key={testTitle}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
@@ -129,24 +130,35 @@ export function TestCases({ problem, template }: TestCasesProps) {
                           )}
 
                           <span className="ml-4 text-white">
-                            {`Test case #${idx + 1} ${testPassed ? "passed" : "failed"}: ${testCase.title}`}
+                            {`Test case #${idx + 1} ${testPassed ? "passed" : "failed"}: ${testTitle}`}
                           </span>
                         </div>
 
-                        {!testPassed && (
+                        {(!testPassed || testExplanation) && (
                           <ChevronDownIcon className="h-4 w-4 text-white transition ease-linear" />
                         )}
                       </div>
                     </button>
                   </CollapsibleTrigger>
-                  {testCase?.errorMessage && (
+                  {testExplanation && (
                     <CollapsibleContent className="rounded-b-sm bg-slate-800">
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: testCase.errorMessageHtml ?? "",
-                        }}
-                        className="[&>pre]:overflow-x-auto [&>pre]:p-4"
-                      ></div>
+                      {testExplanation && (
+                        <div
+                          className={classNames("bg-slate-700 p-4 text-white", {
+                            "rounded-b-sm": !testCase?.errorMessage,
+                          })}
+                        >
+                          {testExplanation}
+                        </div>
+                      )}
+                      {testCase?.errorMessage && (
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: testCase.errorMessageHtml ?? "",
+                          }}
+                          className="[&>pre]:overflow-x-auto [&>pre]:p-4"
+                        ></div>
+                      )}
                     </CollapsibleContent>
                   )}
                 </Collapsible>

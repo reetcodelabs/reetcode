@@ -14,7 +14,15 @@
         "sandpackTemplate": "react-ts",
         "folder": "react-ts",
         "default": true,
-        "hiddenFiles": ["test.mjs", "test.output.json", "vitest.config.ts"]
+        "hiddenFiles": [
+          "test.mjs",
+          "test.output.json",
+          "vitest.config.ts",
+          ".gitignore",
+          "public/index.html",
+          "tsconfig.json"
+        ],
+        "editableFiles": ["styles.css", "App.tsx", "api.ts"]
       }
     ]
   }

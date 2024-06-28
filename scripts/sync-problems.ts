@@ -119,9 +119,19 @@ async function seedProblems(
             return null;
           }
 
+          let fileContent = Fs.readFileSync(filePath).toString()
+
+          if (fileName === 'package.json') {
+            const fileObject: Record<string, Record<string, string> | string> = JSON.parse(fileContent)
+
+            fileObject.devDependencies = {}
+
+            fileContent = JSON.stringify(fileObject, null, 2)
+          }
+
           return {
             path: fileName,
-            content: Fs.readFileSync(filePath).toString(),
+            content: fileContent,
           };
         });
 
@@ -205,11 +215,15 @@ async function seedProblems(
           name: template.template.folder,
           problemId: upsertedProblem.id,
           sandpackTemplate: template.template.sandpackTemplate,
+          hiddenFiles: template.template.hiddenFiles ?? [],
+          editableFiles: template.template.editableFiles ?? []
         },
         update: {
           default: template?.template?.default ?? false,
           name: template.template.folder,
           sandpackTemplate: template.template.sandpackTemplate,
+          hiddenFiles: template.template.hiddenFiles ?? [],
+          editableFiles: template.template.editableFiles ?? []
         },
       });
 
@@ -323,4 +337,4 @@ async function main() {
   await prisma.$disconnect();
 }
 
-main();
+main().catch(console.error);

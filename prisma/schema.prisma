@@ -161,7 +161,8 @@ model Template {
 
     solutionFiles File[] @relation("solutionFiles")
 
-    hiddenFiles String[]
+    hiddenFiles   String[]
+    editableFiles String[]
 
     problem Problem @relation(fields: [problemId], references: [id])
 

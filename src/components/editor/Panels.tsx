@@ -32,17 +32,28 @@ import { FakeTabs } from "../FakeTabs";
 import { MonacoEditor } from "../problems/MonacoEditor";
 import { TestCases } from "../problems/TestCases";
 
-function ListOfEditableFiles() {
+function ListOfEditableFiles({
+  template,
+}: {
+  template: ProblemWithTemplate["template"];
+}) {
   const { sandpack } = useSandpack();
 
   const listOfFiles = Object.keys(sandpack.files).map((name) => ({ name }));
 
-  const tabs = listOfFiles.map((file) => ({
-    key: file.name,
-    title: file.name,
-    active: file.name === sandpack.activeFile,
-    icon: () => <EmptyPage className="mr-3" />,
-  }));
+  const tabs = listOfFiles
+    .filter(
+      (file) =>
+        (template?.hiddenFiles as string[])?.filter((hiddenFile) =>
+          file.name.includes(hiddenFile),
+        ).length === 0,
+    )
+    .map((file) => ({
+      key: file.name,
+      title: file.name,
+      active: file.name === sandpack.activeFile,
+      icon: () => <EmptyPage className="mr-3" />,
+    }));
 
   return (
     <PanelTabs
@@ -84,7 +95,7 @@ function PanelTabs({ tabs, onTabSelected }: PanelTabsProps) {
               onClick={() => onTabSelected?.(tab)}
             >
               {tab?.icon?.()}
-              {tab.title}
+              {tab.title?.split("/")?.[1]}
             </button>
           );
         })}
@@ -238,7 +249,7 @@ export function EditorPanels({ problem, template }: EditorPanelsProps) {
         <ResizablePanelGroup direction="vertical">
           <ResizablePanel minSize={30} defaultSize={40}>
             <div className="h-full flex-1">
-              <ListOfEditableFiles />
+              <ListOfEditableFiles template={template} />
               <SandpackCodeEditor
                 className="h-full"
                 showLineNumbers

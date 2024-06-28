@@ -58,6 +58,18 @@ runCLI({
   ]
 }
 `,
+  "test.mjs": `import { startVitest } from "vitest/node";
+import Fs from "fs";
+
+const vitest = await startVitest("test", {}, { run: true });
+
+await vitest?.close();
+
+const output = Fs.readFileSync("test.output.json").toString();
+
+console.log("${TEST_RESULTS_DELIMITER}");
+console.log(output);
+`
 };
 
 const parseNdJson = <T>(jsonString: string) => {
@@ -179,7 +191,7 @@ export async function parseRuntimeOutputJestTests(
 
   try {
     results = JSON.parse(jsonOutput ?? "") as JestParsedTestResult;
-  } catch (error) {}
+  } catch (error) { }
 
   const tests = results.testResults[0]?.assertionResults ?? [];
 

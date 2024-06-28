@@ -52,7 +52,9 @@ export default function ProblemEditor({ problem }: ProblemProps) {
           files[file.path] = {
             code: file.content,
             hidden: false,
-            readOnly: false,
+            readOnly: !(template?.editableFiles as string[])?.includes(
+              file.path,
+            ),
           };
         }
       });
@@ -60,6 +62,8 @@ export default function ProblemEditor({ problem }: ProblemProps) {
 
     return files;
   }, [template]);
+
+  console.log({ files });
 
   return (
     <SandpackProvider
