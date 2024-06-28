@@ -67,9 +67,7 @@ export async function handleExecuteProblemTests(
         !["package.json", "package-lock.json"].some((forbiddenFile) =>
           file?.path?.includes(forbiddenFile),
         ) &&
-        (template?.editableFiles as string[])?.some((f: string) =>
-          file?.path.includes(f),
-        ),
+        template?.editableFiles?.some((f: string) => file?.path.includes(f)),
     )
     .map((f) => ({ code: f.code, path: f.path.split("/")[1] }));
 

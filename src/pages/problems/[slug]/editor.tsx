@@ -52,9 +52,7 @@ export default function ProblemEditor({ problem }: ProblemProps) {
           files[file.path] = {
             code: file.content,
             hidden: false,
-            readOnly: !(template?.editableFiles as string[])?.includes(
-              file.path,
-            ),
+            readOnly: !template?.editableFiles?.includes(file.path),
           };
         }
       });

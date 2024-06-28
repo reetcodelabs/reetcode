@@ -44,7 +44,7 @@ function ListOfEditableFiles({
   const tabs = listOfFiles
     .filter(
       (file) =>
-        (template?.hiddenFiles as string[])?.filter((hiddenFile) =>
+        template?.hiddenFiles?.filter((hiddenFile: string) =>
           file.name.includes(hiddenFile),
         ).length === 0,
     )
