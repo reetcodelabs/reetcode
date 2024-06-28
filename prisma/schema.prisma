@@ -161,6 +161,8 @@ model Template {
 
     solutionFiles File[] @relation("solutionFiles")
 
+    hiddenFiles String[]
+
     problem Problem @relation(fields: [problemId], references: [id])
 
     startCommand String?
